@@ -1,0 +1,2 @@
+Successfully able to create a user from signup page and store to database
+Sucessfully able to log into user from database

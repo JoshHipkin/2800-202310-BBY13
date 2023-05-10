@@ -49,8 +49,83 @@ app.get("/login", (req, res) => {
     res.render('login.ejs');
 });
 
+app.post('/loggingin', async (req, res) => {
+    var email = req.body.email;
+    var password = req.body.password;
+
+    const schema = Joi.string().required();
+    const validationResult = schema.validate(email);
+    if (validationResult.error != null) {
+        console.log(validationResult.error);
+        res.redirect('login');
+        return;
+    }
+
+    const result = await userCollection.find({ email: email }).project({ email: 1, password: 1, _id: 1 }).toArray();
+
+    if (result.length != 1) {
+        console.log("Email not found");
+        res.redirect('login');
+        return;
+    }
+    if (await bcrypt.compare(password, result[0].password)) {
+        req.session.authenticated = true;
+        req.session.email = email;
+        req.session.cookie.maxAge = expire;
+
+        res.redirect('/');
+        return;
+    }
+    else {
+        res.redirect('login');
+        return;
+    }
+});
+
 app.get("/signup", (req, res) => {
     res.render('signup.ejs');
+});
+
+app.post('/createUser', async (req, res) => {
+    var email = req.body.email;
+    var password = req.body.password;
+
+    if (!req.body.email || req.body.email.trim() === '') {
+        res.redirect('signup');
+        return;
+    }
+
+    if (!req.body.password || req.body.password.trim() === '') {
+        res.redirect('signup');
+        return;
+    }
+
+    //Validating using Joi
+    const schema = Joi.object(
+        {
+            email: Joi.string().max(20).required(),
+            password: Joi.string().max(20).required()
+        });
+
+    const validationResultName = schema.validate({ email, password });
+    if (validationResultName.error != null) {
+        console.log(validationResultName.error);
+        res.redirect('signup');
+        return;
+    }
+
+    //Hashing Password
+    var hashedPassword = await bcrypt.hash(password, 12);
+
+    // Adds user to database
+    await userCollection.insertOne({ email: email, password: hashedPassword });
+    
+    //authenticating session
+    req.session.authenticated = true;
+    req.session.email = email;
+    req.session.cookie.maxAge = expire;
+
+    res.redirect('/');
 });
 
 app.get("/profile", (req, res) => {

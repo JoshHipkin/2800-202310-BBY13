@@ -35,3 +35,14 @@ folder to run off scripts/index.js. Made it compatible with header and footer
 - Fixed header and footer compatibility with EJS 
 - Added Profile page 
 - Implemented working buttons in header and footer to change pages to proper location
+
+# Conrad_UserDatabase
+(May 9, 2023)
+Implemented a feature to allow users to signup in signup page and have their user info stored into the database. 
+Currently if the user does not input a required field or fails joi's validation, the user will be 
+redirected back to the signup page. The same works for login, if the user provides incorrect or fails joi's validation
+the user will be redirected to the login page.
+
+- Implemented signup page and stores user info in database
+- Implemented joi validation
+- Implemented login page and allows user to log into account from database
