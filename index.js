@@ -135,6 +135,10 @@ app.post('/createUser', async (req, res) => {
 });
 
 app.get("/profile", async (req, res) => {
+    if (!req.session.authenticated){
+        res.redirect("/login");
+        return;
+    }
     const email = req.session.email;
     const result = await userCollection.find({ email: email }).project({ password: 1, _id: 1 }).toArray();
     let password = result[0].password;
