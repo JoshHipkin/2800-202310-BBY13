@@ -12,7 +12,7 @@
 2. clone the repository.
 3. Install Node.JS.
 4. download all required node packages by typing 'npm i' into the console.
-5. run using 'node .\scripts\index.js' OR 'nodemon .\scripts\index.js'.
+5. run using 'node index.js' OR 'nodemon index.js'.
 
 # Conrad_MainLoginSignupBasicPages:
 (May 9, 2023)
