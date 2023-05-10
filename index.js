@@ -34,6 +34,7 @@ var mongoStore = MongoStore.create({
     },
 });
 
+
 app.use(session({
     secret: node_session_secret,
     store: mongoStore,
@@ -80,6 +81,11 @@ app.post('/loggingin', async (req, res) => {
         res.redirect('/login');
         return;
     }
+});
+
+app.get('/logout', (req,res) => {
+	req.session.destroy();
+    res.render("login");
 });
 
 app.get("/signup", (req, res) => {
