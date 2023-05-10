@@ -1,5 +1,5 @@
 require("dotenv").config();
-require("./utils.js");
+require("./scripts/utils.js");
 const session = require("express-session");
 const express = require("express");
 const Joi = require("joi");
