@@ -42,11 +42,11 @@ app.use(session({
 }));
 
 app.get("/", (req, res) => {
-    res.render('index.ejs');
+    res.render('index');
 });
 
 app.get("/login", (req, res) => {
-    res.render('login.ejs');
+    res.render('login');
 });
 
 app.post('/loggingin', async (req, res) => {
@@ -65,7 +65,7 @@ app.post('/loggingin', async (req, res) => {
 
     if (result.length != 1) {
         console.log("Email not found");
-        res.redirect('login');
+        res.redirect('/login');
         return;
     }
     if (await bcrypt.compare(password, result[0].password)) {
@@ -77,13 +77,13 @@ app.post('/loggingin', async (req, res) => {
         return;
     }
     else {
-        res.redirect('login');
+        res.redirect('/login');
         return;
     }
 });
 
 app.get("/signup", (req, res) => {
-    res.render('signup.ejs');
+    res.render('signup');
 });
 
 app.post('/createUser', async (req, res) => {
@@ -91,12 +91,12 @@ app.post('/createUser', async (req, res) => {
     var password = req.body.password;
 
     if (!req.body.email || req.body.email.trim() === '') {
-        res.redirect('signup');
+        res.redirect('/signup');
         return;
     }
 
     if (!req.body.password || req.body.password.trim() === '') {
-        res.redirect('signup');
+        res.redirect('/signup');
         return;
     }
 
@@ -129,7 +129,7 @@ app.post('/createUser', async (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
-    res.render('profile.ejs');
+    res.render("profile");
 });
 
 app.listen(port, () => {
