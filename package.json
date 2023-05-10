@@ -11,5 +11,22 @@
     "mongodb": "^5.4.0",
     "node": "^20.1.0",
     "nodemon": "^2.0.22"
-  }
+  },
+  "name": "2800-202310-bby13",
+  "description": "# Team Members: - Jake Robbins - Conrad Christian - Josh Hipkin - Emily Yao",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoshHipkin/2800-202310-BBY13.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JoshHipkin/2800-202310-BBY13/issues"
+  },
+  "homepage": "https://github.com/JoshHipkin/2800-202310-BBY13#readme"
 }

@@ -1,5 +1,5 @@
 require("dotenv").config();
-require("./utils.js");
+require("./scripts/utils.js");
 const session = require("express-session");
 const express = require("express");
 const Joi = require("joi");
@@ -33,6 +33,7 @@ var mongoStore = MongoStore.create({
         secret: mongodb_session_secret,
     },
 });
+
 
 app.use(session({
     secret: node_session_secret,
@@ -80,6 +81,11 @@ app.post('/loggingin', async (req, res) => {
         res.redirect('login');
         return;
     }
+});
+
+app.get('/logout', (req,res) => {
+	req.session.destroy();
+    res.render("login");
 });
 
 app.get("/signup", (req, res) => {
