@@ -1,0 +1,2 @@
+Successfully populated profile ejs with bootstrap and user information
+Successfully passed user info array though ejs parameters 

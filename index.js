@@ -19,7 +19,7 @@ const port = process.env.PORT || 3090;
 
 const expire = 240 * 60 * 60 * 1000;
 
-var {database} = include("dbConnection");
+var { database } = include("dbConnection");
 
 const userCollection = database.db(mongodb_database).collection("users");
 //const recipes = database.db(mongodb_database).collection("recipes");
@@ -119,7 +119,7 @@ app.post('/createUser', async (req, res) => {
 
     // Adds user to database
     await userCollection.insertOne({ email: email, password: hashedPassword });
-    
+
     //authenticating session
     req.session.authenticated = true;
     req.session.email = email;
@@ -128,8 +128,14 @@ app.post('/createUser', async (req, res) => {
     res.redirect('/');
 });
 
-app.get("/profile", (req, res) => {
-    res.render("profile");
+app.get("/profile", async (req, res) => {
+    const email = req.session.email;
+    const result = await userCollection.find({ email: email }).project({ password: 1, _id: 1 }).toArray();
+    let password = result[0].password;
+    let id = result[0]._id;
+    let user = [id, email, password];
+
+    res.render('profile', { user: user });
 });
 
 app.listen(port, () => {
