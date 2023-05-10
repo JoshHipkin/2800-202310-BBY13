@@ -15,7 +15,7 @@ const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 
 const app = express();
-const port = process.env.PORT || 6000;
+const port = process.env.PORT || 3090;
 
 const expire = 240 * 60 * 60 * 1000;
 
@@ -42,8 +42,21 @@ app.use(session({
 }));
 
 app.get("/", (req, res) => {
-    if (!req.session.authenticated) {
-    var html = `<h1>Hello World</h1>`;
-    res.send(html);
-    }
+    res.render('index.ejs');
+});
+
+app.get("/login", (req, res) => {
+    res.render('login.ejs');
+});
+
+app.get("/signup", (req, res) => {
+    res.render('signup.ejs');
+});
+
+app.get("/profile", (req, res) => {
+    res.render('profile.ejs');
+});
+
+app.listen(port, () => {
+    console.log("Listening on port " + port);
 });

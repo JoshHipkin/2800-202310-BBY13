@@ -1,0 +1,1 @@
+Implemented footer, header, index, login, and signup pages successfully with working bootstrap

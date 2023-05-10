@@ -1,0 +1,4 @@
+- Successfully ran website on local host while using index.js app.get()
+- Successfully changed html pages to ejs files and added profile.ejs
+- Successfully implemented header and footer ejs files into views pages
+- Successfully implemented bootstrap elements to work for changing pages
