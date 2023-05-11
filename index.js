@@ -27,6 +27,7 @@ const userCollection = database.db(mongodb_database).collection("users");
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
 
+
 var mongoStore = MongoStore.create({
     mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/Recipal`,
     crypto: {
@@ -140,13 +141,20 @@ app.get("/profile", async (req, res) => {
         return;
     }
     const email = req.session.email;
-    const result = await userCollection.find({ email: email }).project({ password: 1, _id: 1 }).toArray();
-    let password = result[0].password;
-    let id = result[0]._id;
-    let user = [id, email, password];
+    const result = await userCollection.find({ email: email }).project({ password: 1, _id: 1, email: 1 }).toArray();
 
-    res.render('profile', { user: user });
+    res.render('profile', { tabContent: 'profile-info', user: result });
 });
+
+app.get("/profile/preferences", async (req, res) => {
+    if (!req.session.authenticated) {
+        res.redirect("/login");
+        return;
+    }
+    const email = req.session.email;
+    const result = await userCollection.find({email: email}).project({password: 1, _id: 1, email: 1}).toArray();
+    res.render('profile', {tabContent: 'preferences', user: result})
+})
 
 app.listen(port, () => {
     console.log("Listening on port " + port);
