@@ -31,9 +31,28 @@
     <button type="submit" class="btn btn-primary mb-3" id="submit">Save</button>
 </form>
     
-    <h3 class="mb-3">Selected Allergies and Dietary Restrictions</h3>
-    <ul id="selected-allergies-dietary" class="list-group"></ul>
-  </div>
+    <h3 class="mb-3">Your Recipe filters</h3>
+    <div class="text-center">
+        <h3 class="mt-3">Allergens</h3>
+        <ul class="list-group">
+            <% for (let i = 0; i < user.allergens.length; i++) { %>
+                <%- include('templates/savedAllergens', {allergen: user.allergens[i]} ) %>
+            <% } %>
+        </ul>
+    </div>
+
+    <div class="text-center">
+        <h3 class="mt-3">Diet restrictions</h3>
+        <ul class="list-group">
+            <% for (let i = 0; i < user.diet.length; i++) { %>
+              <% if (!(user.diet[i] == '')) { %>
+                <%- include('templates/savedDiet', {diet: user.diet[i]} ) %>
+             <% } %>
+                
+            <% } %>
+        </ul>
+    </div>
+</div>
   
   <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -153,8 +153,10 @@ app.get("/profile/preferences", async (req, res) => {
         return;
     }
     const email = req.session.email;
-    const result = await userCollection.find({email: email}).project({password: 1, _id: 1, email: 1, allergens: 1, diet: 1}).toArray();
-    res.render('profile', {tabContent: 'preferences', user: result})
+    const result = await userCollection.find({email: email})
+    .project({allergens: 1, diet: 1, username: 1})
+    .toArray();
+    res.render('profile', {tabContent: 'preferences', user: result[0]});
 });
 
 app.post("/savePreferences", async (req, res) => {
@@ -162,23 +164,46 @@ app.post("/savePreferences", async (req, res) => {
     const diet = req.body.diet;
     console.log(allergies);
     //Creating a new array without any empty strings
-    var allergens = [];
-    for (var i = 0; i < allergies.length; i++) {
-        if (!allergies[i] == '') {
-            allergens[i] = allergies[i];
+    const filteredAllergies = allergies.filter((allergy) => allergy !== '');
+    try {
+        await userCollection.updateOne(
+            { email: req.session.email },
+            { $push: {
+                allergens: { $each: filteredAllergies },
+                diet: diet
+            }
         }
-    }   
-    //update User collection
-  userCollection.updateOne(
-    {email: req.session.email},
-    {$set: {
-        allergens: allergens,
-        diet: diet
+        );
+        res.render('preferencesSaved');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Failed to save preferences");
     }
-}
-  )
-    res.send("preferencesSaved");
-})
+});
+
+app.post("/preferences/delete", async (req, res) => {
+    const email = req.session.email;
+    const type = req.body.type;
+    const value = req.body.value;
+    let updateField = null;
+
+    if (type === "allergens") {
+        updateField = { $pull: { allergens: value} };
+    } else if (type === "diet") {
+        updateField = { $pull: { diet: value } };
+    } else {
+        res.status(400).send("Invalid type parameter");
+        return;
+    }
+
+    try {
+        await userCollection.updateOne({ email: email }, updateField);
+        res.redirect("/profile/preferences");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Failed to delete value");
+    }
+});
 
 app.listen(port, () => {
     console.log("Listening on port " + port);
