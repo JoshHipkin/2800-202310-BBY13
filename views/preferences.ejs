@@ -6,6 +6,50 @@
         <a href="/profile/preferences" class="nav-link active" id="preferences" >Preferences</a>
     </li>
 </ul>
-<form>
-    <input type="text" id="ingredient" class="form-control">
+<form action="/savePreferences" method="post">
+<div class="container mt-5">
+    <h3 class="mb-3">Allergies / unwanted ingredients</h3>
+    <div id="allergies-container">
+      <div class="form-group mb-2">
+        <input type="text" class="form-control" name="allergy" placeholder="Enter an allergy">
+      </div>
+      <div class="form-group mb-2">
+        <input type="text" class="form-control" name="allergy" placeholder="Enter another allergy">
+      </div>
+    </div>
+    <button type="button" class="btn btn-primary mb-3" id="add-allergy">Add another allergy</button>
+    
+    <h3 class="mb-3">Dietary Restrictions</h3>
+    <div class="form-group mb-3">
+      <select class="form-control" name="diet">
+        <option value="">Select a dietary restriction</option>
+        <option value="gluten-free">Gluten-free</option>
+        <option value="vegan">Vegan</option>
+        <option value="vegetarian">Vegetarian</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary mb-3" id="submit">Save</button>
 </form>
+    
+    <h3 class="mb-3">Selected Allergies and Dietary Restrictions</h3>
+    <ul id="selected-allergies-dietary" class="list-group"></ul>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+    var addAllergyBtn = document.getElementById('add-allergy');
+    addAllergyBtn.addEventListener('click', function() {
+      var allergiesContainer = document.getElementById('allergies-container');
+      var newAllergyDiv = document.createElement('div');
+      newAllergyDiv.classList.add('form-group', 'mb-2');
+      var newAllergyInput = document.createElement('input');
+      newAllergyInput.type = 'text';
+      newAllergyInput.classList.add('form-control');
+      newAllergyInput.name = 'allergy';
+      newAllergyInput.placeholder = 'Enter another allergy';
+      newAllergyDiv.appendChild(newAllergyInput);
+      allergiesContainer.appendChild(newAllergyDiv);
+    });
+  });
+  </script>

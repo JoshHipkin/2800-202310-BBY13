@@ -26,6 +26,7 @@ const userCollection = database.db(mongodb_database).collection("users");
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static('scripts'));
 
 
 var mongoStore = MongoStore.create({
@@ -152,8 +153,31 @@ app.get("/profile/preferences", async (req, res) => {
         return;
     }
     const email = req.session.email;
-    const result = await userCollection.find({email: email}).project({password: 1, _id: 1, email: 1}).toArray();
+    const result = await userCollection.find({email: email}).project({password: 1, _id: 1, email: 1, allergens: 1, diet: 1}).toArray();
     res.render('profile', {tabContent: 'preferences', user: result})
+});
+
+app.post("/savePreferences", async (req, res) => {
+    const allergies = req.body.allergy;
+    const diet = req.body.diet;
+    console.log(allergies);
+    //Creating a new array without any empty strings
+    var allergens = [];
+    for (var i = 0; i < allergies.length; i++) {
+        if (!allergies[i] == '') {
+            allergens[i] = allergies[i];
+        }
+    }   
+    //update User collection
+  userCollection.updateOne(
+    {email: req.session.email},
+    {$set: {
+        allergens: allergens,
+        diet: diet
+    }
+}
+  )
+    res.send("preferencesSaved");
 })
 
 app.listen(port, () => {
