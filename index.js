@@ -152,10 +152,11 @@ app.get("/profile", async (req, res) => {
 // display recipes
 app.get("/home", async (req, res) => {
 
- const recipe = await recipesCollection.find().project({name: 1, description: 1, servings: 1, 
-        _id: 1}).toArray();
+const id = 96313;
+const recipe = await recipesCollection.find({ id: id}).project({name: 1, description: 1, servings: 1, _id: 1}).toArray();
+console.log(recipe);
     
-      res.render('homepage', { recipe: recipe });
+res.render('homepage', { recipe: recipe });
 });
 
 
