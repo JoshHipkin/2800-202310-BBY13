@@ -1,0 +1,26 @@
+<%- include("templates/header") %> 
+
+    <p>Welcome to reciAPP's homepage </p>
+
+    <% let i=0; %>
+<% for(i=0; i < recipe.length; i++) { %>
+<%- include('templates/recipe', {recipe: recipe[i]})  %> 
+<div class="card shadow-sm">
+    <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">صورة مصغرة</text></svg>
+    <div class="card-body">
+      <p class="card-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> <%= recipe.name %> </font><font style="vertical-align: inherit;"> 
+        <p><%= recipe.description %> </p></font></font></p>
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="btn-group">
+          <button type="button" class="btn btn-sm btn-outline-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;" onclick="location.href = '/recipes';" id="more"> Read More </font></font></button>
+          <button type="button" class="btn btn-sm btn-outline-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Save</font></font></button>
+        </div>
+        <small class="text-body-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> <%= recipe.servings %> </font></font></small>
+      </div>
+    </div>
+  </div>
+<% } %> 
+        
+
+    
+<%- include("templates/footer") %>

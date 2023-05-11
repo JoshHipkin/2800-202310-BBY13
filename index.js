@@ -22,7 +22,7 @@ const expire = 240 * 60 * 60 * 1000;
 var { database } = include("dbConnection");
 
 const userCollection = database.db(mongodb_database).collection("users");
-//const recipes = database.db(mongodb_database).collection("recipes");
+const recipesCollection = database.db(mongodb_database).collection("recipes");
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
@@ -147,6 +147,17 @@ app.get("/profile", async (req, res) => {
 
     res.render('profile', { user: user });
 });
+
+
+// display recipes
+app.get("/home", async (req, res) => {
+
+ const recipe = await recipesCollection.find().project({name: 1, description: 1, servings: 1, 
+        _id: 1}).toArray();
+    
+      res.render('homepage');
+});
+
 
 app.listen(port, () => {
     console.log("Listening on port " + port);
