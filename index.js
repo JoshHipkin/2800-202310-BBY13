@@ -155,7 +155,7 @@ app.get("/home", async (req, res) => {
  const recipe = await recipesCollection.find().project({name: 1, description: 1, servings: 1, 
         _id: 1}).toArray();
     
-      res.render('homepage');
+      res.render('homepage', { recipe: recipe });
 });
 
 
