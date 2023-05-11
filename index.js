@@ -83,8 +83,8 @@ app.post('/loggingin', async (req, res) => {
     }
 });
 
-app.get('/logout', (req,res) => {
-	req.session.destroy();
+app.get('/logout', (req, res) => {
+    req.session.destroy();
     res.render("login");
 });
 
@@ -93,8 +93,14 @@ app.get("/signup", (req, res) => {
 });
 
 app.post('/createUser', async (req, res) => {
+    var username = req.body.username;
     var email = req.body.email;
     var password = req.body.password;
+
+    if (!req.body.username || req.body.username.trim() === '') {
+        res.redirect('/signup');
+        return;
+    }
 
     if (!req.body.email || req.body.email.trim() === '') {
         res.redirect('/signup');
@@ -109,11 +115,12 @@ app.post('/createUser', async (req, res) => {
     //Validating using Joi
     const schema = Joi.object(
         {
+            username: Joi.string().alphanum().max(20).required(),
             email: Joi.string().max(20).required(),
             password: Joi.string().max(20).required()
         });
 
-    const validationResultName = schema.validate({ email, password });
+    const validationResultName = schema.validate({ username, email, password });
     if (validationResultName.error != null) {
         console.log(validationResultName.error);
         res.redirect('signup');
@@ -124,18 +131,52 @@ app.post('/createUser', async (req, res) => {
     var hashedPassword = await bcrypt.hash(password, 12);
 
     // Adds user to database
-    await userCollection.insertOne({ email: email, password: hashedPassword });
+    await userCollection.insertOne({ username: username, email: email, password: hashedPassword });
 
     //authenticating session
     req.session.authenticated = true;
     req.session.email = email;
     req.session.cookie.maxAge = expire;
 
+    res.redirect('security');
+});
+
+app.get("/security", async (req, res) => {
+    res.render('security');
+});
+
+app.post("/securityRecovery", async (req, res) => {
+    var securityPassword = req.body.securityPassword;
+    var securityQuestion = req.params.securityQuestion;
+    console.log(securityQuestion);
+    console.log(securityPassword);
+
+    if (!req.body.securityPassword || req.body.securityPassword.trim() === '') {
+        res.redirect('/security');
+        return;
+    }
+
+    const schema = Joi.object(
+        {
+            securityPassword: Joi.string().max(20).required()
+        });
+
+    const validationResultName = schema.validate({ securityPassword });
+    if (validationResultName.error != null) {
+        console.log(validationResultName.error);
+        res.redirect('security');
+        return;
+    }
+
+    var hashedPassword = await bcrypt.hash(securityPassword, 12);
+
+    // await userCollection.updateOne({email: req.session.email}, {$set: {securityPassword: hashedPassword}});
+
     res.redirect('/');
 });
 
 app.get("/profile", async (req, res) => {
-    if (!req.session.authenticated){
+    if (!req.session.authenticated) {
         res.redirect("/login");
         return;
     }
