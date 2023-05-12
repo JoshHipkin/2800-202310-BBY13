@@ -15,19 +15,12 @@
                     </div>
                     <div class="mb-3">
                         <label for="securityPassword" class="form-label">Security Password</label>
-                        <input name="securityPassword" type="text" class="form-control form-select-sm"
-                            placeholder="Security Password">
+                        <input name="securityPassword" type="text" class="form-control form-select-sm" placeholder="Security Password">
                     </div>
-                    <button type="submit" class="btn btn-primary" onclick="test()">Submit</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </fieldset>
             </form>
         </div>
     </main>
-
-    <script> async function test() {
-        console.log("test function ran");
-        console.log(securityQuestion);
-    }
-    </script>
 
     <%- include("templates/footer") %>

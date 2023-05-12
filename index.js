@@ -147,9 +147,8 @@ app.get("/security", async (req, res) => {
 
 app.post("/securityRecovery", async (req, res) => {
     var securityPassword = req.body.securityPassword;
-    var securityQuestion = req.params.securityQuestion;
-    console.log(securityQuestion);
-    console.log(securityPassword);
+    var securityQuestion = req.body.securityQuestion;
+    console.log(req.body);
 
     if (!req.body.securityPassword || req.body.securityPassword.trim() === '') {
         res.redirect('/security');
@@ -170,9 +169,105 @@ app.post("/securityRecovery", async (req, res) => {
 
     var hashedPassword = await bcrypt.hash(securityPassword, 12);
 
-    // await userCollection.updateOne({email: req.session.email}, {$set: {securityPassword: hashedPassword}});
+    await userCollection.updateOne({email: req.session.email}, {$set: {securityPassword: hashedPassword}});
+    await userCollection.updateOne({email: req.session.email}, {$set: {securityQuestion: securityQuestion}});
 
     res.redirect('/');
+});
+
+app.get("/forgot", async (req, res) => {
+    res.render('forgot');
+});
+
+app.post("/forgotLogin", async (req,res) => {
+ var email = req.body.email;
+
+ if (!req.body.email || req.body.email.trim() === '') {
+    res.redirect('/login');
+    return;
+}
+
+const schema = Joi.string().required();
+const validationResult = schema.validate(email);
+if (validationResult.error != null) {
+    console.log(validationResult.error);
+    res.redirect('login');
+    return;
+}
+
+const result = await userCollection.find({ email: email }).project({ securityQuestion: 1, securityPassword: 1, _id: 1 }).toArray();
+
+if (result.length != 1) {
+    console.log("Email not found");
+    res.redirect('/login');
+    return;
+}
+
+let sQuestion = result[0].securityQuestion;
+let sPassword = result[0].securityPassword;
+let account = [sQuestion, sPassword];
+
+req.session.email = email;
+
+res.render('verify', {account: account})
+});
+
+app.post("/securityPasswordVerify", async (req,res) => {
+    var password = req.body.password;
+
+    const schema = Joi.object(
+        {
+            password: Joi.string().max(20).required()
+        });
+
+    const validationResultName = schema.validate({ password });
+    if (validationResultName.error != null) {
+        console.log(validationResultName.error);
+        res.redirect('login');
+        return;
+    }
+
+    email = req.session.email;
+    const result = await userCollection.find({ email: email }).project({ securityPassword: 1, _id: 1 }).toArray();
+
+    if (await bcrypt.compare(password, result[0].securityPassword)) {
+        req.session.authenticated = true;
+        req.session.email = email;
+        req.session.cookie.maxAge = expire;
+
+        res.render('changePassword');
+        return;
+    } else {
+        res.redirect('login')
+    }
+
+});
+
+app.post("/securityChangePassword", async (req, res) => {
+    var password = req.body.password;
+
+    if (!req.body.password || req.body.password.trim() === '') {
+        res.render('changePassword');
+        return;
+    }
+
+    const schema = Joi.object(
+        {
+            password: Joi.string().max(20).required()
+        });
+
+        const validationResultName = schema.validate({ password });
+        if (validationResultName.error != null) {
+            console.log(validationResultName.error);
+            res.render('changePassword');
+            return;
+        }
+
+        var hashedPassword = await bcrypt.hash(password, 12);
+
+        await userCollection.updateOne({email: req.session.email}, {$set: {password: hashedPassword}});
+
+        res.redirect('/');
 });
 
 app.get("/profile", async (req, res) => {
@@ -188,6 +283,11 @@ app.get("/profile", async (req, res) => {
 
     res.render('profile', { user: user });
 });
+
+app.get("*", (req, res) => {
+    res.status(404);
+    res.render('404');
+}); 
 
 app.listen(port, () => {
     console.log("Listening on port " + port);
