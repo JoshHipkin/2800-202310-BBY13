@@ -230,11 +230,25 @@ app.get("/home", async (req, res) => {
         query.ingredients = { $nin: allergens };
       }
 console.log(query);
-if(searchIngredients.length > 0) {
-    query.ingredients = {
-        $all: searchIngredients.map(ingredient => new RegExp(ingredient, "i"))
-    };
-}
+if (searchIngredients.length > 0) {
+    query.$and = [
+      {
+        $or: [
+          {
+            ingredients: {
+              $all: searchIngredients.map((ingredient) => new RegExp(ingredient, "i")),
+            },
+          },
+          {
+            name: {
+              $regex: new RegExp(searchIngredients.join("|"), "i"),
+            },
+          },
+        ],
+      },
+    ];
+  }
+  
 console.log(query);
 
 
