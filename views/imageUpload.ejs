@@ -20,8 +20,14 @@
 </div>
 <h3 class="d-flex justify-content-center">Ingredients:</h3>
 <div id="ingredients-box">
-
 </div>
+<div id="searchButton-box" class="d-flex justify-content-center mt-3 "> 
+</div>
+
+
+
+
+
 
 
 
@@ -74,26 +80,47 @@
         });
 
     }
-    var ingredients = [];
+    var ingredientsArr = [];
     function populateIngredients(data) {
         let ingredientsBox = document.getElementById("ingredients-box");
         ingredientsBox.innerHTML = "";
 
 
-        ingredients.push(data[0].name);
+        ingredientsArr.push(data[0].name);
         let threshold = 0.1;
         for (let i = 1; i < 5; i++) {
             if (data[i].value > threshold && (data[i-1].value / data[i].value) < 3 ) {
-                ingredients.push(data[i].name);
+                ingredientsArr.push(data[i].name);
             }
 
         }
 
-        for (let i = 0; i < ingredients.length; i++) {
-            let ingredient = document.createElement("p");
-            ingredient.innerHTML = ingredients[i];
+        for (let i = 0; i < ingredientsArr.length; i++) {
+            let ingredient = document.createElement("button");
+            ingredient.innerHTML = ingredientsArr[i] + "  \t X";
             ingredientsBox.appendChild(ingredient);
+
+            // add event listener to remove ingredient and button
+             ingredient.addEventListener("click", function() {
+                ingredientsArr.splice(i, 1); // remove ingredient from array
+                ingredient.remove(); // remove button from ingredientsBox
+             });
         }
+
+        console.log(ingredientsArr);
+
+        // add 'Search by ingredient(s)' button
+        let searchButton = document.createElement("button");
+        searchButton.innerHTML = "Search by ingredient(s)";
+        document.getElementById("searchButton-box").appendChild(searchButton);
+
+        // add event listener to send GET request with ingredients array
+        searchButton.addEventListener("click", function() {
+            let ingredientsString = ingredientsArr.join(",");
+            let url = "/home?q=" + ingredientsString;
+            window.location.href = url;
+        });
+
     }
 
     
