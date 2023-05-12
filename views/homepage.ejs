@@ -2,7 +2,9 @@
   <div class="text-center mb-5 mt-5">
     <h3>Welcome to your personalized recipe page!</h3>
   </div>
-    
+        <a href="/imageUpload" class="btn btn-primary btn-lg d-flex justify-content-center  ">
+      <i class="bi bi-camera me-2"></i>Search By Image!
+    </a>
     <form class="form-inline my-5 mx-5" action="/home" method="GET">
       <div class="form-group">
         <label for="search_input">Start adding some ingredients here. You can add as many as you like and We will only show you recipes that contain those ingredients.</label>
@@ -12,7 +14,8 @@
       <button type="submit" class="btn btn-primary mb-3">Search</button>
     </form>
     
-   
+
+    
     
 
 <% for(let i=0; i < recipe.length; i++) { %>
