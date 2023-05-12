@@ -188,7 +188,7 @@ app.post("/securityRecovery", async (req, res) => {
     await userCollection.updateOne({email: req.session.email}, {$set: {securityPassword: hashedPassword}});
     await userCollection.updateOne({email: req.session.email}, {$set: {securityQuestion: securityQuestion}});
 
-    res.redirect('/');
+    res.redirect('/home');
 });
 
 app.get("/forgot", async (req, res) => {
