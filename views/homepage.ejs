@@ -12,30 +12,7 @@
       <button type="submit" class="btn btn-primary mb-3">Search</button>
     </form>
     
-    <div class="pagination d-flex justify-content-center">
-      <% if (currentPage > 1) { %>
-        <a class="page-link" href="/home?page=<%= currentPage - 1 %>"><button class="btn btn-primary">Prev</button></a>
-    
-    
-      <% } %>
-    
-      <% if (startPage > 1) { %>
-        <a class="page-link" href="/home?q=<%= searchQuery %>&page=<%= startPage - 1 %>">...</a>
-      <% } %>
-    
-      <% for (let i = 0; i < pages.length; i++) { %>
-        <% if (currentPage === pages[i]) { %>
-          <span class="page-link current-page active"><%= pages[i] %></span>
-        <% } else { %>
-          <a class="page-link" href="/home?q=<%= searchQuery %>&page=<%= pages[i] %>"><%= pages[i] %></a>
-        <% } %>
-      <% } %>
-    
-      <% if (currentPage < pages.length ) { %>
-        <a class="page-link" href="/home?page=<%= currentPage + 1 %>"><button class="btn btn-primary">Next</button></a>
-    
-      <% } %>
-    </div>
+   
     
 
 <% for(let i=0; i < recipe.length; i++) { %>
@@ -45,7 +22,9 @@
         <p><%= recipe[i].description %> </p></font></font></p>
       <div class="d-flex justify-content-between align-items-center">
         <div class="btn-group">
-          <button type="button" class="btn btn-sm btn-outline-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;" onclick="location.href = '/recipes';" id="more"> Read More </font></font></button>
+         
+          <a class="btn btn-sm btn-outline-secondary" href="/recipe?id=<%= recipe[i]._id %>">Read More</a>
+
           <button type="button" class="btn btn-sm btn-outline-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Save</font></font></button>
         </div>
         <small class="text-body-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> <%= recipe[i].servings %> Servings</font></font></small>
