@@ -365,7 +365,8 @@ app.get("/home", async (req, res) => {
         const ingredientQueries = searchIngredients.map(ingredient => (
           { ingredients: { $regex: new RegExp(ingredient, "i") } }
         ));
-        query.$and = [{ $or: ingredientQueries }];
+        query.$and = query.$and || [];
+        query.$and.push({ $and: ingredientQueries });
       }
       
       if (allergens && allergens.length > 0) {
@@ -381,7 +382,6 @@ app.get("/home", async (req, res) => {
       }
       
   
-console.log(query);
 
 
     const countPromise = recipesCollection.countDocuments(query);
@@ -438,7 +438,6 @@ console.log(query);
     }
   
     
-    console.log(recipeData);
   
     res.render("recipe", { recipe: recipeData });
   });
