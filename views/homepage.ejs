@@ -3,15 +3,39 @@
     <h3>Welcome to your personalized recipe page!</h3>
   </div>
     
-    <form class="form-inline" action="/home" method="GET">
+    <form class="form-inline my-5 mx-5" action="/home" method="GET">
       <div class="form-group">
         <label for="search_input">Start adding some ingredients here. You can add as many as you like and We will only show you recipes that contain those ingredients.</label>
-        <input type="text" class="form-control mb-3" id="search_input" name="q" value="<%= searchQuery %>" placeholder="ingredients go here, separated by commas.">
+        <input type="text" class="form-control mb-3" id="search_input" name="q" value="<%= searchQuery %>" placeholder="ingredients, separated by commas.">
         <input class="mb-3" type="hidden" id="search_query" name="search" value="<%= searchQuery %>">
       </div>
       <button type="submit" class="btn btn-primary mb-3">Search</button>
     </form>
     
+    <div class="pagination d-flex justify-content-center">
+      <% if (currentPage > 1) { %>
+        <a class="page-link" href="/home?page=<%= currentPage - 1 %>"><button class="btn btn-primary">Prev</button></a>
+    
+    
+      <% } %>
+    
+      <% if (startPage > 1) { %>
+        <a class="page-link" href="/home?q=<%= searchQuery %>&page=<%= startPage - 1 %>">...</a>
+      <% } %>
+    
+      <% for (let i = 0; i < pages.length; i++) { %>
+        <% if (currentPage === pages[i]) { %>
+          <span class="page-link current-page active"><%= pages[i] %></span>
+        <% } else { %>
+          <a class="page-link" href="/home?q=<%= searchQuery %>&page=<%= pages[i] %>"><%= pages[i] %></a>
+        <% } %>
+      <% } %>
+    
+      <% if (currentPage < pages.length ) { %>
+        <a class="page-link" href="/home?page=<%= currentPage + 1 %>"><button class="btn btn-primary">Next</button></a>
+    
+      <% } %>
+    </div>
     
 
 <% for(let i=0; i < recipe.length; i++) { %>
@@ -32,9 +56,9 @@
 
 
 
-<div class="pagination">
+<div class="pagination d-flex justify-content-center">
   <% if (currentPage > 1) { %>
-    <button id="prev-button" class="btn btn-primary" type="button">Previous</button>
+    <a class="page-link" href="/home?page=<%= currentPage - 1 %>"><button class="btn btn-primary">Prev</button></a>
 
 
   <% } %>
@@ -45,14 +69,14 @@
 
   <% for (let i = 0; i < pages.length; i++) { %>
     <% if (currentPage === pages[i]) { %>
-      <span class="page-link current-page"><%= pages[i] %></span>
+      <span class="page-link current-page active"><%= pages[i] %></span>
     <% } else { %>
       <a class="page-link" href="/home?q=<%= searchQuery %>&page=<%= pages[i] %>"><%= pages[i] %></a>
     <% } %>
   <% } %>
 
-  <% if (currentPage < pageCount) { %>
-<button id="next-button" class="btn btn-primary" type="button">Next</button>
+  <% if (currentPage < pageCount ) { %>
+    <a class="page-link" href="/home?page=<%= currentPage + 1 %>"><button class="btn btn-primary">Next</button></a>
 
   <% } %>
 </div>
@@ -60,6 +84,7 @@
 
 <script>
   function updatePage(page, searchQuery) {
+    console.log("Update page called with page=" + page + " and searchQuery=" + searchQuery);
     const url = new URL(window.location.href);
     url.searchParams.set("page", page);
     url.searchParams.set("search", searchQuery);
@@ -80,16 +105,8 @@
     const currentPage = parseInt("<%= currentPage %>");
     const pageCount = parseInt("<%= pageCount %>");
     const searchQuery = "<%= searchQuery %>";
-    if (currentPage < pageCount) {
       updatePage(currentPage + 1, searchQuery);
-    }
-  }
-
-  // Add click event listeners to the "Previous" and "Next" buttons
-  const prevButton = document.getElementById("prev-button");
-  const nextButton = document.getElementById("next-button");
-  prevButton.addEventListener("click", goToPreviousPage);
-  nextButton.addEventListener("click", goToNextPage);
+  };
 </script>
 
 
