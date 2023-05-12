@@ -36,8 +36,9 @@ const recipesCollection = database.db(mongodb_database).collection("recipes");
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
+app.use("/public/images/", express.static("./public/images"));
+app.use("/styles", express.static("./styles"));
 app.use(express.static('scripts'));
-
 
 var mongoStore = MongoStore.create({
     mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/Recipal`,
