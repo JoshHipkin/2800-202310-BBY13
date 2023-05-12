@@ -22,7 +22,7 @@ const expire = 240 * 60 * 60 * 1000;
 var { database } = include("dbConnection");
 
 const userCollection = database.db(mongodb_database).collection("users");
-//const recipes = database.db(mongodb_database).collection("recipes");
+const recipesCollection = database.db(mongodb_database).collection("recipes");
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
@@ -288,6 +288,50 @@ app.get("*", (req, res) => {
     res.status(404);
     res.render('404');
 }); 
+
+// display recipes and limit recipes on homepage 
+
+app.get("/home", async (req, res) => {
+
+    const page = parseInt(req.query.page) || 1; // Get the page number from the query parameter
+  
+    const recipesPerPage = 50;
+    const skip = (page - 1) * recipesPerPage;
+  
+    const countPromise = recipesCollection.countDocuments({});
+    const recipesPromise = recipesCollection
+      .find()
+      .project({ name: 1, description: 1, servings: 1, _id: 1 })
+      .skip(skip)
+      .limit(recipesPerPage)
+      .toArray();
+  
+    const [recipeCount, recipeData] = await Promise.all([countPromise, recipesPromise]);
+  
+    const pageCount = Math.ceil(recipeCount / recipesPerPage);
+    const maxButtons = 10;
+    const visiblePages = 5;
+    const halfVisiblePages = Math.floor(visiblePages / 2);
+    let startPage = Math.max(1, page - halfVisiblePages);
+    let endPage = Math.min(startPage + visiblePages - 1, pageCount);
+  
+    if (endPage - startPage + 1 < visiblePages) {
+      startPage = Math.max(1, endPage - visiblePages + 1);
+    }
+  
+    const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+  
+    res.render("homepage", {
+      recipe: recipeData,
+      currentPage: page,
+      pageCount: pageCount,
+      pages: pages,
+      maxButtons: maxButtons,
+      visiblePages: visiblePages,
+      startPage: startPage
+    });
+  });
+
 
 app.listen(port, () => {
     console.log("Listening on port " + port);

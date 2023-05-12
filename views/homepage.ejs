@@ -1,0 +1,79 @@
+<%- include("templates/header") %> 
+
+    <p>Welcome to reciAPP's homepage </p>
+
+<% for(let i=0; i < recipe.length; i++) { %>
+<div class="card shadow-sm">
+    <div class="card-body">
+      <p class="card-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><h1> <%= recipe[i].name %> </h1></font><font style="vertical-align: inherit;"> 
+        <p><%= recipe[i].description %> </p></font></font></p>
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="btn-group">
+          <button type="button" class="btn btn-sm btn-outline-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;" onclick="location.href = '/recipes';" id="more"> Read More </font></font></button>
+          <button type="button" class="btn btn-sm btn-outline-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Save</font></font></button>
+        </div>
+        <small class="text-body-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> <%= recipe[i].servings %> Servings</font></font></small>
+      </div>
+    </div>
+  </div>
+<% } %> 
+
+
+
+<div class="pagination">
+  <% if (currentPage > 1) { %>
+    <a class="page-link" href="/home?page=<%= currentPage - 1 %>">Previous</a>
+  <% } %>
+
+  <% if (startPage > 1) { %>
+    <a class="page-link" href="/home?page=<%= startPage - 1 %>">...</a>
+  <% } %>
+
+  <% for (let i = 0; i < pages.length; i++) { %>
+    <% if (currentPage === pages[i]) { %>
+      <span class="page-link current-page"><%= pages[i] %></span>
+    <% } else { %>
+      <a class="page-link" href="/home?page=<%= pages[i] %>"><%= pages[i] %></a>
+    <% } %>
+  <% } %>
+
+  <% if (currentPage < pageCount) { %>
+    <a class="page-link" href="/home?page=<%= currentPage + 1 %>">Next</a>
+  <% } %>
+</div>
+
+<script>
+  
+  // Function to update the page URL with the specified page number
+  function updatePage(page) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("page", page);
+    window.location.href = url.toString();
+  }
+
+  // Function to handle click event on "Previous" button
+  function goToPreviousPage() {
+    const currentPage = parseInt("<%= currentPage %>");
+    if (currentPage > 1) {
+      updatePage(currentPage - 1);
+    }
+  }
+
+  // Function to handle click event on "Next" button
+  function goToNextPage() {
+    const currentPage = parseInt("<%= currentPage %>");
+    const pageCount = parseInt("<%= pageCount %>");
+    if (currentPage < pageCount) {
+      updatePage(currentPage + 1);
+    }
+  }
+// Add click event listeners to the "Previous" and "Next" buttons
+  const prevButton = document.getElementById("prev-button");
+  const nextButton = document.getElementById("next-button");
+  prevButton.addEventListener("click", goToPreviousPage);
+  nextButton.addEventListener("click", goToNextPage);    
+ 
+</script>
+
+
+<%- include("templates/footer") %>

@@ -1,0 +1,3 @@
+Successfully populated homepage ejs with all recipe information into cards
+Successfully passed recipe info array though ejs parameters 
+Successfully add pagination feature and previous and next function
