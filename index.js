@@ -22,7 +22,7 @@ const expire = 240 * 60 * 60 * 1000;
 var { database } = include("dbConnection");
 
 const userCollection = database.db(mongodb_database).collection("users");
-//const recipes = database.db(mongodb_database).collection("recipes");
+const recipesCollection = database.db(mongodb_database).collection("recipes");
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
@@ -204,6 +204,78 @@ app.post("/preferences/delete", async (req, res) => {
         res.status(500).send("Failed to delete value");
     }
 });
+
+app.get("/home", async (req, res) => {
+    const user = await userCollection.findOne({ email: req.session.email});
+    const allergens = user.allergens;
+    const diet = user.diet;    
+    const searchQuery = req.query.q;
+    const searchIngredients = searchQuery ? searchQuery.split(",") : [];
+    const page = parseInt(req.query.page) || 1; // Get the page number from the query parameter
+  
+    const recipesPerPage = 20;
+    const skip = (page - 1) * recipesPerPage;
+  
+    const query = {};
+
+  
+
+    if (diet && diet.length > 0) {
+        const dietQuery = diet.map(tag => ({ search_terms: { $regex: new RegExp(tag, "i") } }));
+        query.$and = dietQuery;
+      }
+      console.log(query);
+      
+      if (allergens && allergens.length > 0) {
+        query.ingredients = { $nin: allergens };
+      }
+console.log(query);
+if(searchIngredients.length > 0) {
+    query.ingredients = {
+        $all: searchIngredients.map(ingredient => new RegExp(ingredient, "i"))
+    };
+}
+console.log(query);
+
+
+    const countPromise = recipesCollection.countDocuments(query);
+
+    const recipesPromise = recipesCollection
+      .find(query)
+      .project({ name: 1, description: 1, servings: 1, _id: 1, ingredients: 1 })
+      .skip(skip)
+      .limit(recipesPerPage)
+      .toArray();
+  
+    
+
+    const [recipeCount, recipeData] = await Promise.all([countPromise, recipesPromise]);
+  
+    const pageCount = Math.ceil(recipeCount / recipesPerPage);
+    const maxButtons = 10;
+    const visiblePages = 5;
+    const halfVisiblePages = Math.floor(visiblePages / 2);
+    let startPage = Math.max(1, page - halfVisiblePages);
+    let endPage = Math.min(startPage + visiblePages - 1, pageCount);
+  
+    if (endPage - startPage + 1 < visiblePages) {
+      startPage = Math.max(1, endPage - visiblePages + 1);
+    }
+  
+    const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+  
+    res.render("homepage", {
+      recipe: recipeData,
+      currentPage: page,
+      pageCount: pageCount,
+      pages: pages,
+      maxButtons: maxButtons,
+      visiblePages: visiblePages,
+      startPage: startPage,
+      searchQuery: searchQuery,
+      searchIngredients: searchIngredients
+    });
+  });
 
 app.listen(port, () => {
     console.log("Listening on port " + port);

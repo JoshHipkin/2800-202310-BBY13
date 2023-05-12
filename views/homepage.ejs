@@ -1,0 +1,114 @@
+<%- include("templates/header") %> 
+  <div class="text-center mb-5 mt-5">
+    <h3>Welcome to your personalized recipe page!</h3>
+  </div>
+    
+    <form class="form-inline my-5 mx-5" action="/home" method="GET">
+      <div class="form-group">
+        <label for="search_input">Start adding some ingredients here. You can add as many as you like and We will only show you recipes that contain those ingredients.</label>
+        <input type="text" class="form-control mb-3" id="search_input" name="q" value="<%= searchQuery %>" placeholder="ingredients, separated by commas.">
+        <input class="mb-3" type="hidden" id="search_query" name="search" value="<%= searchQuery %>">
+      </div>
+      <button type="submit" class="btn btn-primary mb-3">Search</button>
+    </form>
+    
+    <div class="pagination d-flex justify-content-center">
+      <% if (currentPage > 1) { %>
+        <a class="page-link" href="/home?page=<%= currentPage - 1 %>"><button class="btn btn-primary">Prev</button></a>
+    
+    
+      <% } %>
+    
+      <% if (startPage > 1) { %>
+        <a class="page-link" href="/home?q=<%= searchQuery %>&page=<%= startPage - 1 %>">...</a>
+      <% } %>
+    
+      <% for (let i = 0; i < pages.length; i++) { %>
+        <% if (currentPage === pages[i]) { %>
+          <span class="page-link current-page active"><%= pages[i] %></span>
+        <% } else { %>
+          <a class="page-link" href="/home?q=<%= searchQuery %>&page=<%= pages[i] %>"><%= pages[i] %></a>
+        <% } %>
+      <% } %>
+    
+      <% if (currentPage < pages.length ) { %>
+        <a class="page-link" href="/home?page=<%= currentPage + 1 %>"><button class="btn btn-primary">Next</button></a>
+    
+      <% } %>
+    </div>
+    
+
+<% for(let i=0; i < recipe.length; i++) { %>
+<div class="card shadow-sm">
+    <div class="card-body">
+      <p class="card-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><h1> <%= recipe[i].name %> </h1></font><font style="vertical-align: inherit;"> 
+        <p><%= recipe[i].description %> </p></font></font></p>
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="btn-group">
+          <button type="button" class="btn btn-sm btn-outline-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;" onclick="location.href = '/recipes';" id="more"> Read More </font></font></button>
+          <button type="button" class="btn btn-sm btn-outline-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Save</font></font></button>
+        </div>
+        <small class="text-body-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> <%= recipe[i].servings %> Servings</font></font></small>
+      </div>
+    </div>
+  </div>
+<% } %> 
+
+
+
+<div class="pagination d-flex justify-content-center">
+  <% if (currentPage > 1) { %>
+    <a class="page-link" href="/home?page=<%= currentPage - 1 %>"><button class="btn btn-primary">Prev</button></a>
+
+
+  <% } %>
+
+  <% if (startPage > 1) { %>
+    <a class="page-link" href="/home?q=<%= searchQuery %>&page=<%= startPage - 1 %>">...</a>
+  <% } %>
+
+  <% for (let i = 0; i < pages.length; i++) { %>
+    <% if (currentPage === pages[i]) { %>
+      <span class="page-link current-page active"><%= pages[i] %></span>
+    <% } else { %>
+      <a class="page-link" href="/home?q=<%= searchQuery %>&page=<%= pages[i] %>"><%= pages[i] %></a>
+    <% } %>
+  <% } %>
+
+  <% if (currentPage < pageCount ) { %>
+    <a class="page-link" href="/home?page=<%= currentPage + 1 %>"><button class="btn btn-primary">Next</button></a>
+
+  <% } %>
+</div>
+
+
+<script>
+  function updatePage(page, searchQuery) {
+    console.log("Update page called with page=" + page + " and searchQuery=" + searchQuery);
+    const url = new URL(window.location.href);
+    url.searchParams.set("page", page);
+    url.searchParams.set("search", searchQuery);
+    window.location.href = url.toString();
+  }
+
+  // Function to handle click event on "Previous" button
+  function goToPreviousPage() {
+    const currentPage = parseInt("<%= currentPage %>");
+    const searchQuery = "<%= searchQuery %>";
+    if (currentPage > 1) {
+      updatePage(currentPage - 1, searchQuery);
+    }
+  }
+
+  // Function to handle click event on "Next" button
+  function goToNextPage() {
+    const currentPage = parseInt("<%= currentPage %>");
+    const pageCount = parseInt("<%= pageCount %>");
+    const searchQuery = "<%= searchQuery %>";
+      updatePage(currentPage + 1, searchQuery);
+  };
+</script>
+
+
+
+<%- include("templates/footer") %>
