@@ -284,10 +284,7 @@ app.get("/profile", async (req, res) => {
     res.render('profile', { user: user });
 });
 
-app.get("*", (req, res) => {
-    res.status(404);
-    res.render('404');
-}); 
+
 
 // display recipes and limit recipes on homepage 
 
@@ -341,7 +338,11 @@ app.get("/home", async (req, res) => {
       searchIngredients: searchIngredients
     });
   });
-
+  
+  app.get("*", (req, res) => {
+    res.status(404);
+    res.render('404');
+}); 
 
 app.listen(port, () => {
     console.log("Listening on port " + port);
