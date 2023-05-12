@@ -15,6 +15,12 @@
 5. run using 'node index.js' OR 'nodemon index.js'.
 
 # Conrad_LoginSecurityRecovery
+Conrad_SecurityQuestionFix
+(May 12, 2023)
+Fixed Problem bug of text running off text field in verify.ejs. Changed to textarea with better wrap properties.
+- Changed input field in verify.ejs to textarea and changed some text properties
+
+(May 11, 2023)
 Created a feature to allow the user to reset their password if they had forgotten their user ID. 
 
 - Added username to signup page and store to database (15 mins)

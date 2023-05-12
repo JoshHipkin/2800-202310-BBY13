@@ -10,12 +10,12 @@
     question = "What city/town did your mother and father meet?";
 } %>
 <div class="container">
-    <h1>Security Question </h1>
+    <h1>Security Verification </h1>
     <form action="/securityPasswordVerify" method="post">
         <fieldset class="mb-3" id="personalInfoFields" disabled>
             <div class="form-group">
-                <label>User ID</label>
-                <input type="text" id="IDProfile" class="form-control" value="<%-question%>">
+                <label>Security Question ID</label>
+                <textarea type="text" id="IDProfile" class="form-control"><%-question%></textarea>
             </div>
         </fieldset>
         <div class="form-group">
