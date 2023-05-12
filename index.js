@@ -453,10 +453,7 @@ console.log(query);
 
   
 
-  app.get("*", (req, res) => {
-    res.status(404);
-    res.render('404');
-}); 
+
 
 
 app.get("/imageUpload", async (req, res) => {
@@ -516,7 +513,10 @@ app.post('/process-image', upload.single('image'), (req, res) => {
   });
 
       
-
+  app.get("*", (req, res) => {
+    res.status(404);
+    res.render('404');
+}); 
 
 app.listen(port, () => {
     console.log("Listening on port " + port);
