@@ -27,7 +27,7 @@ const userCollection = database.db(mongodb_database).collection("users");
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
 app.use("/public/images/", express.static("./public/images"));
-app.use("/css", express.static("./css"));
+app.use("/styles", express.static("./styles"));
 
 var mongoStore = MongoStore.create({
     mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/Recipal`,
