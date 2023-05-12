@@ -1,0 +1,102 @@
+
+<%- include("templates/header") %> 
+
+<h3 class="d-flex justify-content-center">image upload</h3>
+
+
+
+<div id="image-box" class="card d-flex justify-content-center">
+    <img id="image-preview" src="" alt="image preview" style="width: 100%; height: 100%; object-fit: contain;">
+
+    <div id="upload-button" class="d-flex justify-content-center">
+
+        <input type="file" name="image" id="image-upload" style="display:none" accept="image/*" capture="environment">
+        <button class="button" id="" style="padding:10px" type="button"
+        onclick="document.getElementById('image-upload').click()"><span> +
+        </span></button>
+
+    <button id="analyze-button" style="display: none;" onclick="processImage()">Analyze Photo</button>
+    </div>
+</div>
+<h3 class="d-flex justify-content-center">Ingredients:</h3>
+<div id="ingredients-box">
+
+</div>
+
+
+
+
+
+
+<script>
+
+    //let ImageFile; // Global variable to store the image file
+
+    /*
+    attribution: listenImageSelect code adapted from snippet by user "nkron" on StackOverflow.
+    https://stackoverflow.com/questions/4459379/preview-an-image-before-it-is-uploaded
+    */
+    function listenImageSelect() {
+        console.log("listening for image select");
+        var imgInput = document.getElementById("image-upload"); 
+
+        imgInput.addEventListener('change', function (e) {
+            console.log("image selected");
+            ImageFile = e.target.files[0];   //Local variable
+            const blob = URL.createObjectURL(ImageFile);
+            document.getElementById("image-preview").src = blob;
+            document.getElementById("analyze-button").style.display = "block";
+        });
+    } listenImageSelect();
+
+
+    function processImage() {
+        if (!ImageFile) {
+            return;
+        }
+        
+        const formData = new FormData(); // create a new form data object
+        formData.append('image', ImageFile); // add the image file to the form data
+
+        fetch('/process-image', { // send the image to the server using fetch
+            method: 'POST',
+            enctype: 'multipart/form-data',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            // handle the response from the server here
+            console.log(data);
+            populateIngredients(data);
+        })
+        .catch(error => {
+            console.error("ERROR!!!"+error);
+        });
+
+    }
+    var ingredients = [];
+    function populateIngredients(data) {
+        let ingredientsBox = document.getElementById("ingredients-box");
+        ingredientsBox.innerHTML = "";
+
+
+        ingredients.push(data[0].name);
+        let threshold = 0.1;
+        for (let i = 1; i < 5; i++) {
+            if (data[i].value > threshold && (data[i-1].value / data[i].value) < 3 ) {
+                ingredients.push(data[i].name);
+            }
+
+        }
+
+        for (let i = 0; i < ingredients.length; i++) {
+            let ingredient = document.createElement("p");
+            ingredient.innerHTML = ingredients[i];
+            ingredientsBox.appendChild(ingredient);
+        }
+    }
+
+    
+</script>
+
+<%- include("templates/footer") %>
