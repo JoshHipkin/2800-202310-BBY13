@@ -152,20 +152,28 @@ app.get("/profile", async (req, res) => {
 // display recipes and limit recipes on homepage 
 
 app.get("/home", async (req, res) => {
-
+    const searchQuery = req.query.q;
+    const searchIngredients = searchQuery ? searchQuery.split(",") : [];
     const page = parseInt(req.query.page) || 1; // Get the page number from the query parameter
   
-    const recipesPerPage = 50;
+    const recipesPerPage = 20;
     const skip = (page - 1) * recipesPerPage;
   
-    const countPromise = recipesCollection.countDocuments({});
+    const query = searchIngredients.length > 0
+    ? { ingredients: { $all: searchIngredients.map(ingredient => new RegExp(ingredient, "i")) } }
+    : {};
+
+    const countPromise = recipesCollection.countDocuments(query);
+
     const recipesPromise = recipesCollection
-      .find()
-      .project({ name: 1, description: 1, servings: 1, _id: 1 })
+      .find(query)
+      .project({ name: 1, description: 1, servings: 1, _id: 1, ingredients: 1 })
       .skip(skip)
       .limit(recipesPerPage)
       .toArray();
   
+    
+
     const [recipeCount, recipeData] = await Promise.all([countPromise, recipesPromise]);
   
     const pageCount = Math.ceil(recipeCount / recipesPerPage);
@@ -188,7 +196,9 @@ app.get("/home", async (req, res) => {
       pages: pages,
       maxButtons: maxButtons,
       visiblePages: visiblePages,
-      startPage: startPage
+      startPage: startPage,
+      searchQuery: searchQuery,
+      searchIngredients: searchIngredients
     });
   });
 

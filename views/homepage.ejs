@@ -1,6 +1,18 @@
 <%- include("templates/header") %> 
-
-    <p>Welcome to reciAPP's homepage </p>
+  <div class="text-center mb-5 mt-5">
+    <h3>Welcome to your personalized recipe page!</h3>
+  </div>
+    
+    <form class="form-inline" action="/home" method="GET">
+      <div class="form-group">
+        <label for="search_input">Start adding some ingredients here. You can add as many as you like and We will only show you recipes that contain those ingredients.</label>
+        <input type="text" class="form-control mb-3" id="search_input" name="q" value="<%= searchQuery %>" placeholder="ingredients go here, separated by commas.">
+        <input class="mb-3" type="hidden" id="search_query" name="search" value="<%= searchQuery %>">
+      </div>
+      <button type="submit" class="btn btn-primary mb-3">Search</button>
+    </form>
+    
+    
 
 <% for(let i=0; i < recipe.length; i++) { %>
 <div class="card shadow-sm">
@@ -22,40 +34,44 @@
 
 <div class="pagination">
   <% if (currentPage > 1) { %>
-    <a class="page-link" href="/home?page=<%= currentPage - 1 %>">Previous</a>
+    <button id="prev-button" class="btn btn-primary" type="button">Previous</button>
+
+
   <% } %>
 
   <% if (startPage > 1) { %>
-    <a class="page-link" href="/home?page=<%= startPage - 1 %>">...</a>
+    <a class="page-link" href="/home?q=<%= searchQuery %>&page=<%= startPage - 1 %>">...</a>
   <% } %>
 
   <% for (let i = 0; i < pages.length; i++) { %>
     <% if (currentPage === pages[i]) { %>
       <span class="page-link current-page"><%= pages[i] %></span>
     <% } else { %>
-      <a class="page-link" href="/home?page=<%= pages[i] %>"><%= pages[i] %></a>
+      <a class="page-link" href="/home?q=<%= searchQuery %>&page=<%= pages[i] %>"><%= pages[i] %></a>
     <% } %>
   <% } %>
 
   <% if (currentPage < pageCount) { %>
-    <a class="page-link" href="/home?page=<%= currentPage + 1 %>">Next</a>
+<button id="next-button" class="btn btn-primary" type="button">Next</button>
+
   <% } %>
 </div>
 
+
 <script>
-  
-  // Function to update the page URL with the specified page number
-  function updatePage(page) {
+  function updatePage(page, searchQuery) {
     const url = new URL(window.location.href);
     url.searchParams.set("page", page);
+    url.searchParams.set("search", searchQuery);
     window.location.href = url.toString();
   }
 
   // Function to handle click event on "Previous" button
   function goToPreviousPage() {
     const currentPage = parseInt("<%= currentPage %>");
+    const searchQuery = "<%= searchQuery %>";
     if (currentPage > 1) {
-      updatePage(currentPage - 1);
+      updatePage(currentPage - 1, searchQuery);
     }
   }
 
@@ -63,17 +79,19 @@
   function goToNextPage() {
     const currentPage = parseInt("<%= currentPage %>");
     const pageCount = parseInt("<%= pageCount %>");
+    const searchQuery = "<%= searchQuery %>";
     if (currentPage < pageCount) {
-      updatePage(currentPage + 1);
+      updatePage(currentPage + 1, searchQuery);
     }
   }
-// Add click event listeners to the "Previous" and "Next" buttons
+
+  // Add click event listeners to the "Previous" and "Next" buttons
   const prevButton = document.getElementById("prev-button");
   const nextButton = document.getElementById("next-button");
   prevButton.addEventListener("click", goToPreviousPage);
-  nextButton.addEventListener("click", goToNextPage);    
- 
+  nextButton.addEventListener("click", goToNextPage);
 </script>
+
 
 
 <%- include("templates/footer") %>
