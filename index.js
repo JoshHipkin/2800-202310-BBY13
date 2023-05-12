@@ -132,8 +132,11 @@ app.post('/createUser', async (req, res) => {
     //Hashing Password
     var hashedPassword = await bcrypt.hash(password, 12);
 
+    const allergens = [];
+    const diet = [];
+
     // Adds user to database
-    await userCollection.insertOne({ username: username, email: email, password: hashedPassword });
+    await userCollection.insertOne({ username: username, email: email, password: hashedPassword, allergens: allergens, diet: diet });
 
     //authenticating session
     req.session.authenticated = true;
@@ -302,13 +305,13 @@ app.post("/savePreferences", async (req, res) => {
     //Creating a new array without any empty strings
     const filteredAllergies = allergies.filter((allergy) => allergy !== '');
     try {
+        const updateQuery = { $push: { allergens: { $each: filteredAllergies} } };
+        if (diet.length > 0) {
+            updateQuery.$push.diet = diet;
+        } 
         await userCollection.updateOne(
             { email: req.session.email },
-            { $push: {
-                allergens: { $each: filteredAllergies },
-                diet: diet
-            }
-        }
+            updateQuery
         );
         res.render('preferencesSaved');
     } catch (err) {
