@@ -14,13 +14,14 @@ body {
   }
   
   .card {
+
     background-color: rgba(255, 255, 255, 0.8);
     padding: 40px;
     border-radius: 10px;
     text-align: center;
     box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
     max-width: 600px;
-    width: 90%;
+    width: 90vw;
     margin: 0 auto;
   }
   .card-title {
@@ -33,7 +34,9 @@ body {
     margin-bottom: 20px;
   }
   
-  .btn {
+  /* .btn {
+    width: 10vw;
+    height: 6vh;
     background-color: #00784a;
     color: white;
     padding: 14px 20px;
@@ -42,15 +45,14 @@ body {
     cursor: pointer;
     margin-right: 10px;
     margin-bottom: 10px;
-  }
+  } */
   
-  .btn:hover {
+  /* .btn:hover {
     background-color: #00784a;
-  }
-  @media only screen and (max-width: 1000px) {
+  } */
+  /* @media only screen and (max-width: 1000px) {
     .card {
       width: 80%;
-      height: 40%;
     }
     
     .card-body {
@@ -67,8 +69,8 @@ body {
       height: 50px;
     }
     
-    .btn-primary {
+    /* .btn-primary {
       font-size: 1.2rem;
       padding: 12px 25px;
-    }
-  }
+    } */
+  
