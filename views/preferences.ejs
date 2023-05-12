@@ -1,0 +1,78 @@
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a href="/profile" class="nav-link" id="profile-info">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a href="/profile/preferences" class="nav-link active" id="preferences" >Preferences</a>
+    </li>
+</ul>
+<form action="/savePreferences" method="post">
+<div class="container mt-5">
+    <h3 class="mb-3">Allergies / unwanted ingredients</h3>
+    <p>*We will do our best to not show any recipes with these raw ingredients. ingredients that are not spelled the exact same as the way you type here may still show up
+      and other procucts that contain these ingredients may also show up.
+    </p>
+    <div id="allergies-container">
+      <div class="form-group mb-2">
+        <input type="text" class="form-control" name="allergy" placeholder="Enter an allergy">
+      </div>
+      <div class="form-group mb-2">
+        <input type="text" class="form-control" name="allergy" placeholder="Enter another allergy">
+      </div>
+    </div>
+    <button type="button" class="btn btn-primary mb-3" id="add-allergy">Add another allergy</button>
+    
+    <h3 class="mb-3">Dietary Restrictions</h3>
+    <p>You may leave this blank if you have an open diet.</p>
+    <div class="form-group mb-3">
+      <select class="form-control" name="diet">
+        <option value="">Select a dietary restriction</option>
+        <option value="gluten-free">Gluten-free</option>
+        <option value="vegan">Vegan</option>
+        <option value="vegetarian">Vegetarian</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary mb-3" id="submit">Save</button>
+</form>
+    
+    <h3 class="mb-3">Your Recipe filters</h3>
+    <div class="text-center">
+        <h3 class="mt-3">Allergens</h3>
+        <ul class="list-group">
+            <% for (let i = 0; i < user.allergens.length; i++) { %>
+                <%- include('templates/savedAllergens', {allergen: user.allergens[i]} ) %>
+            <% } %>
+        </ul>
+    </div>
+
+    <div class="text-center">
+        <h3 class="mt-3">Diet restrictions</h3>
+        <ul class="list-group">
+            <% for (let i = 0; i < user.diet.length; i++) { %>
+              <% if (!(user.diet[i] == '')) { %>
+                <%- include('templates/savedDiet', {diet: user.diet[i]} ) %>
+             <% } %>
+                
+            <% } %>
+        </ul>
+    </div>
+</div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+    var addAllergyBtn = document.getElementById('add-allergy');
+    addAllergyBtn.addEventListener('click', function() {
+      var allergiesContainer = document.getElementById('allergies-container');
+      var newAllergyDiv = document.createElement('div');
+      newAllergyDiv.classList.add('form-group', 'mb-2');
+      var newAllergyInput = document.createElement('input');
+      newAllergyInput.type = 'text';
+      newAllergyInput.classList.add('form-control');
+      newAllergyInput.name = 'allergy';
+      newAllergyInput.placeholder = 'Enter another allergy';
+      newAllergyDiv.appendChild(newAllergyInput);
+      allergiesContainer.appendChild(newAllergyDiv);
+    });
+  });
+  </script>

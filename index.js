@@ -26,6 +26,8 @@ const recipesCollection = database.db(mongodb_database).collection("recipes");
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static('scripts'));
+
 
 var mongoStore = MongoStore.create({
     mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/Recipal`,
@@ -276,19 +278,73 @@ app.get("/profile", async (req, res) => {
         return;
     }
     const email = req.session.email;
-    const result = await userCollection.find({ email: email }).project({ password: 1, _id: 1 }).toArray();
-    let password = result[0].password;
-    let id = result[0]._id;
-    let user = [id, email, password];
+    const result = await userCollection.find({ email: email }).project({ password: 1, _id: 1, email: 1 }).toArray();
 
-    res.render('profile', { user: user });
+    res.render('profile', { tabContent: 'profile-info', user: result });
 });
 
+app.get("/profile/preferences", async (req, res) => {
+    if (!req.session.authenticated) {
+        res.redirect("/login");
+        return;
+    }
+    const email = req.session.email;
+    const result = await userCollection.find({email: email})
+    .project({allergens: 1, diet: 1, username: 1})
+    .toArray();
+    res.render('profile', {tabContent: 'preferences', user: result[0]});
+});
 
+app.post("/savePreferences", async (req, res) => {
+    const allergies = req.body.allergy;
+    const diet = req.body.diet;
+    console.log(allergies);
+    //Creating a new array without any empty strings
+    const filteredAllergies = allergies.filter((allergy) => allergy !== '');
+    try {
+        await userCollection.updateOne(
+            { email: req.session.email },
+            { $push: {
+                allergens: { $each: filteredAllergies },
+                diet: diet
+            }
+        }
+        );
+        res.render('preferencesSaved');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Failed to save preferences");
+    }
+});
 
-// display recipes and limit recipes on homepage 
+app.post("/preferences/delete", async (req, res) => {
+    const email = req.session.email;
+    const type = req.body.type;
+    const value = req.body.value;
+    let updateField = null;
+
+    if (type === "allergens") {
+        updateField = { $pull: { allergens: value} };
+    } else if (type === "diet") {
+        updateField = { $pull: { diet: value } };
+    } else {
+        res.status(400).send("Invalid type parameter");
+        return;
+    }
+
+    try {
+        await userCollection.updateOne({ email: email }, updateField);
+        res.redirect("/profile/preferences");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Failed to delete value");
+    }
+});
 
 app.get("/home", async (req, res) => {
+    const user = await userCollection.findOne({ email: req.session.email});
+    const allergens = user.allergens;
+    const diet = user.diet;    
     const searchQuery = req.query.q;
     const searchIngredients = searchQuery ? searchQuery.split(",") : [];
     const page = parseInt(req.query.page) || 1; // Get the page number from the query parameter
@@ -296,9 +352,41 @@ app.get("/home", async (req, res) => {
     const recipesPerPage = 20;
     const skip = (page - 1) * recipesPerPage;
   
-    const query = searchIngredients.length > 0
-    ? { ingredients: { $all: searchIngredients.map(ingredient => new RegExp(ingredient, "i")) } }
-    : {};
+    const query = {};
+
+  
+
+    if (diet && diet.length > 0) {
+        const dietQuery = diet.map(tag => ({ search_terms: { $regex: new RegExp(tag, "i") } }));
+        query.$and = dietQuery;
+      }
+      console.log(query);
+      
+      if (allergens && allergens.length > 0) {
+        query.ingredients = { $nin: allergens };
+      }
+console.log(query);
+if (searchIngredients.length > 0) {
+    query.$and = [
+      {
+        $or: [
+          {
+            ingredients: {
+              $all: searchIngredients.map((ingredient) => new RegExp(ingredient, "i")),
+            },
+          },
+          {
+            name: {
+              $regex: new RegExp(searchIngredients.join("|"), "i"),
+            },
+          },
+        ],
+      },
+    ];
+  }
+  
+console.log(query);
+
 
     const countPromise = recipesCollection.countDocuments(query);
 

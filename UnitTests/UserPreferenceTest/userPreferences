@@ -1,0 +1,3 @@
+Ingredient and diet restrictions successfully populate the user database.
+multiple different combinations of entries work.
+only one dietary restriction may be entered at once, and a user can add as many allergens/ unwanted ingredients at a time.
