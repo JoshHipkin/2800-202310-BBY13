@@ -6,6 +6,13 @@ const Joi = require("joi");
 const saltRounds = 12;
 const bcrypt = require("bcrypt");
 const MongoStore = require("connect-mongo");
+const multer = require('multer');
+// configure multer for handling file uploads
+const upload = multer({ dest: 'uploads/' });
+const fs = require("fs");
+const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
+const stub = ClarifaiStub.grpc();
+
 
 
 
@@ -15,6 +22,7 @@ const mongodb_password = process.env.MONGODB_PASSWORD;
 const mongodb_database = process.env.MONGODB_DATABASE;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
+const clarifai_secret = process.env.CLARIFAI_SECRET
 
 const app = express();
 const port = process.env.PORT || 3090;
@@ -444,6 +452,66 @@ app.get("/home", async (req, res) => {
 
   
 
+
+
+
+app.get("/imageUpload", async (req, res) => {
+    res.render('imageUpload');
+    
+});
+
+
+
+
+    // This will be used by every Clarifai endpoint call
+    const metadata = new grpc.Metadata();
+    metadata.set("authorization", "Key " + clarifai_secret);
+
+app.post('/process-image', upload.single('image'), (req, res) => {
+
+    console.log("1");
+    const imageFile = req.file; // get the image file from the request
+    console.log(imageFile);
+    console.log(imageFile.path);
+
+    const IMAGE_FILE_LOCATION = imageFile.path;
+    const imageBytes = fs.readFileSync(IMAGE_FILE_LOCATION);
+    stub.PostModelOutputs(
+      {
+        user_app_id: {
+            "user_id": 'clarifai',
+            "app_id": 'main'
+        },
+        model_id: "food-item-recognition",
+        inputs: [
+            { data: { image: { base64: imageBytes } } }
+        ]
+      },
+      metadata,
+      (err, response) => {
+        if (err) {
+          console.log("Error3: " + err);
+          res.status(500).send('Error processing image');
+          return;
+        }
+  
+        if (response.status.code !== 10000) {
+          console.log("Received failed status: " + response.status.description + "\n" + response.status.details);
+          res.status(500).send('Error processing image');
+          return;
+        }
+        const output = response.outputs[0];
+        console.log("Predicted concepts, with confidence values:");
+        for (const concept of output.data.concepts) {
+            console.log(concept.name + " " + concept.value);
+        }
+        const concepts = output.data.concepts.map(concept => ({name: concept.name, value: concept.value}));
+        res.json(concepts);
+      }
+    );
+  });
+
+      
   app.get("*", (req, res) => {
     res.status(404);
     res.render('404');
