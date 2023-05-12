@@ -1,0 +1,29 @@
+<%- include("templates/header") %> 
+<% var question = ""; %>
+<% if (account.at(0) == 1) {
+    question = "What is the middle name of your youngest child?";
+} %>
+<% if (account.at(0) == 2) {
+    question = "What is name of your first stuffed animal?";
+} %>
+<% if (account.at(0) == 3) {
+    question = "What city/town did your mother and father meet?";
+} %>
+<div class="container">
+    <h1>Security Question </h1>
+    <form action="/securityPasswordVerify" method="post">
+        <fieldset class="mb-3" id="personalInfoFields" disabled>
+            <div class="form-group">
+                <label>User ID</label>
+                <input type="text" id="IDProfile" class="form-control" value="<%-question%>">
+            </div>
+        </fieldset>
+        <div class="form-group">
+            <label for="floatingPassword">Security Question Answer</label>
+            <input name='password' type='password' class="form-control" id="floatingPassword" placeholder="Answer">
+        </div>
+        <button type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>
+    </form>
+</div>
+
+<%- include("templates/footer") %>

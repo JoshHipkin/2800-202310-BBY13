@@ -1,0 +1,3 @@
+Successfully saves security question and answer to database
+Successfully displays correct question for user email
+Successfully changes user password in database if verified

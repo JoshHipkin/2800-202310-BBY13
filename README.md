@@ -14,6 +14,22 @@
 4. download all required node packages by typing 'npm i' into the console.
 5. run using 'node index.js' OR 'nodemon index.js'.
 
+# Conrad_LoginSecurityRecovery
+Created a feature to allow the user to reset their password if they had forgotten their user ID. 
+
+- Added username to signup page and store to database (15 mins)
+- Created page for security.ejs to allow user to type security password with bootstrap (30 mins)
+- Researching mongodb methods (15 mins)
+- Connecting security password to database (1 hr)
+- Troubleshooting select menu for security question (1.5 hr)
+- Connecting security question to database (15 mins)
+- Creating forgot.ejs and reset.ejs for user to reset password (30 mins)
+- Fixing ejs parameter array that reads to reset.ejs(15 mins)
+- Fixing proper security question being read to fieldset in reset.ejs (45 mins)
+- Writing securityPasswordVerify post to verify password and to properly display (30 mins)
+- Created 404 page (10 mins)
+- Created ability to change password after verifying user through security question and save to database (30 mins)
+
 # Conrad_PopulatingProfilePage
 (May 10, 2023)
 Populated profile page that auto fills the profile page with user information drawn from the database. Changed  the 

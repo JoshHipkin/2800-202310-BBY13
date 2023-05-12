@@ -1,0 +1,26 @@
+<%- include("templates/header") %>
+    <main class="form-signin w-100 m-auto">
+        <div class="d-flex gap-2 justify-content-center py-5">
+            <form action="/securityRecovery" method="post">
+                <fieldset>
+                    <legend>Security Recovery</legend>
+                    <p>Remember this to recover your account</p>
+                    <div class="mb-3">
+                        <label for="securityQuestionText" class="form-label">Security Question</label>
+                        <select name="securityQuestion" id="securityQuestion" class="form-select form-select-sm">
+                            <option value="1">What is the middle name of your youngest child?</option>
+                            <option value="2">What is name of your first stuffed animal?</option>
+                            <option value="3">What city/town did your mother and father meet?</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="securityPassword" class="form-label">Security Password</label>
+                        <input name="securityPassword" type="text" class="form-control form-select-sm" placeholder="Security Password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </fieldset>
+            </form>
+        </div>
+    </main>
+
+    <%- include("templates/footer") %>
