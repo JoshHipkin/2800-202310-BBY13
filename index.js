@@ -87,7 +87,7 @@ app.post('/loggingin', async (req, res) => {
         req.session.email = email;
         req.session.cookie.maxAge = expire;
 
-        res.redirect('/');
+        res.redirect('/home');
         return;
     }
     else {
@@ -98,7 +98,7 @@ app.post('/loggingin', async (req, res) => {
 
 app.get('/logout', (req, res) => {
     req.session.destroy();
-    res.render("login");
+    res.redirect("/");
 });
 
 app.get("/signup", (req, res) => {
@@ -188,7 +188,7 @@ app.post("/securityRecovery", async (req, res) => {
     await userCollection.updateOne({email: req.session.email}, {$set: {securityPassword: hashedPassword}});
     await userCollection.updateOne({email: req.session.email}, {$set: {securityQuestion: securityQuestion}});
 
-    res.redirect('/home');
+    res.redirect('/');
 });
 
 app.get("/forgot", async (req, res) => {
