@@ -7,6 +7,8 @@ const saltRounds = 12;
 const bcrypt = require("bcrypt");
 const MongoStore = require("connect-mongo");
 
+
+
 const mongodb_host = process.env.MONGODB_HOST;
 const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
@@ -338,7 +340,30 @@ app.get("/home", async (req, res) => {
       searchIngredients: searchIngredients
     });
   });
+
+  const { ObjectId } = require('mongodb');
+
+  app.get("/recipe", async (req, res) => {
+    const recipeId = req.query.id;
   
+    const recipeData = await recipesCollection.findOne({ _id: new ObjectId(recipeId) });
+
+  
+    console.log(recipeData);
+  
+    if (!recipeData) {
+      res.send("Recipe not found");
+      return;
+    }
+  
+    
+    console.log(recipeData);
+  
+    res.render("recipe", { recipe: recipeData });
+  });
+
+  
+
   app.get("*", (req, res) => {
     res.status(404);
     res.render('404');
