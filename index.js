@@ -361,34 +361,25 @@ app.get("/home", async (req, res) => {
 
   
 
-    if (diet && diet.length > 0) {
-        const dietQuery = diet.map(tag => ({ search_terms: { $regex: new RegExp(tag, "i") } }));
-        query.$and = dietQuery;
+    if (searchIngredients.length > 0) {
+        const ingredientQueries = searchIngredients.map(ingredient => (
+          { ingredients: { $regex: new RegExp(ingredient, "i") } }
+        ));
+        query.$and = [{ $or: ingredientQueries }];
       }
-      console.log(query);
       
       if (allergens && allergens.length > 0) {
-        query.ingredients = { $nin: allergens };
+        const allergenQuery = allergens.map(allergen => ({ ingredients: { $not: new RegExp(allergen, "i") } }));
+        query.$and = query.$and || []; // Create an empty array if $and doesn't exist
+        query.$and.push({ $or: allergenQuery });
       }
-console.log(query);
-if (searchIngredients.length > 0) {
-    query.$and = [
-      {
-        $or: [
-          {
-            ingredients: {
-              $all: searchIngredients.map((ingredient) => new RegExp(ingredient, "i")),
-            },
-          },
-          {
-            name: {
-              $regex: new RegExp(searchIngredients.join("|"), "i"),
-            },
-          },
-        ],
-      },
-    ];
-  }
+      
+      if (diet && diet.length > 0) {
+        const dietQuery = diet.map((tag) => ({ search_terms: { $regex: new RegExp(tag, "i") } }));
+        query.$and = query.$and || []; // Create an empty array if $and doesn't exist
+        query.$and.push({ $and: dietQuery });
+      }
+      
   
 console.log(query);
 
@@ -440,7 +431,6 @@ console.log(query);
     const recipeData = await recipesCollection.findOne({ _id: new ObjectId(recipeId) });
 
   
-    console.log(recipeData);
   
     if (!recipeData) {
       res.send("Recipe not found");
