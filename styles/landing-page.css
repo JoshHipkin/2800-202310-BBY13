@@ -5,7 +5,7 @@ body {
     background-size: cover;
   }
   
-  .container {
+  /* .container {
     font-size: 18pt;
     height: 100vh;
     display: flex;
@@ -32,7 +32,7 @@ body {
     max-width: 100%;
     height: auto;
     margin-bottom: 20px;
-  }
+  } */
   
   /* .btn {
     width: 10vw;
