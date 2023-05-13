@@ -360,15 +360,22 @@ app.get("/home", async (req, res) => {
     const allergens = user.allergens;
     const diet = user.diet;    
     const searchQuery = req.query.q;
+    const searchTerm = req.query.q;
     const searchIngredients = searchQuery ? searchQuery.split(",") : [];
-    const page = parseInt(req.query.page) || 1; // Get the page number from the query parameter
+    const page = parseInt(req.query.page) || 1;
   
     const recipesPerPage = 20;
     const skip = (page - 1) * recipesPerPage;
   
     const query = {};
 
-  
+ 
+    if (searchTerm && searchTerm.length > 0) {
+        const recipeQuery = { name: { $regex: new RegExp(searchTerm, "i") } };
+        query.$and = query.$and || [];
+        query.$and.push(recipeQuery);
+      }
+
 
     if (searchIngredients.length > 0) {
         const ingredientQueries = searchIngredients.map(ingredient => (
@@ -380,13 +387,13 @@ app.get("/home", async (req, res) => {
       
       if (allergens && allergens.length > 0) {
         const allergenQuery = allergens.map(allergen => ({ ingredients: { $not: new RegExp(allergen, "i") } }));
-        query.$and = query.$and || []; // Create an empty array if $and doesn't exist
+        query.$and = query.$and || [];
         query.$and.push({ $or: allergenQuery });
       }
       
       if (diet && diet.length > 0) {
         const dietQuery = diet.map((tag) => ({ search_terms: { $regex: new RegExp(tag, "i") } }));
-        query.$and = query.$and || []; // Create an empty array if $and doesn't exist
+        query.$and = query.$and || [];
         query.$and.push({ $and: dietQuery });
       }
       
