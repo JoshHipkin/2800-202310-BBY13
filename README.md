@@ -4,3 +4,4 @@ Team Members:
 - Jake Robbins
 - Conrad Christian
 - Josh Hipkin
+- Emily Yao
