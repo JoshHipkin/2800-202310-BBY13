@@ -561,7 +561,6 @@ app.get("/imageUpload", async (req, res) => {
 
 app.post('/process-image', upload.single('image'), (req, res) => {
 
-    console.log("1");
     const imageFile = req.file; // get the image file from the request
     console.log(imageFile);
     console.log(imageFile.path);
@@ -592,18 +591,28 @@ app.post('/process-image', upload.single('image'), (req, res) => {
           res.status(500).send('Error processing image');
           return;
         }
+
+        //no errors... continue
         const output = response.outputs[0];
         console.log("Predicted concepts, with confidence values:");
         for (const concept of output.data.concepts) {
             console.log(concept.name + " " + concept.value);
         }
         const concepts = output.data.concepts.map(concept => ({name: concept.name, value: concept.value}));
-        res.json(concepts);
+          
+        // Delete the temporary file
+        fs.unlink(imageFile.path, (error) => {
+            if (error) {
+            console.error('Error deleting file:', error);
+            }
+        });
+        // send the results back to the client
+         res.json(concepts);
       }
     );
   });
       
-  app.get("*", (req, res) => {
+app.get("*", (req, res) => {
     res.status(404);
     res.render('404');
 }); 
