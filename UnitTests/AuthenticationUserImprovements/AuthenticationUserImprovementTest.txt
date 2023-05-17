@@ -1,0 +1,6 @@
+Successfully changes headers depending on the validation and process though the site 
+Successfully reads function properly to validate session and authentication
+Successfully redirects through signup process more effortlessly for user
+Successfully implemented continue to homepage without login feature
+Successfully implemented prompts to notify invalid signup or login
+Successfully only saves one unique email user to database
