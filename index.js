@@ -229,16 +229,14 @@ app.get("/signupAllergens", (req, res) => {
 
 app.post("/userAllergens", async (req, res) => {
     const allergies = req.body.allergy;
+    const filteredAllergies = allergies.filter((allergy) => allergy !== '');
     try {
         const updateQuery = { $push: { allergens: { $each: filteredAllergies} } };
-        if (diet.length > 0) {
-            updateQuery.$push.diet = diet;
-        } 
         await userCollection.updateOne(
             { email: req.session.email },
             updateQuery
         );
-        res.redirect('/');
+        res.redirect('/home');
     } catch (err) {
         console.error(err);
         res.status(500).send("Failed to save preferences");
