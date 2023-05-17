@@ -1,23 +1,26 @@
 
-<%- include("templates/header") %> 
-
+<% if(isValidSession(req)) { %>
+    <%- include("templates/header") %> 
+    <% } else { %>
+      <%- include("templates/headerBeforeLoginHome") %> 
+    <% } %>
 <h3 class="d-flex justify-content-center">image upload</h3>
 
 
 
 <div id="image-box" class="card d-flex justify-content-center">
-    <img id="image-preview" src="" alt="image preview" style="width: 100%; height: 100%; object-fit: contain;">
+    <img id="image-preview" src="" alt="" style="width: 100%; height: 100%; object-fit: contain; display:hidden">
 
     <div id="upload-button" class="d-flex justify-content-center">
-
         <input type="file" name="image" id="image-upload" style="display:none" accept="image/*" capture="environment">
-        <button class="button" id="" style="padding:10px" type="button"
+        <button class="button" id="" style="padding:10px;font-size:30pt" type="button"
         onclick="document.getElementById('image-upload').click()"><span> +
         </span></button>
 
     <button id="analyze-button" style="display: none;" onclick="processImage()">Analyze Photo</button>
     </div>
 </div>
+<img id="loading" src="/public/images/loading-gif.gif" alt="" style="width: 20vw; height: auto; object-fit: contain; display:none">
 <h3 class="d-flex justify-content-center">Ingredients:</h3>
 <div id="ingredients-box">
 </div>
@@ -45,15 +48,30 @@
     function listenImageSelect() {
         console.log("listening for image select");
         var imgInput = document.getElementById("image-upload"); 
+        var preview = document.getElementById("image-preview");
 
         imgInput.addEventListener('change', function (e) {
             console.log("image selected");
             ImageFile = e.target.files[0];   //Local variable
             const blob = URL.createObjectURL(ImageFile);
-            document.getElementById("image-preview").src = blob;
+            preview.src = blob;
+            preview.style.display = "block";
             document.getElementById("analyze-button").style.display = "block";
         });
     } listenImageSelect();
+
+        // add 'Search by ingredient(s)' button
+        const searchButton = document.createElement("button");
+        searchButton.innerHTML = "Search by ingredient(s)";
+        searchButton.style.display = "none";
+        document.getElementById("searchButton-box").appendChild(searchButton);
+
+        // add event listener to send GET request with ingredients array
+        searchButton.addEventListener("click", function() {
+            let ingredientsString = ingredientsArr.join(",");
+            let url = "/home?q=" + ingredientsString;
+            window.location.href = url;
+        });
 
 
     function processImage() {
@@ -61,6 +79,10 @@
             return;
         }
         
+
+        // show loading gif
+        document.getElementById("loading").style.display = "block";
+
         const formData = new FormData(); // create a new form data object
         formData.append('image', ImageFile); // add the image file to the form data
 
@@ -74,6 +96,7 @@
             // handle the response from the server here
             console.log(data);
             populateIngredients(data);
+            document.getElementById("loading").style.display = "none";
         })
         .catch(error => {
             console.error("ERROR!!!"+error);
@@ -109,17 +132,7 @@
 
         console.log(ingredientsArr);
 
-        // add 'Search by ingredient(s)' button
-        let searchButton = document.createElement("button");
-        searchButton.innerHTML = "Search by ingredient(s)";
-        document.getElementById("searchButton-box").appendChild(searchButton);
-
-        // add event listener to send GET request with ingredients array
-        searchButton.addEventListener("click", function() {
-            let ingredientsString = ingredientsArr.join(",");
-            let url = "/home?q=" + ingredientsString;
-            window.location.href = url;
-        });
+        searchButton.style.display = "block";
 
     }
 

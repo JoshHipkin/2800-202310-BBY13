@@ -13,10 +13,11 @@ body {
     justify-content: center;
   }
   
-  .px-4.py-5.my-5.text-center {
-    margin-top: 200px;
-    color: white;
-    padding: 200px;
+  .card {
+
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 40px;
+    border-radius: 10px;
     text-align: center;
   }
   .card-title {
@@ -29,7 +30,9 @@ body {
     margin-bottom: 20px;
   }
   
-  .btn {
+  /* .btn {
+    width: 10vw;
+    height: 6vh;
     background-color: #00784a;
     color: white;
     padding: 14px 20px;
@@ -38,15 +41,14 @@ body {
     cursor: pointer;
     margin-right: 10px;
     margin-bottom: 10px;
-  }
+  } */
   
-  .btn:hover {
+  /* .btn:hover {
     background-color: #00784a;
-  }
-  @media only screen and (max-width: 1000px) {
+  } */
+  /* @media only screen and (max-width: 1000px) {
     .card {
       width: 80%;
-      height: 40%;
     }
     
     .card-body {
@@ -63,8 +65,8 @@ body {
       height: 50px;
     }
     
-    .btn-primary {
+    /* .btn-primary {
       font-size: 1.2rem;
       padding: 12px 25px;
-    }
-  }
+    } */
+  

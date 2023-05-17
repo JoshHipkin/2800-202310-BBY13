@@ -1,0 +1,40 @@
+<%- include("templates/header") %> 
+    <main class="form-signin w-100 m-auto">
+        <div class="d-flex gap-2 justify-content-center py-5">
+            <form action="/userAllergens" method="post" class="text-center">
+                <h3 class="h3 mb-3 fw-normal">Add any extra allergens or unwanted ingredients</h3>
+                <p style="color: red">*Warning: There may still be some items in recipes that contain these ingredients. 
+                    Recipes will only be filtered out if the individual ingredient is listed
+                </p>
+                <div id="allergies-container">
+          <div class="form-group mb-2">
+            <input type="text" class="form-control" name="allergy" placeholder="Enter an allergy">
+          </div>
+          <div class="form-group mb-2">
+            <input type="text" class="form-control" name="allergy" placeholder="Enter another allergy">
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary mb-3" id="add-allergy">Add another allergy</button>
+                  <button type="submit" class="btn btn-primary mb-3" id="submit">Finish</button>
+            </form>
+        </div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    
+        var addAllergyBtn = document.getElementById('add-allergy');
+        addAllergyBtn.addEventListener('click', function() {
+          var allergiesContainer = document.getElementById('allergies-container');
+          var newAllergyDiv = document.createElement('div');
+          newAllergyDiv.classList.add('form-group', 'mb-2');
+          var newAllergyInput = document.createElement('input');
+          newAllergyInput.type = 'text';
+          newAllergyInput.classList.add('form-control');
+          newAllergyInput.name = 'allergy';
+          newAllergyInput.placeholder = 'Enter another allergy';
+          newAllergyDiv.appendChild(newAllergyInput);
+          allergiesContainer.appendChild(newAllergyDiv);
+        });
+      });
+      </script>
+<%- include("templates/footer") %>

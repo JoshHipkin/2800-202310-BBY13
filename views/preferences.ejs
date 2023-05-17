@@ -8,9 +8,20 @@
 </ul>
 <form action="/savePreferences" method="post">
 <div class="container mt-5">
+  <h3 class="mb-3">Dietary Restrictions</h3>
+  <div class="form-group mb-3">
+    <label for="dietDrop">Select a dietary restriction</label>
+    <select class="form-select" id="dietDrop" name="diet">
+      <option value="">None</option>
+      <option value="gluten-free">Gluten-free</option>
+      <option value="vegan">Vegan</option>
+      <option value="vegetarian">Vegetarian</option>
+    </select>
+  </div>
+
     <h3 class="mb-3">Allergies / unwanted ingredients</h3>
-    <p>*We will do our best to not show any recipes with these raw ingredients. ingredients that are not spelled the exact same as the way you type here may still show up
-      and other procucts that contain these ingredients may also show up.
+    <p style="color: red">*Warning: There may still be some items in recipes that contain these ingredients. 
+      Recipes will only be filtered out if the individual ingredient is listed
     </p>
     <div id="allergies-container">
       <div class="form-group mb-2">
@@ -22,16 +33,7 @@
     </div>
     <button type="button" class="btn btn-primary mb-3" id="add-allergy">Add another allergy</button>
     
-    <h3 class="mb-3">Dietary Restrictions</h3>
-    <p>You may leave this blank if you have an open diet.</p>
-    <div class="form-group mb-3">
-      <select class="form-control" name="diet">
-        <option value="">Select a dietary restriction</option>
-        <option value="gluten-free">Gluten-free</option>
-        <option value="vegan">Vegan</option>
-        <option value="vegetarian">Vegetarian</option>
-      </select>
-    </div>
+    
     <button type="submit" class="btn btn-primary mb-3" id="submit">Save</button>
 </form>
     

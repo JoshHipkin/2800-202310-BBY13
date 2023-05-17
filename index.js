@@ -1,9 +1,10 @@
+
+//All reqiure statements
 require("dotenv").config();
 require("./scripts/utils.js");
 const session = require("express-session");
 const express = require("express");
 const Joi = require("joi");
-const saltRounds = 12;
 const bcrypt = require("bcrypt");
 const MongoStore = require("connect-mongo");
 const multer = require('multer');
@@ -12,10 +13,11 @@ const upload = multer({ dest: 'uploads/' });
 const fs = require("fs");
 const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
 const stub = ClarifaiStub.grpc();
+// Salt rounds for bcrypt password hashing
+const saltRounds = 12;                                          
 
 
-
-
+/* Secrets */
 const mongodb_host = process.env.MONGODB_HOST;
 const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
@@ -23,23 +25,32 @@ const mongodb_database = process.env.MONGODB_DATABASE;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 const clarifai_secret = process.env.CLARIFAI_SECRET
+/*  End Secrets */
 
+//Express
 const app = express();
+//hosting port
 const port = process.env.PORT || 3090;
 
-const expire = 240 * 60 * 60 * 1000;
+//session expire time
+const expire = 60 * 60 * 60 * 1000;
 
+// mongodb connection
 var { database } = include("dbConnection");
 
+//accessing user collection
 const userCollection = database.db(mongodb_database).collection("users");
+//accessing recipe collection
 const recipesCollection = database.db(mongodb_database).collection("recipes");
 
+/* setting up file usage */
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
 app.use("/public/images/", express.static("./public/images"));
 app.use("/styles", express.static("./styles"));
-app.use(express.static('scripts'));
+app.use(express.static('./scripts'));
 
+// use for session storage
 var mongoStore = MongoStore.create({
     mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/Recipal`,
     crypto: {
@@ -47,7 +58,20 @@ var mongoStore = MongoStore.create({
     },
 });
 
+function isValidSession(req) {
+    if (req.session.authenticated) {
+      return true;
+    }
+    return false;
+  }
+  
+function sessionValidation(req, res) {
+    if (!(isValidSession(req))) {
+      res.redirect('/login');
+    }
+  }
 
+// use node session
 app.use(session({
     secret: node_session_secret,
     store: mongoStore,
@@ -55,14 +79,17 @@ app.use(session({
     resave: true
 }));
 
+// landing page
 app.get("/", (req, res) => {
     res.render('index');
 });
 
+//login page
 app.get("/login", (req, res) => {
     res.render('login');
 });
 
+// processing login request
 app.post('/loggingin', async (req, res) => {
     var email = req.body.email;
     var password = req.body.password;
@@ -71,7 +98,7 @@ app.post('/loggingin', async (req, res) => {
     const validationResult = schema.validate(email);
     if (validationResult.error != null) {
         console.log(validationResult.error);
-        res.redirect('login');
+        res.render('login-invalid');
         return;
     }
 
@@ -79,7 +106,7 @@ app.post('/loggingin', async (req, res) => {
 
     if (result.length != 1) {
         console.log("Email not found");
-        res.redirect('/login');
+        res.render('login-invalid');
         return;
     }
     if (await bcrypt.compare(password, result[0].password)) {
@@ -87,24 +114,27 @@ app.post('/loggingin', async (req, res) => {
         req.session.email = email;
         req.session.cookie.maxAge = expire;
 
-        res.redirect('/');
+        res.redirect('home');
         return;
     }
     else {
-        res.redirect('/login');
+        res.render('login-invalid');
         return;
     }
 });
 
+// perform logout, and delete session
 app.get('/logout', (req, res) => {
     req.session.destroy();
-    res.render("login");
+    res.redirect("/");
 });
 
+//sign up page
 app.get("/signup", (req, res) => {
     res.render('signup');
 });
 
+//Process new user signup
 app.post('/createUser', async (req, res) => {
     var username = req.body.username;
     var email = req.body.email;
@@ -145,9 +175,14 @@ app.post('/createUser', async (req, res) => {
 
     const allergens = [];
     const diet = [];
+    var result = await userCollection.find({email: email}).toArray()
 
-    // Adds user to database
-    await userCollection.insertOne({ username: username, email: email, password: hashedPassword, allergens: allergens, diet: diet });
+    if (result.length == 0) {
+        await userCollection.insertOne({ username: username, email: email, password: hashedPassword, allergens: allergens, diet: diet });
+    } else {
+        res.render('signupEmailTaken');
+        return;
+    }
 
     //authenticating session
     req.session.authenticated = true;
@@ -157,10 +192,12 @@ app.post('/createUser', async (req, res) => {
     res.redirect('security');
 });
 
+// prompting for security questions
 app.get("/security", async (req, res) => {
     res.render('security');
 });
 
+//processing user security questions, insert into database
 app.post("/securityRecovery", async (req, res) => {
     var securityPassword = req.body.securityPassword;
     var securityQuestion = req.body.securityQuestion;
@@ -188,9 +225,43 @@ app.post("/securityRecovery", async (req, res) => {
     await userCollection.updateOne({email: req.session.email}, {$set: {securityPassword: hashedPassword}});
     await userCollection.updateOne({email: req.session.email}, {$set: {securityQuestion: securityQuestion}});
 
-    res.redirect('/');
+    res.redirect('/signupDiet');
 });
 
+//Ask user to add preferences on signup
+app.get("/signupDiet", (req, res) => {
+res.render('signupDiet');
+});
+
+//post users preferences
+app.post("/userDiet", async (req, res) => {
+    var diet = req.body.diet;
+    console.log(diet);
+    await userCollection.updateOne({email: req.session.email}, {$push: {diet: diet} });
+    res.redirect("/signupAllergens");
+});
+
+app.get("/signupAllergens", (req, res) => {
+    res.render("signupAllergens");
+});
+
+app.post("/userAllergens", async (req, res) => {
+    const allergies = req.body.allergy;
+    const filteredAllergies = allergies.filter((allergy) => allergy !== '');
+    try {
+        const updateQuery = { $push: { allergens: { $each: filteredAllergies} } };
+        await userCollection.updateOne(
+            { email: req.session.email },
+            updateQuery
+        );
+        res.redirect('/home');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Failed to save preferences");
+    }
+});
+
+//password reset page
 app.get("/forgot", async (req, res) => {
     res.render('forgot');
 });
@@ -287,21 +358,17 @@ app.post("/securityChangePassword", async (req, res) => {
 });
 
 app.get("/profile", async (req, res) => {
-    if (!req.session.authenticated) {
-        res.redirect("/login");
-        return;
-    }
+    sessionValidation(req, res)
+    
     const email = req.session.email;
-    const result = await userCollection.find({ email: email }).project({ password: 1, _id: 1, email: 1 }).toArray();
+    const result = await userCollection.find({ email: email }).project({ username: 1, password: 1, _id: 1, email: 1 }).toArray();
 
     res.render('profile', { tabContent: 'profile-info', user: result });
 });
 
 app.get("/profile/preferences", async (req, res) => {
-    if (!req.session.authenticated) {
-        res.redirect("/login");
-        return;
-    }
+    sessionValidation(req, res)
+
     const email = req.session.email;
     const result = await userCollection.find({email: email})
     .project({allergens: 1, diet: 1, username: 1})
@@ -360,15 +427,22 @@ app.get("/home", async (req, res) => {
     const allergens = user.allergens;
     const diet = user.diet;    
     const searchQuery = req.query.q;
+    const searchTerm = req.query.q;
     const searchIngredients = searchQuery ? searchQuery.split(",") : [];
-    const page = parseInt(req.query.page) || 1; // Get the page number from the query parameter
+    const page = parseInt(req.query.page) || 1;
   
     const recipesPerPage = 20;
     const skip = (page - 1) * recipesPerPage;
   
     const query = {};
 
-  
+ 
+    if (searchTerm && searchTerm.length > 0) {
+        const recipeQuery = { name: { $regex: new RegExp(searchTerm, "i") } };
+        query.$and = query.$and || [];
+        query.$and.push(recipeQuery);
+      }
+
 
     if (searchIngredients.length > 0) {
         const ingredientQueries = searchIngredients.map(ingredient => (
@@ -380,13 +454,13 @@ app.get("/home", async (req, res) => {
       
       if (allergens && allergens.length > 0) {
         const allergenQuery = allergens.map(allergen => ({ ingredients: { $not: new RegExp(allergen, "i") } }));
-        query.$and = query.$and || []; // Create an empty array if $and doesn't exist
+        query.$and = query.$and || [];
         query.$and.push({ $or: allergenQuery });
       }
       
       if (diet && diet.length > 0) {
         const dietQuery = diet.map((tag) => ({ search_terms: { $regex: new RegExp(tag, "i") } }));
-        query.$and = query.$and || []; // Create an empty array if $and doesn't exist
+        query.$and = query.$and || [];
         query.$and.push({ $and: dietQuery });
       }
       
@@ -428,7 +502,9 @@ app.get("/home", async (req, res) => {
       visiblePages: visiblePages,
       startPage: startPage,
       searchQuery: searchQuery,
-      searchIngredients: searchIngredients
+      searchIngredients: searchIngredients,
+      isValidSession, 
+      req
     });
   });
 
@@ -511,7 +587,6 @@ app.post('/process-image', upload.single('image'), (req, res) => {
       }
     );
   });
-
       
   app.get("*", (req, res) => {
     res.status(404);
