@@ -1,25 +1,26 @@
 
 <%- include("templates/header") %> 
 
-<h3 class="d-flex justify-content-center">image upload</h3>
+<h3 class="d-flex justify-content-center">Image upload</h3>
 
 
 
-<div id="image-box" class="card d-flex justify-content-center">
-    <img id="image-preview" src="" alt="" style="width: 100%; height: 100%; object-fit: contain; display:hidden">
+<div id="image-box" class="container d-flex justify-content-center">
+    <img id="image-preview" src="" alt="" style="">
 
-    <div id="upload-button" class="d-flex justify-content-center">
-        <input type="file" name="image" id="image-upload" style="display:none" accept="image/*" capture="environment">
-        <button class="button" id="" style="padding:10px;font-size:30pt" type="button"
-        onclick="document.getElementById('image-upload').click()"><span> +
-        </span></button>
 
-    <button id="analyze-button" style="display: none;" onclick="processImage()">Analyze Photo</button>
-    </div>
+</div>    
+<div id="upload-button" class="d-flex justify-content-center">
+    <input type="file" name="image" id="image-upload" style="display:none" accept="image/*" capture="environment">
+    <button class="btn btn-success btn-lg btn-block" id="" style="padding:6px;" type="button"
+        onclick="document.getElementById('image-upload').click()">
+        Add <i class="bi bi-camera me-2">+</i>
+    </button>
+
 </div>
 <img id="loading" src="/public/images/loading-gif.gif" alt="" style="width: 20vw; height: auto; object-fit: contain; display:none">
 <h3 class="d-flex justify-content-center">Ingredients:</h3>
-<div id="ingredients-box">
+<div id="ingredients-box" class="container">
 </div>
 <div id="searchButton-box" class="d-flex justify-content-center mt-3 "> 
 </div>
@@ -53,13 +54,16 @@
             const blob = URL.createObjectURL(ImageFile);
             preview.src = blob;
             preview.style.display = "block";
-            document.getElementById("analyze-button").style.display = "block";
+
+            processImage()
+            //document.getElementById("analyze-button").style.display = "block";
         });
     } listenImageSelect();
 
         // add 'Search by ingredient(s)' button
         const searchButton = document.createElement("button");
-        searchButton.innerHTML = "Search by ingredient(s)";
+        searchButton.className = "btn btn-success btn-lg btn-block";
+        searchButton.innerHTML = "<i class=\"bi bi-search\"></i> Search by ingredient(s)...  ";
         searchButton.style.display = "none";
         document.getElementById("searchButton-box").appendChild(searchButton);
 
@@ -106,7 +110,10 @@
         ingredientsBox.innerHTML = "";
 
 
-        ingredientsArr.push(data[0].name);
+        ingredientsArr.push(data[0].name); //always include first ingredient
+
+        /* add ingredients to ingredientsArr if they meet the threshold
+         & are not less than a third as likely as prior one */
         let threshold = 0.1;
         for (let i = 1; i < 5; i++) {
             if (data[i].value > threshold && (data[i-1].value / data[i].value) < 3 ) {
@@ -115,9 +122,11 @@
 
         }
 
+        // add ingredients to ingredientsBox
         for (let i = 0; i < ingredientsArr.length; i++) {
             let ingredient = document.createElement("button");
-            ingredient.innerHTML = ingredientsArr[i] + "  \t X";
+            ingredient.className = "btn btn-outline-success";
+            ingredient.innerHTML = ingredientsArr[i] +  " \t <i class=\"bi bi-x-circle-fill\"></i>";
             ingredientsBox.appendChild(ingredient);
 
             // add event listener to remove ingredient and button
