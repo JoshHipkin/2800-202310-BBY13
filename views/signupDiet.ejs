@@ -1,0 +1,20 @@
+<%- include("templates/header") %> 
+    <main class="form-signin w-100 m-auto">
+        <div class="d-flex gap-2 justify-content-center py-5">
+            <form action="/userDiet" method="post" class="text-center">
+                <h3 class="h3 mb-3 fw-normal">Add your diet</h3>
+                <p>Select from the dropdown if you have a specific diet. You can edit this later in your profile.</p>
+                <div class="form-group mb-3">
+                    <label for="dietSelect">Select a dietary restriction</label>
+                    <select class="form-select" id="dietSelect" name="diet"> 
+                      <option value="">None</option>
+                      <option value="gluten-free">Gluten-free</option>
+                      <option value="vegan">Vegan</option>
+                      <option value="vegetarian">Vegetarian</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary mb-3" id="submit">Next</button>
+            </form>
+        </div>
+    </main>
+<%- include("templates/footer") %>

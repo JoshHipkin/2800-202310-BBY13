@@ -1,9 +1,10 @@
+
+//All reqiure statements
 require("dotenv").config();
 require("./scripts/utils.js");
 const session = require("express-session");
 const express = require("express");
 const Joi = require("joi");
-const saltRounds = 12;
 const bcrypt = require("bcrypt");
 const MongoStore = require("connect-mongo");
 const multer = require('multer');
@@ -12,10 +13,11 @@ const upload = multer({ dest: 'uploads/' });
 const fs = require("fs");
 const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
 const stub = ClarifaiStub.grpc();
+// Salt rounds for bcrypt password hashing
+const saltRounds = 12;                                          
 
 
-
-
+/* Secrets */
 const mongodb_host = process.env.MONGODB_HOST;
 const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
@@ -23,23 +25,32 @@ const mongodb_database = process.env.MONGODB_DATABASE;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 const clarifai_secret = process.env.CLARIFAI_SECRET
+/*  End Secrets */
 
+//Express
 const app = express();
+//hosting port
 const port = process.env.PORT || 3090;
 
-const expire = 240 * 60 * 60 * 1000;
+//session expire time
+const expire = 60 * 60 * 60 * 1000;
 
+// mongodb connection
 var { database } = include("dbConnection");
 
+//accessing user collection
 const userCollection = database.db(mongodb_database).collection("users");
+//accessing recipe collection
 const recipesCollection = database.db(mongodb_database).collection("recipes");
 
+/* setting up file usage */
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
 app.use("/public/images/", express.static("./public/images"));
 app.use("/styles", express.static("./styles"));
-app.use(express.static('scripts'));
+app.use(express.static('./scripts'));
 
+// use for session storage
 var mongoStore = MongoStore.create({
     mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@${mongodb_host}/Recipal`,
     crypto: {
@@ -47,7 +58,7 @@ var mongoStore = MongoStore.create({
     },
 });
 
-
+// use node session
 app.use(session({
     secret: node_session_secret,
     store: mongoStore,
@@ -55,14 +66,17 @@ app.use(session({
     resave: true
 }));
 
+// landing page
 app.get("/", (req, res) => {
     res.render('index');
 });
 
+//login page
 app.get("/login", (req, res) => {
     res.render('login');
 });
 
+// processing login request
 app.post('/loggingin', async (req, res) => {
     var email = req.body.email;
     var password = req.body.password;
@@ -96,15 +110,18 @@ app.post('/loggingin', async (req, res) => {
     }
 });
 
+// perform logout, and delete session
 app.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect("/");
 });
 
+//sign up page
 app.get("/signup", (req, res) => {
     res.render('signup');
 });
 
+//Process new user signup
 app.post('/createUser', async (req, res) => {
     var username = req.body.username;
     var email = req.body.email;
@@ -157,10 +174,12 @@ app.post('/createUser', async (req, res) => {
     res.redirect('security');
 });
 
+// prompting for security questions
 app.get("/security", async (req, res) => {
     res.render('security');
 });
 
+//processing user security questions, insert into database
 app.post("/securityRecovery", async (req, res) => {
     var securityPassword = req.body.securityPassword;
     var securityQuestion = req.body.securityQuestion;
@@ -188,9 +207,45 @@ app.post("/securityRecovery", async (req, res) => {
     await userCollection.updateOne({email: req.session.email}, {$set: {securityPassword: hashedPassword}});
     await userCollection.updateOne({email: req.session.email}, {$set: {securityQuestion: securityQuestion}});
 
-    res.redirect('/');
+    res.redirect('/signupDiet');
 });
 
+//Ask user to add preferences on signup
+app.get("/signupDiet", (req, res) => {
+res.render('signupDiet');
+});
+
+//post users preferences
+app.post("/userDiet", async (req, res) => {
+    var diet = req.body.diet;
+    console.log(diet);
+    await userCollection.updateOne({email: req.session.email}, {$push: {diet: diet} });
+    res.redirect("/signupAllergens");
+});
+
+app.get("/signupAllergens", (req, res) => {
+    res.render("signupAllergens");
+});
+
+app.post("/userAllergens", async (req, res) => {
+    const allergies = req.body.allergy;
+    try {
+        const updateQuery = { $push: { allergens: { $each: filteredAllergies} } };
+        if (diet.length > 0) {
+            updateQuery.$push.diet = diet;
+        } 
+        await userCollection.updateOne(
+            { email: req.session.email },
+            updateQuery
+        );
+        res.redirect('/');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Failed to save preferences");
+    }
+});
+
+//password reset page
 app.get("/forgot", async (req, res) => {
     res.render('forgot');
 });
