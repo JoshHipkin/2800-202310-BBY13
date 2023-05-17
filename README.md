@@ -5,6 +5,7 @@
 - Conrad Christian
 - Josh Hipkin
 - Emily Yao
+- Emily Yao
 
 
 # How to Run the App:
