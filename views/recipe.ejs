@@ -1,8 +1,4 @@
-<% if(isValidSession(req)) { %>
-  <%- include("templates/header") %> 
-  <% } else { %>
-    <%- include("templates/headerBeforeLoginHome") %> 
-  <% } %>
+<%- include(`templates/header${headerSession}`) %> 
   <div class="p-4 mb-3 bg-body-tertiary rounded">
    
    
@@ -37,8 +33,7 @@
 </div>
 
 
-<%- include("templates/footer") %>
-
+<%- include(`templates/footer${headerSession}`) %>
 
 
 

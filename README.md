@@ -15,7 +15,14 @@
 4. download all required node packages by typing 'npm i' into the console.
 5. run using 'node index.js' OR 'nodemon index.js'.
 
-# Conrad_LoginSecurityRecovery
+# Conrad_AuthenticationUserImprovements
+Conrad_HeaderHotFix
+(May 17, 2023)
+Changed some code to improve header and footer not working on certain pages. Also optimized code and passed clean variables into ejs.
+- Changed code to function on js instead of ejs
+- Improved ejs code for header and footer
+- Ensured pages recipe, imageUpload and Homepage worked with new header and footer
+
 (May 16, 2023)
 Improvements made to creating and logging into a user. Changed redirects on pages. Implemented invalid credential prompts if user 
 types in existing email. Changed header and footer depending on user login. Redirect page to login if user tries to access

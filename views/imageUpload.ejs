@@ -1,12 +1,5 @@
-
-<% if(isValidSession(req)) { %>
-    <%- include("templates/header") %> 
-    <% } else { %>
-      <%- include("templates/headerBeforeLoginHome") %> 
-    <% } %>
+<%- include(`templates/header${headerSession}`) %> 
 <h3 class="d-flex justify-content-center">image upload</h3>
-
-
 
 <div id="image-box" class="card d-flex justify-content-center">
     <img id="image-preview" src="" alt="" style="width: 100%; height: 100%; object-fit: contain; display:hidden">
@@ -26,16 +19,6 @@
 </div>
 <div id="searchButton-box" class="d-flex justify-content-center mt-3 "> 
 </div>
-
-
-
-
-
-
-
-
-
-
 
 <script>
 
@@ -139,4 +122,4 @@
     
 </script>
 
-<%- include("templates/footer") %>
+<%- include(`templates/footer${headerSession}`) %>

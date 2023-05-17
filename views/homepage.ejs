@@ -1,9 +1,5 @@
-<% if(isValidSession(req)) { %>
-  <%- include("templates/header") %> 
-  <% } else { %>
-    <%- include("templates/headerBeforeLoginHome") %> 
-  <% } %>
-  <div class="text-center mb-5 mt-5">
+<%- include(`templates/header${headerSession}`) %> 
+    <div class="text-center mb-5 mt-5">
     <h3>Welcome to your personalized recipe page!</h3>
   </div>
         <a href="/imageUpload" class="btn btn-primary btn-lg d-flex justify-content-center  ">
@@ -17,9 +13,6 @@
       </div>
       <button type="submit" class="btn btn-primary mb-3">Search</button>
     </form>
-    
-
-    
     
 
 <% for(let i=0; i < recipe.length; i++) { %>
@@ -97,5 +90,5 @@
 
 
 
-<%- include("templates/footer") %>
+<%- include(`templates/footer${headerSession}`) %>
 

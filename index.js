@@ -492,6 +492,12 @@ app.get("/home", async (req, res) => {
     }
   
     const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+
+    
+    var headerSession = ""
+    if (!(isValidSession(req))){
+        headerSession = "BeforeLogin"
+    }
   
     res.render("homepage", {
       recipe: recipeData,
@@ -503,8 +509,7 @@ app.get("/home", async (req, res) => {
       startPage: startPage,
       searchQuery: searchQuery,
       searchIngredients: searchIngredients,
-      isValidSession, 
-      req
+      headerSession
     });
   });
 
@@ -514,17 +519,24 @@ app.get("/home", async (req, res) => {
     const recipeId = req.query.id;
   
     const recipeData = await recipesCollection.findOne({ _id: new ObjectId(recipeId) });
-
-  
   
     if (!recipeData) {
       res.send("Recipe not found");
       return;
     }
   
-    
+    var headerSession = ""
+    if (!(isValidSession(req))){
+        headerSession = "BeforeLogin"
+        console.log("ran")
+    }
+
+    console.log("headerSession: ", headerSession)
   
-    res.render("recipe", { recipe: recipeData });
+    res.render("recipe", { 
+        recipe: recipeData,
+        headerSession
+    });
   });
 
   
@@ -533,12 +545,15 @@ app.get("/home", async (req, res) => {
 
 
 app.get("/imageUpload", async (req, res) => {
-    res.render('imageUpload');
-    
+    var headerSession = ""
+    if (!(isValidSession(req))){
+        headerSession = "BeforeLogin"
+    }
+
+    res.render('imageUpload', {
+        headerSession
+    });
 });
-
-
-
 
     // This will be used by every Clarifai endpoint call
     const metadata = new grpc.Metadata();
