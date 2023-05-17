@@ -15,6 +15,22 @@
 5. run using 'node index.js' OR 'nodemon index.js'.
 
 # Conrad_LoginSecurityRecovery
+(May 16, 2023)
+Improvements made to creating and logging into a user. Changed redirects on pages. Implemented invalid credential prompts if user 
+types in existing email. Changed header and footer depending on user login. Redirect page to login if user tries to access
+user session validation pages.
+
+- Added validation if user is logged in or not to restrict pages, ex. Profile
+- Changed header and footer for pages before accessing home
+- Changed redirect of logo button if user is already at homepage 
+- Implemented continue without logging in button on landing page
+- Change user id into username in profile
+- Fixing session validation functions and valid session functions
+- Change header if user is logged in or not when on homepage
+- Prevent additional users to be created if email is already in database
+- Improve prompts to show user if they used incorrect login details, account already exists, and password restrictions
+
+# Conrad_LoginSecurityRecovery
 Conrad_SecurityQuestionFix
 (May 12, 2023)
 Fixed Problem bug of text running off text field in verify.ejs. Changed to textarea with better wrap properties.

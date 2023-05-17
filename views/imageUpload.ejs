@@ -1,6 +1,9 @@
 
-<%- include("templates/header") %> 
-
+<% if(isValidSession(req)) { %>
+    <%- include("templates/header") %> 
+    <% } else { %>
+      <%- include("templates/headerBeforeLoginHome") %> 
+    <% } %>
 <h3 class="d-flex justify-content-center">image upload</h3>
 
 

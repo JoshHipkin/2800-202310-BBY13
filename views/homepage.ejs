@@ -1,4 +1,8 @@
-<%- include("templates/header") %> 
+<% if(isValidSession(req)) { %>
+  <%- include("templates/header") %> 
+  <% } else { %>
+    <%- include("templates/headerBeforeLoginHome") %> 
+  <% } %>
   <div class="text-center mb-5 mt-5">
     <h3>Welcome to your personalized recipe page!</h3>
   </div>
