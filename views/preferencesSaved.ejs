@@ -1,5 +1,9 @@
-<%- include("templates/header") %>
-<div class="container mt-5">
+<% if(isValidSession(req)) { %>
+  <%- include("templates/header") %> 
+  <% } else { %>
+    <%- include("templates/headerBeforeLoginHome") %> 
+  <% } %>
+  <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="card">

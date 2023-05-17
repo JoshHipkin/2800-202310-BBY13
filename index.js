@@ -58,6 +58,19 @@ var mongoStore = MongoStore.create({
     },
 });
 
+function isValidSession(req) {
+    if (req.session.authenticated) {
+      return true;
+    }
+    return false;
+  }
+  
+function sessionValidation(req, res) {
+    if (!(isValidSession(req))) {
+      res.redirect('/login');
+    }
+  }
+
 // use node session
 app.use(session({
     secret: node_session_secret,
@@ -85,7 +98,7 @@ app.post('/loggingin', async (req, res) => {
     const validationResult = schema.validate(email);
     if (validationResult.error != null) {
         console.log(validationResult.error);
-        res.redirect('login');
+        res.render('login-invalid');
         return;
     }
 
@@ -93,7 +106,7 @@ app.post('/loggingin', async (req, res) => {
 
     if (result.length != 1) {
         console.log("Email not found");
-        res.redirect('/login');
+        res.render('login-invalid');
         return;
     }
     if (await bcrypt.compare(password, result[0].password)) {
@@ -101,11 +114,11 @@ app.post('/loggingin', async (req, res) => {
         req.session.email = email;
         req.session.cookie.maxAge = expire;
 
-        res.redirect('/home');
+        res.redirect('home');
         return;
     }
     else {
-        res.redirect('/login');
+        res.render('login-invalid');
         return;
     }
 });
@@ -162,9 +175,14 @@ app.post('/createUser', async (req, res) => {
 
     const allergens = [];
     const diet = [];
+    var result = await userCollection.find({email: email}).toArray()
 
-    // Adds user to database
-    await userCollection.insertOne({ username: username, email: email, password: hashedPassword, allergens: allergens, diet: diet });
+    if (result.length == 0) {
+        await userCollection.insertOne({ username: username, email: email, password: hashedPassword, allergens: allergens, diet: diet });
+    } else {
+        res.render('signupEmailTaken');
+        return;
+    }
 
     //authenticating session
     req.session.authenticated = true;
@@ -340,21 +358,17 @@ app.post("/securityChangePassword", async (req, res) => {
 });
 
 app.get("/profile", async (req, res) => {
-    if (!req.session.authenticated) {
-        res.redirect("/login");
-        return;
-    }
+    sessionValidation(req, res)
+    
     const email = req.session.email;
-    const result = await userCollection.find({ email: email }).project({ password: 1, _id: 1, email: 1 }).toArray();
+    const result = await userCollection.find({ email: email }).project({ username: 1, password: 1, _id: 1, email: 1 }).toArray();
 
     res.render('profile', { tabContent: 'profile-info', user: result });
 });
 
 app.get("/profile/preferences", async (req, res) => {
-    if (!req.session.authenticated) {
-        res.redirect("/login");
-        return;
-    }
+    sessionValidation(req, res)
+
     const email = req.session.email;
     const result = await userCollection.find({email: email})
     .project({allergens: 1, diet: 1, username: 1})
@@ -488,7 +502,9 @@ app.get("/home", async (req, res) => {
       visiblePages: visiblePages,
       startPage: startPage,
       searchQuery: searchQuery,
-      searchIngredients: searchIngredients
+      searchIngredients: searchIngredients,
+      isValidSession, 
+      req
     });
   });
 
@@ -571,7 +587,6 @@ app.post('/process-image', upload.single('image'), (req, res) => {
       }
     );
   });
-
       
   app.get("*", (req, res) => {
     res.status(404);
