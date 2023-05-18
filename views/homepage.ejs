@@ -1,8 +1,5 @@
 <%- include(`templates/header${headerSession}`) %> 
 
-  <div class="text-center mb-5 mt-5">
-    <h3>Welcome to your personalized recipe page!</h3>
-
 
   <div class="text-center mb-5 mt-5">
     <h3>Welcome to your personalized recipe page!</h3>
@@ -17,17 +14,6 @@
         <input class="mb-3" type="hidden" id="search_query" name="search" value="<%= searchQuery %>">
       </div>
       <button type="submit" class="btn btn-primary mb-3">Search</button>
-    </form>
-    
-
-    <div class="container" >
-      <div class="card mb-3 custom-card">
-        <img src="/public/images/recipehome1.jpeg" class="card-img-top rotated" alt="dinner" style="width: 80%; height: auto; display: block; margin: 0 auto;">
-        <div class="card-body">
-          <h1 class="card-title">Easy 30-minutes-or-less Dinners</h1>
-          <p class="card-text">Here you'll find a collection of delicious recipes that your family will love! Flavored, well-rounded dishes with layer after layer of fresh goodness.</p>
-          <p class="card-text"><a class="btn btn-primary" href="/browseRecipe/1" role="button">Explore</a></p>
-        </div>
     </form>
 
     <div class="container" >
@@ -141,18 +127,12 @@
         </button>
       </div>
 
-      <div class="card">
-        <a href="/browseRecipe/7">
-          <img src="/public/images/dessert.jpeg" class="card-img-top-1" alt="dessert">
-        </a>
-        <h3>Dessert</h3>
-      </div>
       
-  
 
       <script>
         const carousel = new bootstrap.Carousel('#carouselExampleCaptions')
       </script>
+
 
 <%- include("templates/footer") %>
 

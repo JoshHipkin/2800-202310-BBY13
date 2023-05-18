@@ -425,14 +425,17 @@ app.post("/preferences/delete", async (req, res) => {
 });
 
 app.get("/home", async (req, res) => {
+
+    const searchQuery = req.query.q;
    
     var headerSession = ""
     if (!(isValidSession(req))){
-        headerSession = "BeforeLogin"
+        headerSession = "BeforeLoginHome"
     }
   
     res.render("homepage", {
-        headerSession
+        headerSession,
+        searchQuery
     });
 });
 
