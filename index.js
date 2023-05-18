@@ -491,6 +491,27 @@ app.get("/search", async (req, res) => {
   
     const query = {};
 
+    //Easter Egg
+    var conrad = false;
+    var bread = false;
+    for (let i = 0; i < searchIngredients.length; i++) {
+        let currIngredient = searchIngredients[i].trim().toLowerCase();
+        if (currIngredient === "conrad") {
+            conrad = true;
+        }
+        if(currIngredient === "bread"){
+            bread = true;
+        }
+        if(conrad && bread){
+            res.render('conrad');
+            return;
+        }
+
+    }
+
+
+
+
  
     if (searchTerm && searchTerm.length > 0) {
         const recipeQuery = { name: { $regex: new RegExp(searchTerm, "i") } };
@@ -498,7 +519,7 @@ app.get("/search", async (req, res) => {
         query.$or.push(recipeQuery);
       }
 
-
+    
     if (searchIngredients.length > 0) {
         const ingredientQueries = searchIngredients.map(ingredient => (
           { ingredients: { $regex: new RegExp(ingredient, "i") } }
