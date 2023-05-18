@@ -482,6 +482,9 @@ app.get("/search", async (req, res) => {
     const searchQuery = req.query.q;
     const searchTerm = req.query.q;
     const searchIngredients = searchQuery ? searchQuery.split(",") : [];
+    const page = parseInt(req.query.page) || 1;
+    const recipesPerPage = 20;
+    const skip = (page -1) * recipesPerPage;
 
   
     const query = {};
@@ -514,6 +517,30 @@ app.get("/search", async (req, res) => {
         query.$and.push({ $and: dietQuery });
       }
       
+      const countPromise = recipesCollection.countDocuments(query);
+
+      const recipesPromise = recipesCollection
+        .find(query)
+        .project({ name: 1, description: 1, servings: 1, _id: 1, ingredients: 1 })
+        .skip(skip)
+        .limit(recipesPerPage)
+        .toArray();
+    
+      
+  
+      const [recipeCount, recipeData] = await Promise.all([countPromise, recipesPromise]);
+    
+      const pageCount = Math.ceil(recipeCount / recipesPerPage);
+      const maxButtons = 10;
+      const visiblePages = 5;
+      const halfVisiblePages = Math.floor(visiblePages / 2);
+      let startPage = Math.max(1, page - halfVisiblePages);
+      let endPage = Math.min(startPage + visiblePages - 1, pageCount);
+    
+      if (endPage - startPage + 1 < visiblePages) {
+        startPage = Math.max(1, endPage - visiblePages + 1);
+      }
+    
 
     //recieved all ratings
     var ratings = await commentCollection.find({}).project({rating: 1, recipeID: 1}).toArray();
@@ -597,10 +624,17 @@ app.get("/search", async (req, res) => {
     }
   
     res.render("search", {
-      searchQuery: searchQuery,
-      searchIngredients: searchIngredients,
-      filteredRatings, filteredRatings,
-      headerSession
+        recipe: recipeData,
+        currentPage: page,
+        pageCount: pageCount,
+        pages: pages,
+        maxButtons: maxButtons,
+        visiblePages: visiblePages,
+        startPage: startPage,
+        searchQuery: searchQuery,
+        searchIngredients: searchIngredients,
+        filteredRatings: filteredRatings,
+        headerSession
     });
 
 });
