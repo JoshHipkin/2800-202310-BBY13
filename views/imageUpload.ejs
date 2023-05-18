@@ -70,7 +70,7 @@
     // add event listener to send GET request with ingredients array
     searchButton.addEventListener("click", function() {
         let ingredientsString = ingredientsArr.join(", ");
-        let url = "/home?q=" + ingredientsString;
+        let url = "/search?q=" + ingredientsString;
         window.location.href = url;
     });
 
