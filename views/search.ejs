@@ -13,13 +13,11 @@
               <i class="bi bi-search"></i>
       </div>
   </div>
-    
-
-    
-    
 
 <% for(let i=0; i < recipe.length; i++) { %>
-<div class="card shadow-sm">
+  <%- include('templates/recipeCard', {recipe: recipe[i], filteredRatings: filteredRatings}) %>
+
+<!-- <div class="card shadow-sm">
     <div class="card-body">
       <p class="card-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><h1> <%= recipe[i].name %> </h1></font><font style="vertical-align: inherit;"> 
         <p><%= recipe[i].description %> </p></font></font></p>
@@ -33,7 +31,7 @@
         <small class="text-body-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> <%= recipe[i].servings %> Servings</font></font></small>
       </div>
     </div>
-  </div>
+  </div> -->
 <% } %> 
 
 

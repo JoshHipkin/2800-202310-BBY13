@@ -1,0 +1,25 @@
+<div class="card shadow-sm">
+    <div class="card-body">
+      <p class="card-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><h1> <%= recipe.name %> </h1></font><font style="vertical-align: inherit;"> 
+        <% var rateExists = false %>
+        <% for(count = 0; count < filteredRatings.length; count++) { %>
+          <% if(filteredRatings[count].recipeID == recipe._id) { %>
+            <% rateExists = true %>
+            <p>Rating: <%-((filteredRatings[count].rating) / (filteredRatings[count].ratingTotal)).toFixed(1)%>/5.0 (based on <%-filteredRatings[count].ratingTotal%> reviews)</p>
+          <% } %>
+        <% } %>
+        <% if(!(rateExists)){ %>
+          <p>No ratings</p>
+        <% } %>
+        <p><%= recipe.description %> </p></font></font></p>
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="btn-group">
+         
+          <a class="btn btn-sm btn-outline-secondary" href="/recipe?id=<%= recipe._id %>">Read More</a>
+
+          <button type="button" class="btn btn-sm btn-outline-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Save</font></font></button>
+        </div>
+        <small class="text-body-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> <%= recipe.servings %> Servings</font></font></small>
+      </div>
+    </div>
+  </div>

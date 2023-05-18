@@ -19,6 +19,14 @@ http://repqxuwlgf.eu09.qoddiapp.com/
 5. run using 'node index.js' OR 'nodemon index.js'.
 
 # Conrad_RecipeReviews
+Conrad_HotFixRatings
+(May 18, 2023)
+With the new implemented pages of browsing and search. Improved code to work on new pages, created ejs recipe card template, improved interator processes of reviews on ejs cards. Fixed bug where multiple lines of ratings were printing depending on length of comment array 
+- Improved ejs code
+- Applied ratings to recipes on both browsing and search pages
+- Created recipe card template ejs files to refer to 
+- Fixed bug with multiple lines of ratings printing
+
 (May 17, 2023)
 Implemented the ability to leave reviews on recipes. Comments, comment topic header and ratings are available for the user to rate and review recipes. Changes to homepage displays the avg rating based on user reviews, as well as in profile for each recipe. Used chatGPT to develop function to iterate though an array and return the index of a desired value in object. 
 
