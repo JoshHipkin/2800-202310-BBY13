@@ -2,6 +2,10 @@
 
   <div class="text-center mb-5 mt-5">
     <h3>Welcome to your personalized recipe page!</h3>
+
+
+  <div class="text-center mb-5 mt-5">
+    <h3>Welcome to your personalized recipe page!</h3>
   </div>
         <a href="/imageUpload" class="btn btn-primary btn-lg d-flex justify-content-center  ">
       <i class="bi bi-camera me-2"></i>Search By Image!
@@ -24,12 +28,22 @@
           <p class="card-text">Here you'll find a collection of delicious recipes that your family will love! Flavored, well-rounded dishes with layer after layer of fresh goodness.</p>
           <p class="card-text"><a class="btn btn-primary" href="/browseRecipe/1" role="button">Explore</a></p>
         </div>
+    </form>
+
+    <div class="container" >
+      <div class="card mb-3 custom-card">
+        <img src="/public/images/recipehome1.jpeg" class="card-img-top rotated custom-image" alt="dinner" >
+        <div class="card-body">
+          <h1 class="card-title">Easy 30-minutes-or-less Dinners</h1>
+          <p class="card-text">Here you'll find a collection of delicious recipes that your family will love! Flavored, well-rounded dishes with layer after layer of fresh goodness.</p>
+          <p class="card-text"><a class="btn btn-primary" href="/browseRecipe/1" role="button">Explore</a></p>
+        </div>
       </div>      
     </div>
 
     <div class="container" >
       <div class="card mb-3 custom-card">
-        <img src="/public/images/recipehome2.jpeg" class="card-img-top rotate" alt="dinner" style="width: 80%; height: auto; display: block; margin: 0 auto;">
+        <img src="/public/images/recipehome2.jpeg" class="card-img-top rotate custom-image" alt="dinner" >
         <div class="card-body">
           <h1 class="card-title">Healthy and Low Calorie Recipes</h1>
           <p class="card-text">These nutritious and low-calorie recipes offer a perfect balance between nourishment and culinary delight.</p>
@@ -41,7 +55,7 @@
 
     <div class="container" >
       <div class="card mb-3 custom-card">
-        <img src="/public/images/recipehome3.jpeg" class="card-img-top " alt="dinner" style="width: 80%; height: auto; display: block; margin: 0 auto;">
+        <img src="/public/images/recipehome3.jpeg" class="card-img-top custom-image" alt="dinner" >
         <div class="card-body">
           <h1 class="card-title">Recipe of the Day</h1>
           <p class="card-text">Explore the top delicious recipes! They make any occasion feel extra-special, even everyday dinners.</p>
@@ -83,10 +97,62 @@
       </div>
     </div>
     
+     
+<div class="jumbotron jumbotron-fluid text-light mx-5 mb-4">
+  <div class="container text-center">
+      <h3 class="display-6">Try some of ReciPAL's community recipes!</h3>
+  </div>
+</div>
+  <div class="box-shadow">
 
-    
-    
+  <div id="carouselExampleCaptions" class="carousel slide">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <a href="#"><img src="/public/images/dish1.jpg" class="d-block w-100 carousel-img" alt="..."></a>
+          <div class="carousel-caption d-md-block">
+            <h5>First slide label</h5>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <a href="#"><img src="/public/images/dish2.jpg" class="d-block w-100 carousel-img" alt="..."></a>
+          <div class="carousel-caption d-md-block">
+            <h5>Second slide label</h5>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <a href="#"><img src="/public/images/dish3.jpg" class="d-block w-100 carousel-img" alt="..."></a>
+          <div class="carousel-caption d-md-block">
+            <h5>Third slide label</h5>
+          </div>
+        </div>
 
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+
+      <div class="card">
+        <a href="/browseRecipe/7">
+          <img src="/public/images/dessert.jpeg" class="card-img-top-1" alt="dessert">
+        </a>
+        <h3>Dessert</h3>
+      </div>
+      
+  
+
+      <script>
+        const carousel = new bootstrap.Carousel('#carouselExampleCaptions')
+      </script>
 
 <%- include("templates/footer") %>
 

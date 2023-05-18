@@ -14,7 +14,9 @@ const fs = require("fs");
 const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
 const stub = ClarifaiStub.grpc();
 // Salt rounds for bcrypt password hashing
-const saltRounds = 12;                                          
+const saltRounds = 12;     
+
+
 
 
 /* Secrets */
@@ -423,6 +425,18 @@ app.post("/preferences/delete", async (req, res) => {
 });
 
 app.get("/home", async (req, res) => {
+   
+    var headerSession = ""
+    if (!(isValidSession(req))){
+        headerSession = "BeforeLogin"
+    }
+  
+    res.render("homepage", {
+        headerSession
+    });
+});
+
+app.get("/search", async (req, res) => {
     const user = await userCollection.findOne({ email: req.session.email});
     const allergens = user.allergens;
     const diet = user.diet;    
@@ -462,13 +476,49 @@ app.get("/home", async (req, res) => {
       }
       
 
+    //recieved all ratings
+    var ratings = await commentCollection.find({}).project({rating: 1, recipeID: 1}).toArray();
+
+    //filters the ratings
+    var filteredRatings = []
+    for (count = 0; ratings.length > count; count++){
+        //ignores all null or empty ratings
+        if (!(ratings[count].rating == null)) { 
+                //compares filteredRatings array object to object in ratings array
+                if (filteredRatings.some(e => e.recipeID == ratings[count].recipeID)){
+
+                    key = "recipeID"
+                    value = ratings[count].recipeID
+
+                    //Function to find index based off key and value developed by ChatGPT
+                    function findIndex(array, key, value) {
+                        for (let index = 0; index < array.length; index++) {
+                          const obj = array[index];
+                          if (obj.hasOwnProperty(key) && obj[key] === value) {
+                            return index;
+                          }
+                        }
+                      }
+
+                    objIndex = findIndex(filteredRatings, key, value)
+
+                    //Adds integer of rating together and total amount of ratings for average calculation later on
+                    filteredRatings[objIndex].rating = parseInt(filteredRatings[objIndex].rating) + parseInt(ratings[count].rating)
+                    filteredRatings[objIndex].ratingTotal = parseInt(filteredRatings[objIndex].ratingTotal) + parseInt(1)
+
+                } else {
+                    //If there is no unique recipeID in filtered ratings array, the object is added 
+                    filteredRatings.push({recipeID: ratings[count].recipeID, rating: parseInt(ratings[count].rating), ratingTotal: parseInt(1)})
+                }
+        }
+    }
     
     var headerSession = ""
     if (!(isValidSession(req))){
         headerSession = "BeforeLogin"
     }
   
-    res.render("homepage", {
+    res.render("search", {
       searchQuery: searchQuery,
       searchIngredients: searchIngredients,
       headerSession
@@ -505,9 +555,30 @@ app.get("/home", async (req, res) => {
     }); 
   }); 
 
+app.post('/commentPost', async(req, res) => {
 
-  // browse recipe page (redirect from homepage)
-  app.get('/browseRecipe/:id', async (req, res) => {
+    if (!(isValidSession(req))){
+        res.redirect('login')
+        return;
+    } else {
+        var email = req.session.email
+        var comment = req.body.comment
+        var recipeID = req.body.idRecipe
+        var header = req.body.commentHeader
+        var rating = req.body.rating
+
+        const resultUser = await userCollection.find({ email: email}).project({ username: 1}).toArray();
+        var username = resultUser[0].username;
+
+        await commentCollection.insertOne({ recipeID: recipeID, username: username, commentHeader: header, comment: comment, rating: rating});
+
+  
+    res.redirect(`/recipe?id=${recipeID}`)
+    }
+})
+
+// browse recipe page (redirect from homepage)
+app.get('/browseRecipe/:id', async (req, res) => {
     const recipesPerPage = 20;
     const page = req.params.id;
     let query = {}; // Initialize an empty query object
@@ -559,12 +630,6 @@ app.get("/home", async (req, res) => {
   });
 
 
-
-
-  
-
-
-//Image upload
 app.get("/imageUpload", async (req, res) => {
     var headerSession = ""
     if (!(isValidSession(req))){
