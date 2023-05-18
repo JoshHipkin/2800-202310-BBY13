@@ -3,25 +3,27 @@
   <div class="text-center mb-5 mt-5">
     <h3>Start by searching for recipes using our image detection AI, or simply by using the search bar</h3>
   </div>
-        <a href="/imageUpload" class="btn btn-primary btn-lg d-flex justify-content-center mx-5">
+        <a href="/imageUpload" class="btn btn-success btn-lg d-flex justify-content-center mx-5">
       <i class="bi bi-camera me-2"></i>Search By Image!
     </a>
     <form class="form-inline my-5 mx-5" action="/search" method="GET">
-      <div class="input-group">
-        <label for="search_input">
-            Search by recipe name or add as many ingredients as you want, separated by commas
-        </label>
-        <input type="text" class="form-control mb-3" id="search_input" name="q" placeholder="">
-        <button type="submit" class="btn btn-primary mb-3" id="">
-            <i class="bi bi-search"></i>     
+      <div class="form-group">
+        
+            <label for="search_input">Search by recipe name or add as many ingredients as you want, separated by commas</label>
+            <div class="input-group">
+                <input type="text" class="form-control mb-3" id="search_input" name="q" placeholder="">
+                <button type="submit" class="btn btn-success mb-3" id="">
+                    <i class="bi bi-search"></i>
+            </div>
         </div>
     </form>
-<div class="jumbotron jumbotron-fluid bg-primary text-light">
+<div class="jumbotron jumbotron-fluid text-light mx-5 mb-4">
     <div class="container text-center">
-        <h3 class="display-6">Try some user uploaded recipes!</h3>
+        <h3 class="display-6">Try some of ReciPAL's community recipes!</h3>
     </div>
 </div>
-    
+    <div class="box-shadow">
+
     <div id="carouselExampleCaptions" class="carousel slide">
         <div class="carousel-indicators">
           <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -57,10 +59,11 @@
           <span class="visually-hidden">Next</span>
         </button>
       </div>
+      </div>
       
 
       <script>
-        const carousel = new bootstrap.Carousel('#myCarousel')
+        const carousel = new bootstrap.Carousel('#carouselExampleCaptions')
       </script>
 
     <%- include("templates/footer") %>

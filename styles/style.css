@@ -1,10 +1,25 @@
-/* body {
-    margin: 0px;
-    padding: 0px;
-    font-size: 12pt;
-    background-color: rgb(106, 110, 110);
-} */
 
+body {
+    min-height: 400px;
+    margin-bottom: 100px;
+    clear: both;
+}
 .recipal-logo {
     max-height: 40vh;
 }
+#mobile {
+    display: none;
+}
+#desktop {
+    display: block;
+}
+
+@media (max-width: 900px) {
+    #desktop {
+        display: none;
+    }
+    #mobile {
+display: inline-flex;
+    }
+}
+
