@@ -1,0 +1,30 @@
+.carousel-img {
+    max-height: 300px; /* Adjust the desired height as needed */
+    object-fit: cover; /* Maintain the aspect ratio and cover the container */
+  }
+
+  #carouselExampleCaptions {
+      max-width: 65%;
+      max-height: 80vh;
+      margin: 0 auto;
+  }
+  .carousel-caption h5,
+  .carousel-caption p {
+    color: black;
+    font-size: 24px;
+  }
+  .carousel-caption {
+    background-color: rgba(0, 0, 0, 0.7); /* Adjust the background color and opacity as needed */
+  }
+  .carousel-caption h5,
+  .carousel-caption p {
+    color: white; /* Set the text color to white for better contrast */
+  }
+  
+  @media (max-width:1100px) {
+    .carousel-caption h5,
+    .carousel-caption p {
+      color: white;
+      font-size: 1rem;
+  }
+}

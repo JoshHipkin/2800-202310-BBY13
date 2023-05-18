@@ -409,6 +409,10 @@ app.post("/preferences/delete", async (req, res) => {
 });
 
 app.get("/home", async (req, res) => {
+    res.render("homepage");
+});
+
+app.get("/search", async (req, res) => {
     const user = await userCollection.findOne({ email: req.session.email});
     const allergens = user.allergens;
     const diet = user.diet;    
@@ -425,8 +429,8 @@ app.get("/home", async (req, res) => {
  
     if (searchTerm && searchTerm.length > 0) {
         const recipeQuery = { name: { $regex: new RegExp(searchTerm, "i") } };
-        query.$and = query.$and || [];
-        query.$and.push(recipeQuery);
+        query.$or = query.$and || [];
+        query.$or.push(recipeQuery);
       }
 
 
@@ -434,14 +438,14 @@ app.get("/home", async (req, res) => {
         const ingredientQueries = searchIngredients.map(ingredient => (
           { ingredients: { $regex: new RegExp(ingredient, "i") } }
         ));
-        query.$and = query.$and || [];
-        query.$and.push({ $and: ingredientQueries });
+        query.$or = query.$or || [];
+        query.$or.push({ $or: ingredientQueries });
       }
       
       if (allergens && allergens.length > 0) {
         const allergenQuery = allergens.map(allergen => ({ ingredients: { $not: new RegExp(allergen, "i") } }));
         query.$and = query.$and || [];
-        query.$and.push({ $or: allergenQuery });
+        query.$and.push({ $and: allergenQuery });
       }
       
       if (diet && diet.length > 0) {
@@ -479,7 +483,7 @@ app.get("/home", async (req, res) => {
   
     const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
   
-    res.render("homepage", {
+    res.render("search", {
       recipe: recipeData,
       currentPage: page,
       pageCount: pageCount,
