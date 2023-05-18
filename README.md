@@ -7,6 +7,9 @@
 - Emily Yao
 - Emily Yao
 
+# Hosted App
+The app is hosted on Qoddi at the following link:
+http://repqxuwlgf.eu09.qoddiapp.com/
 
 # How to Run the App:
 1. Only those with the required .env variables can access the mongodb database.
