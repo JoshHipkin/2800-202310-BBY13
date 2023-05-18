@@ -519,9 +519,18 @@ app.get("/home", async (req, res) => {
     } else if (page == 2) {
       specificTag = 'low-calorie';
     } else if (page == 3) {
-      specificTag = 'desserts';
-    }
+      specificTag = 'occasion';
+    } else if (page == 4) {
+        specificTag = 'breakfast';
+      } else if (page == 5) {
+        specificTag = 'lunch';
+      } else if (page == 6) {
+        specificTag = 'dinner';
+      } else if (page == 7) {
+        specificTag = 'dessert';
+      }
   
+
     // Construct the query to filter recipes with the specific tag
     query = { tags: { $regex: specificTag, $options: "i" } };
   

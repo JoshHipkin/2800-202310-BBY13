@@ -1,4 +1,5 @@
 <%- include(`templates/header${headerSession}`) %> 
+
 <h3 class="d-flex justify-content-center">image upload</h3>
 
 <div id="image-box" class="card d-flex justify-content-center">
@@ -8,7 +9,8 @@
         <input type="file" name="image" id="image-upload" style="display:none" accept="image/*" capture="environment">
         <button class="button" id="" style="padding:10px;font-size:30pt" type="button"
         onclick="document.getElementById('image-upload').click()"><span> +
-        </span></button>
+        </span>
+    </button>
 
     <button id="analyze-button" style="display: none;" onclick="processImage()">Analyze Photo</button>
     </div>
