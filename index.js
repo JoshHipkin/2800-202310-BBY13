@@ -581,45 +581,7 @@ app.get("/search", async (req, res) => {
         }
     }
   
-    const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
-
-    //recieved all ratings
-    var ratings = await commentCollection.find({}).project({rating: 1, recipeID: 1}).toArray();
-
-    //filters the ratings
-    var filteredRatings = []
-    for (count = 0; ratings.length > count; count++){
-        //ignores all null or empty ratings
-        if (!(ratings[count].rating == null)) { 
-                //compares filteredRatings array object to object in ratings array
-                if (filteredRatings.some(e => e.recipeID == ratings[count].recipeID)){
-
-                    key = "recipeID"
-                    value = ratings[count].recipeID
-
-                    //Function to find index based off key and value developed by ChatGPT
-                    function findIndex(array, key, value) {
-                        for (let index = 0; index < array.length; index++) {
-                          const obj = array[index];
-                          if (obj.hasOwnProperty(key) && obj[key] === value) {
-                            return index;
-                          }
-                        }
-                      }
-
-                    objIndex = findIndex(filteredRatings, key, value)
-
-                    //Adds integer of rating together and total amount of ratings for average calculation later on
-                    filteredRatings[objIndex].rating = parseInt(filteredRatings[objIndex].rating) + parseInt(ratings[count].rating)
-                    filteredRatings[objIndex].ratingTotal = parseInt(filteredRatings[objIndex].ratingTotal) + parseInt(1)
-
-                } else {
-                    //If there is no unique recipeID in filtered ratings array, the object is added 
-                    filteredRatings.push({recipeID: ratings[count].recipeID, rating: parseInt(ratings[count].rating), ratingTotal: parseInt(1)})
-                }
-        }
-    }
-    
+    const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);    
     
     res.render("search", {
         recipe: recipeData,
@@ -695,7 +657,6 @@ app.get("/search", async (req, res) => {
         headerSession = "BeforeLogin"
     }
 
-  
     res.render("recipe", { 
         recipe: recipeData,
         commentData: commentData,
@@ -760,6 +721,43 @@ app.get('/browseRecipe/:id', async (req, res) => {
       .project({ name: 1, description: 1, servings: 1, _id: 1, ingredients: 1 })
       .limit(recipesPerPage)
       .toArray();
+
+       //recieved all ratings
+    var ratings = await commentCollection.find({}).project({rating: 1, recipeID: 1}).toArray();
+
+    //Same code as in homepage to display rating avg in recipe page
+    var filteredRatings = []
+    for (count = 0; ratings.length > count; count++){
+        //ignores all null or empty ratings
+        if (!(ratings[count].rating == null)) { 
+                //compares filteredRatings array object to object in ratings array
+                if (filteredRatings.some(e => e.recipeID == ratings[count].recipeID)){
+
+                    key = "recipeID"
+                    value = ratings[count].recipeID
+
+                    //Function to find index based off key and value developed by ChatGPT
+                    function findIndex(array, key, value) {
+                        for (let index = 0; index < array.length; index++) {
+                          const obj = array[index];
+                          if (obj.hasOwnProperty(key) && obj[key] === value) {
+                            return index;
+                          }
+                        }
+                      }
+
+                    objIndex = findIndex(filteredRatings, key, value)
+
+                    //Adds integer of rating together and total amount of ratings for average calculation later on
+                    filteredRatings[objIndex].rating = parseInt(filteredRatings[objIndex].rating) + parseInt(ratings[count].rating)
+                    filteredRatings[objIndex].ratingTotal = parseInt(filteredRatings[objIndex].ratingTotal) + parseInt(1)
+
+                } else {
+                    //If there is no unique recipeID in filtered ratings array, the object is added 
+                    filteredRatings.push({recipeID: ratings[count].recipeID, rating: parseInt(ratings[count].rating), ratingTotal: parseInt(1)})
+                }
+        }
+    }
   
       var headerSession = ""
       if (!(isValidSession(req))){
@@ -771,6 +769,7 @@ app.get('/browseRecipe/:id', async (req, res) => {
   
       res.render("browseRecipe", {
         recipe: recipeData,
+        filteredRatings: filteredRatings,
         headerSession    
       });
     } catch (error) {
