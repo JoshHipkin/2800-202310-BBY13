@@ -445,8 +445,12 @@ app.post("/preferences/delete", async (req, res) => {
 
 app.get("/home", async (req, res) => {
     const user = await userCollection.findOne({ email: req.session.email});
-    const allergens = user.allergens;
-    const diet = user.diet;    
+
+    if (isValidSession(req)) {
+        var allergens = user.allergens;
+        var diet = user.diet; 
+    }  
+
     const searchQuery = req.query.q;
     const searchTerm = req.query.q;
     const searchIngredients = searchQuery ? searchQuery.split(",") : [];
