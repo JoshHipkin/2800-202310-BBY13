@@ -13,6 +13,7 @@ const upload = multer({ dest: 'uploads/' });
 const fs = require("fs");
 const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
 const stub = ClarifaiStub.grpc();
+const { Configuration, OpenAIApi } = require("openai");
 // Salt rounds for bcrypt password hashing
 const saltRounds = 12;                                          
 
@@ -25,7 +26,15 @@ const mongodb_database = process.env.MONGODB_DATABASE;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 const clarifai_secret = process.env.CLARIFAI_SECRET
-/*  End Secrets */
+const openai_secret = process.env.OPENAI_SECRET
+
+
+//OpenAI
+const configuration = new Configuration({
+    apiKey: openai_secret,
+  });
+  const openai = new OpenAIApi(configuration);
+
 
 //Express
 const app = express();
@@ -730,6 +739,38 @@ app.post('/process-image', upload.single('image'), (req, res) => {
       }
     );
   });
+
+
+app.get(/airecipe/, async (req, res) => {
+    const ingredientsAI = req.query.q;
+    console.log(ingredientsAI);
+
+    const response = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: "recipe from only these ingredients: "
+        +  ingredientsAI
+        + "\nas JSON {name, ingredients_raw_str, steps}",
+        temperature: 0.3,
+        max_tokens: 420,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+    });
+    const recipe = JSON.parse(response.data.choices[0].text);
+    console.log(recipe);
+
+    var headerSession = ""
+    if (!(isValidSession(req))){
+        headerSession = "BeforeLogin"
+    }
+  
+    res.render("generatedRecipe", { 
+        recipe: recipe,
+        headerSession
+    });
+
+
+});
       
 app.get("*", (req, res) => {
     res.status(404);
