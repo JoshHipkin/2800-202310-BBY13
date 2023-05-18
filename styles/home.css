@@ -1,0 +1,64 @@
+
+
+.jumbotron {
+  background-color: #DD7373;
+  border: white 4px;
+  border-radius: 8px;
+
+}
+.carousel-img {
+    max-height: 400px; 
+    object-fit: cover; 
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+
+  .btn-success {
+    background-color: #198754;
+  }
+
+  #carouselExampleCaptions {
+      max-width: 65%;
+      max-height: 80vh;
+      margin: 0 auto;
+  }
+  .carousel-caption h5,
+  .carousel-caption p {
+    color: black;
+    font-size: 24px;
+  }
+  .carousel-caption {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  .carousel-caption h5,
+  .carousel-caption p {
+    color: white;
+  }
+  
+  @media (max-width:1100px) {
+    .carousel-caption h5,
+    .carousel-caption p {
+      color: white;
+      font-size: 1rem;
+  }
+
+  .carousel-img {
+    max-height: 250px; 
+    object-fit: cover; 
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  #carouselExampleCaptions {
+    max-width: 80%;
+    max-height: 80vh;
+    margin: 0 auto;
+}
+
+.navbar-nav .nav-link i {
+  font-size: 24px;
+}
+.carousel-item {
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+}

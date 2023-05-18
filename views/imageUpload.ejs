@@ -57,12 +57,12 @@
     searchButton.style.display = "none";
     document.getElementById("searchButton-box").appendChild(searchButton);
 
-    // add event listener to send GET request with ingredients array
-    searchButton.addEventListener("click", function() {
-        let ingredientsString = ingredientsArr.join(", ");
-        let url = "/home?q=" + ingredientsString;
-        window.location.href = url;
-    });
+        // add event listener to send GET request with ingredients array
+        searchButton.addEventListener("click", function() {
+            let ingredientsString = ingredientsArr.join(",");
+            let url = "/search?q=" + ingredientsString;
+            window.location.href = url;
+        });
 
 
     function processImage() {

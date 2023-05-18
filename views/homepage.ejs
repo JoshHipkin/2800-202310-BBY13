@@ -1,100 +1,69 @@
-<%- include(`templates/header${headerSession}`) %> 
-    <div class="text-center mb-5 mt-5">
-    <h3>Welcome to your personalized recipe page!</h3>
+<%- include("templates/header") %>
+
+  <div class="text-center mb-5 mt-5">
+    <h3>Start by searching for recipes using our image detection AI, or simply by using the search bar</h3>
   </div>
-        <a href="/imageUpload" class="btn btn-primary btn-lg d-flex justify-content-center  ">
+        <a href="/imageUpload" class="btn btn-success btn-lg d-flex justify-content-center mx-5">
       <i class="bi bi-camera me-2"></i>Search By Image!
     </a>
-    <form class="form-inline my-5 mx-5" action="/home" method="GET">
+    <form class="form-inline my-5 mx-5" action="/search" method="GET">
       <div class="form-group">
-        <label for="search_input">Start adding some ingredients here. You can add as many as you like and We will only show you recipes that contain those ingredients.</label>
-        <input type="text" class="form-control mb-3" id="search_input" name="q" value="<%= searchQuery %>" placeholder="ingredients, separated by commas.">
-        <input class="mb-3" type="hidden" id="search_query" name="search" value="<%= searchQuery %>">
-      </div>
-      <button type="submit" class="btn btn-primary mb-3">Search</button>
-    </form>
-    
-<% for(let i=0; i < recipe.length; i++) { %>
-<div class="card shadow-sm">
-    <div class="card-body">
-      <p class="card-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><h1> <%= recipe[i].name %> </h1></font><font style="vertical-align: inherit;"> 
-        <% for(count = 0; count < filteredRatings.length; count++) { %>
-          <% if(filteredRatings[count].recipeID == recipe[i]._id) { %>
-            <p>Rating: <%-((filteredRatings[count].rating) / (filteredRatings[count].ratingTotal)).toFixed(1)%>/5.0 (based on <%-filteredRatings[count].ratingTotal%> reviews)</p>
-          <% } else { %>
-            <p>No reviews</p>
-          <% } %>
-        <% } %>
-        <p><%= recipe[i].description %> </p></font></font></p>
-      <div class="d-flex justify-content-between align-items-center">
-        <div class="btn-group">
-         
-          <a class="btn btn-sm btn-outline-secondary" href="/recipe?id=<%= recipe[i]._id %>">Read More</a>
-
-          <button type="button" class="btn btn-sm btn-outline-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Save</font></font></button>
+        
+            <label for="search_input">Search by recipe name or add as many ingredients as you want, separated by commas</label>
+            <div class="input-group">
+                <input type="text" class="form-control mb-3" id="search_input" name="q" placeholder="">
+                <button type="submit" class="btn btn-success mb-3" id="">
+                    <i class="bi bi-search"></i>
+            </div>
         </div>
-        <small class="text-body-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> <%= recipe[i].servings %> Servings</font></font></small>
-      </div>
+    </form>
+<div class="jumbotron jumbotron-fluid text-light mx-5 mb-4">
+    <div class="container text-center">
+        <h3 class="display-6">Try some of ReciPAL's community recipes!</h3>
     </div>
-  </div>
-<% } %> 
-
-
-
-<div class="pagination d-flex justify-content-center">
-  <% if (currentPage > 1) { %>
-    <a class="page-link" href="/home?page=<%= currentPage - 1 %>"><button class="btn btn-primary">Prev</button></a>
-
-
-  <% } %>
-
-  <% if (startPage > 1) { %>
-    <a class="page-link" href="/home?q=<%= searchQuery %>&page=<%= startPage - 1 %>">...</a>
-  <% } %>
-
-  <% for (let i = 0; i < pages.length; i++) { %>
-    <% if (currentPage === pages[i]) { %>
-      <span class="page-link current-page active"><%= pages[i] %></span>
-    <% } else { %>
-      <a class="page-link" href="/home?q=<%= searchQuery %>&page=<%= pages[i] %>"><%= pages[i] %></a>
-    <% } %>
-  <% } %>
-
-  <% if (currentPage < pageCount ) { %>
-    <a class="page-link" href="/home?page=<%= currentPage + 1 %>"><button class="btn btn-primary">Next</button></a>
-
-  <% } %>
 </div>
+    <div class="box-shadow">
 
+    <div id="carouselExampleCaptions" class="carousel slide">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <a href="#"><img src="/public/images/dish1.jpg" class="d-block w-100 carousel-img" alt="..."></a>
+            <div class="carousel-caption d-md-block">
+              <h5>First slide label</h5>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <a href="#"><img src="/public/images/dish2.jpg" class="d-block w-100 carousel-img" alt="..."></a>
+            <div class="carousel-caption d-md-block">
+              <h5>Second slide label</h5>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <a href="#"><img src="/public/images/dish3.jpg" class="d-block w-100 carousel-img" alt="..."></a>
+            <div class="carousel-caption d-md-block">
+              <h5>Third slide label</h5>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+      </div>
+      
 
-<script>
-  function updatePage(page, searchQuery) {
-    console.log("Update page called with page=" + page + " and searchQuery=" + searchQuery);
-    const url = new URL(window.location.href);
-    url.searchParams.set("page", page);
-    url.searchParams.set("search", searchQuery);
-    window.location.href = url.toString();
-  }
+      <script>
+        const carousel = new bootstrap.Carousel('#carouselExampleCaptions')
+      </script>
 
-  // Function to handle click event on "Previous" button
-  function goToPreviousPage() {
-    const currentPage = parseInt("<%= currentPage %>");
-    const searchQuery = "<%= searchQuery %>";
-    if (currentPage > 1) {
-      updatePage(currentPage - 1, searchQuery);
-    }
-  }
-
-  // Function to handle click event on "Next" button
-  function goToNextPage() {
-    const currentPage = parseInt("<%= currentPage %>");
-    const pageCount = parseInt("<%= pageCount %>");
-    const searchQuery = "<%= searchQuery %>";
-      updatePage(currentPage + 1, searchQuery);
-  };
-</script>
-
-
-
-<%- include(`templates/footer${headerSession}`) %>
-
+    <%- include("templates/footer") %>
