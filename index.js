@@ -459,10 +459,12 @@ app.get("/home", async (req, res) => {
 app.get("/search", async (req, res) => {
     const user = await userCollection.findOne({ email: req.session.email});
 
+
     if (isValidSession(req)) {
         var allergens = user.allergens;
         var diet = user.diet; 
     }  
+
 
     const searchQuery = req.query.q;
     const searchTerm = req.query.q;
@@ -642,6 +644,7 @@ app.get("/search", async (req, res) => {
     if (!(isValidSession(req))){
         headerSession = "BeforeLogin"
     }
+
   
     res.render("recipe", { 
         recipe: recipeData,
