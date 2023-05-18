@@ -15,7 +15,9 @@ const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
 const stub = ClarifaiStub.grpc();
 const { Configuration, OpenAIApi } = require("openai");
 // Salt rounds for bcrypt password hashing
-const saltRounds = 12;                                          
+const saltRounds = 12;     
+
+
 
 
 /* Secrets */
@@ -453,7 +455,18 @@ app.post("/preferences/delete", async (req, res) => {
 });
 
 app.get("/home", async (req, res) => {
-    res.render("homepage");
+
+    const searchQuery = req.query.q;
+   
+    var headerSession = ""
+    if (!(isValidSession(req))){
+        headerSession = "BeforeLoginHome"
+    }
+  
+    res.render("homepage", {
+        headerSession,
+        searchQuery
+    });
 });
 
 app.get("/search", async (req, res) => {
@@ -469,10 +482,7 @@ app.get("/search", async (req, res) => {
     const searchQuery = req.query.q;
     const searchTerm = req.query.q;
     const searchIngredients = searchQuery ? searchQuery.split(",") : [];
-    const page = parseInt(req.query.page) || 1;
-  
-    const recipesPerPage = 20;
-    const skip = (page - 1) * recipesPerPage;
+
   
     const query = {};
 
@@ -504,31 +514,42 @@ app.get("/search", async (req, res) => {
         query.$and.push({ $and: dietQuery });
       }
       
-  
 
+    //recieved all ratings
+    var ratings = await commentCollection.find({}).project({rating: 1, recipeID: 1}).toArray();
 
-    const countPromise = recipesCollection.countDocuments(query);
+    //filters the ratings
+    var filteredRatings = []
+    for (count = 0; ratings.length > count; count++){
+        //ignores all null or empty ratings
+        if (!(ratings[count].rating == null)) { 
+                //compares filteredRatings array object to object in ratings array
+                if (filteredRatings.some(e => e.recipeID == ratings[count].recipeID)){
 
-    const recipesPromise = recipesCollection
-      .find(query)
-      .project({ name: 1, description: 1, servings: 1, _id: 1, ingredients: 1 })
-      .skip(skip)
-      .limit(recipesPerPage)
-      .toArray();
-  
-    
+                    key = "recipeID"
+                    value = ratings[count].recipeID
 
-    const [recipeCount, recipeData] = await Promise.all([countPromise, recipesPromise]);
-  
-    const pageCount = Math.ceil(recipeCount / recipesPerPage);
-    const maxButtons = 10;
-    const visiblePages = 5;
-    const halfVisiblePages = Math.floor(visiblePages / 2);
-    let startPage = Math.max(1, page - halfVisiblePages);
-    let endPage = Math.min(startPage + visiblePages - 1, pageCount);
-  
-    if (endPage - startPage + 1 < visiblePages) {
-      startPage = Math.max(1, endPage - visiblePages + 1);
+                    //Function to find index based off key and value developed by ChatGPT
+                    function findIndex(array, key, value) {
+                        for (let index = 0; index < array.length; index++) {
+                          const obj = array[index];
+                          if (obj.hasOwnProperty(key) && obj[key] === value) {
+                            return index;
+                          }
+                        }
+                      }
+
+                    objIndex = findIndex(filteredRatings, key, value)
+
+                    //Adds integer of rating together and total amount of ratings for average calculation later on
+                    filteredRatings[objIndex].rating = parseInt(filteredRatings[objIndex].rating) + parseInt(ratings[count].rating)
+                    filteredRatings[objIndex].ratingTotal = parseInt(filteredRatings[objIndex].ratingTotal) + parseInt(1)
+
+                } else {
+                    //If there is no unique recipeID in filtered ratings array, the object is added 
+                    filteredRatings.push({recipeID: ratings[count].recipeID, rating: parseInt(ratings[count].rating), ratingTotal: parseInt(1)})
+                }
+        }
     }
   
     const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
@@ -576,19 +597,16 @@ app.get("/search", async (req, res) => {
     }
   
     res.render("search", {
-      recipe: recipeData,
-      currentPage: page,
-      pageCount: pageCount,
-      pages: pages,
-      maxButtons: maxButtons,
-      visiblePages: visiblePages,
-      startPage: startPage,
       searchQuery: searchQuery,
       searchIngredients: searchIngredients,
       filteredRatings, filteredRatings,
       headerSession
     });
-  });
+
+});
+
+
+// recipe detail page
 
   const { ObjectId } = require('mongodb');
 
@@ -651,8 +669,8 @@ app.get("/search", async (req, res) => {
         commentData: commentData,
         filteredRatings: filteredRatings,
         headerSession
-    });
-  });
+    }); 
+  }); 
 
 app.post('/commentPost', async(req, res) => {
 
@@ -671,9 +689,63 @@ app.post('/commentPost', async(req, res) => {
 
         await commentCollection.insertOne({ recipeID: recipeID, username: username, commentHeader: header, comment: comment, rating: rating});
 
+  
     res.redirect(`/recipe?id=${recipeID}`)
     }
 })
+
+// browse recipe page (redirect from homepage)
+app.get('/browseRecipe/:id', async (req, res) => {
+    const recipesPerPage = 20;
+    const page = req.params.id;
+    let query = {}; // Initialize an empty query object
+  
+    let specificTag = ""; // Specify the default tag value
+  
+    if (page == 1) {
+      specificTag = '30-minutes-or-less';
+    } else if (page == 2) {
+      specificTag = 'low-calorie';
+    } else if (page == 3) {
+      specificTag = 'occasion';
+    } else if (page == 4) {
+        specificTag = 'breakfast';
+      } else if (page == 5) {
+        specificTag = 'lunch';
+      } else if (page == 6) {
+        specificTag = 'dinner';
+      } else if (page == 7) {
+        specificTag = 'dessert';
+      }
+  
+
+    // Construct the query to filter recipes with the specific tag
+    query = { tags: { $regex: specificTag, $options: "i" } };
+  
+    const countPromise = recipesCollection.countDocuments(query);
+    const recipesPromise = recipesCollection
+      .find(query)
+      .project({ name: 1, description: 1, servings: 1, _id: 1, ingredients: 1 })
+      .limit(recipesPerPage)
+      .toArray();
+  
+      var headerSession = ""
+      if (!(isValidSession(req))){
+          headerSession = "BeforeLogin"
+      }
+    
+    try {
+      const [recipeCount, recipeData] = await Promise.all([countPromise, recipesPromise]);
+  
+      res.render("browseRecipe", {
+        recipe: recipeData,
+        headerSession    
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
 
 app.get("/imageUpload", async (req, res) => {
     var headerSession = ""
