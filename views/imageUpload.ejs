@@ -21,6 +21,8 @@
 </div>
 <div id="searchButton-box" class="d-flex justify-content-center mt-3 "> 
 </div>
+<div id="aiRecipeButton-box" class="d-flex justify-content-center mt-3 "> 
+</div>
 
 <script>
 
@@ -57,12 +59,27 @@
     searchButton.style.display = "none";
     document.getElementById("searchButton-box").appendChild(searchButton);
 
+    // add Custom with AI button
+    const AIRecipeButton = document.createElement("button");
+    AIRecipeButton.className = "btn btn-success btn-lg btn-block";
+    AIRecipeButton.innerHTML = "Get Custom Recipe... ";
+    AIRecipeButton.style.display = "none";
+    document.getElementById("aiRecipeButton-box").appendChild(AIRecipeButton);
+
     // add event listener to send GET request with ingredients array
     searchButton.addEventListener("click", function() {
         let ingredientsString = ingredientsArr.join(", ");
         let url = "/home?q=" + ingredientsString;
         window.location.href = url;
     });
+
+    // add event listener to send GET request with ingredients array
+    AIRecipeButton.addEventListener("click", function() {
+        let ingredientsString = ingredientsArr.join(", ");
+        let url = "airecipe/?q=" + ingredientsString;
+        window.location.href = url;
+    });
+
 
 
     function processImage() {
@@ -150,6 +167,7 @@
         console.log(ingredientsArr);
 
         searchButton.style.display = "block";
+        AIRecipeButton.style.display = "block";
 
     }
 
