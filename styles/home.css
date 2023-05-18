@@ -1,4 +1,6 @@
-
+.container {
+  max-width: 95vw;
+}
 
 .jumbotron {
   background-color: #DD7373;
