@@ -1,0 +1,6 @@
+Successfully created collection for database to store comments
+Successfully saves comments to database
+Successfully saves rating and topic header to database
+Successfully displays user ratings in recipe page
+Successfully displays avg rating on homepage and recipe page
+Successfully prevents unsigned in user to post reviews

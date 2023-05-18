@@ -14,11 +14,17 @@
       <button type="submit" class="btn btn-primary mb-3">Search</button>
     </form>
     
-
 <% for(let i=0; i < recipe.length; i++) { %>
 <div class="card shadow-sm">
     <div class="card-body">
       <p class="card-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><h1> <%= recipe[i].name %> </h1></font><font style="vertical-align: inherit;"> 
+        <% for(count = 0; count < filteredRatings.length; count++) { %>
+          <% if(filteredRatings[count].recipeID == recipe[i]._id) { %>
+            <p>Rating: <%-((filteredRatings[count].rating) / (filteredRatings[count].ratingTotal)).toFixed(1)%>/5.0 (based on <%-filteredRatings[count].ratingTotal%> reviews)</p>
+          <% } else { %>
+            <p>No reviews</p>
+          <% } %>
+        <% } %>
         <p><%= recipe[i].description %> </p></font></font></p>
       <div class="d-flex justify-content-between align-items-center">
         <div class="btn-group">
