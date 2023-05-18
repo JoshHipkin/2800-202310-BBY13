@@ -1,10 +1,4 @@
-nav {
-  background-color: #DD7373;
-}
 
-#footer {
-  background-color: #DD7373;
-}
 
 .jumbotron {
   background-color: #DD7373;
@@ -19,7 +13,7 @@ nav {
 }
 
 
-  .btn {
+  .btn-success {
     background-color: #198754;
   }
 

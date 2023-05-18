@@ -1,17 +1,18 @@
 <%- include("templates/header") %> 
   <div class="text-center mb-5 mt-5">
-    <h3>Welcome to your personalized recipe page!</h3>
   </div>
-        <a href="/imageUpload" class="btn btn-primary btn-lg d-flex justify-content-center  ">
+        <a href="/imageUpload" class="btn btn-success btn-lg d-flex justify-content-center mx-5 mb-3">
       <i class="bi bi-camera me-2"></i>Search By Image!
     </a>
-    <form class="form-inline my-5 mx-5" action="/search" method="GET">
-      <div class="form-group">
-        <label for="search_input">Start adding some ingredients here. You can add as many as you like and We will only show you recipes that contain those ingredients.</label>
-        <input type="text" class="form-control mb-3" id="search_input" name="q" value="<%= searchQuery %>" placeholder="ingredients, separated by commas.">
+    <div class="form-group mx-5">
+        
+      <label for="search_input">Search by recipe name or add as many ingredients as you want, separated by commas</label>
+      <div class="input-group">
+          <input type="text" class="form-control mb-3" id="search_input" name="q" placeholder="">
+          <button type="submit" class="btn btn-success mb-3" id="">
+              <i class="bi bi-search"></i>
       </div>
-      <button type="submit" class="btn btn-primary mb-3">Search</button>
-    </form>
+  </div>
     
 
     
