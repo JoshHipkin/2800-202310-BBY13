@@ -471,11 +471,13 @@ app.get("/home", async (req, res) => {
 
 app.get("/search", async (req, res) => {
     const user = await userCollection.findOne({ email: req.session.email});
-
+    var headerSession = "BeforeLogin";
+   
 
     if (isValidSession(req)) {
         var allergens = user.allergens;
-        var diet = user.diet; 
+        var diet = user.diet;
+        headerSession = ''; 
     }  
 
 
@@ -618,11 +620,7 @@ app.get("/search", async (req, res) => {
         }
     }
     
-    var headerSession = ""
-    if (!(isValidSession(req))){
-        headerSession = "BeforeLogin"
-    }
-  
+    
     res.render("search", {
         recipe: recipeData,
         currentPage: page,
