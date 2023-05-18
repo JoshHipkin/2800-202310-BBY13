@@ -1,5 +1,6 @@
 <%- include(`templates/header${headerSession}`) %> 
-    <div class="text-center mb-5 mt-5">
+
+  <div class="text-center mb-5 mt-5">
     <h3>Welcome to your personalized recipe page!</h3>
   </div>
         <a href="/imageUpload" class="btn btn-primary btn-lg d-flex justify-content-center  ">
@@ -15,80 +16,43 @@
     </form>
     
 
-<% for(let i=0; i < recipe.length; i++) { %>
-<div class="card shadow-sm">
-    <div class="card-body">
-      <p class="card-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><h1> <%= recipe[i].name %> </h1></font><font style="vertical-align: inherit;"> 
-        <p><%= recipe[i].description %> </p></font></font></p>
-      <div class="d-flex justify-content-between align-items-center">
-        <div class="btn-group">
-         
-          <a class="btn btn-sm btn-outline-secondary" href="/recipe?id=<%= recipe[i]._id %>">Read More</a>
-
-          <button type="button" class="btn btn-sm btn-outline-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Save</font></font></button>
+    <div class="container" >
+      <div class="card mb-3 custom-card">
+        <img src="/public/images/recipehome1.jpeg" class="card-img-top rotated" alt="dinner" style="width: 80%; height: auto; display: block; margin: 0 auto;">
+        <div class="card-body">
+          <h1 class="card-title">Easy 30-minutes-or-less Dinners</h1>
+          <p class="card-text">Here you'll find a collection of delicious recipes that your family will love! Flavored, well-rounded dishes with layer after layer of fresh goodness.</p>
+          <p class="card-text"><a class="btn btn-primary" href="/browseRecipe/1" role="button">Explore</a></p>
         </div>
-        <small class="text-body-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> <%= recipe[i].servings %> Servings</font></font></small>
-      </div>
+      </div>      
     </div>
-  </div>
-<% } %> 
+
+    <div class="container" >
+      <div class="card mb-3 custom-card">
+        <img src="/public/images/recipehome2.jpeg" class="card-img-top rotate" alt="dinner" style="width: 80%; height: auto; display: block; margin: 0 auto;">
+        <div class="card-body">
+          <h1 class="card-title">Healthy and Low Calorie Recipes</h1>
+          <p class="card-text">These nutritious and low-calorie recipes offer a perfect balance between nourishment and culinary delight.</p>
+          <p class="card-text"><a class="btn btn-primary" href="/browseRecipe/2" role="button">Explore</a></p>
+        </div>
+      </div>      
+    </div>
+
+
+    <div class="container" >
+      <div class="card mb-3 custom-card">
+        <img src="/public/images/recipehome3.jpeg" class="card-img-top" alt="dinner" style="width: 80%; height: auto; display: block; margin: 0 auto;">
+        <div class="card-body">
+          <h1 class="card-title">Desserts</h1>
+          <p class="card-text">End your meal with a sweet, homemade dessert. They make any occasion feel extra-special, from birthdays tot everyday dinners.</p>
+          <p class="card-text"><a class="btn btn-primary" href="/browseRecipe/3" role="button">Explore</a></p>
+        </div>
+      </div>      
+    </div>
+    
 
 
 
-<div class="pagination d-flex justify-content-center">
-  <% if (currentPage > 1) { %>
-    <a class="page-link" href="/home?page=<%= currentPage - 1 %>"><button class="btn btn-primary">Prev</button></a>
 
-
-  <% } %>
-
-  <% if (startPage > 1) { %>
-    <a class="page-link" href="/home?q=<%= searchQuery %>&page=<%= startPage - 1 %>">...</a>
-  <% } %>
-
-  <% for (let i = 0; i < pages.length; i++) { %>
-    <% if (currentPage === pages[i]) { %>
-      <span class="page-link current-page active"><%= pages[i] %></span>
-    <% } else { %>
-      <a class="page-link" href="/home?q=<%= searchQuery %>&page=<%= pages[i] %>"><%= pages[i] %></a>
-    <% } %>
-  <% } %>
-
-  <% if (currentPage < pageCount ) { %>
-    <a class="page-link" href="/home?page=<%= currentPage + 1 %>"><button class="btn btn-primary">Next</button></a>
-
-  <% } %>
-</div>
-
-
-<script>
-  function updatePage(page, searchQuery) {
-    console.log("Update page called with page=" + page + " and searchQuery=" + searchQuery);
-    const url = new URL(window.location.href);
-    url.searchParams.set("page", page);
-    url.searchParams.set("search", searchQuery);
-    window.location.href = url.toString();
-  }
-
-  // Function to handle click event on "Previous" button
-  function goToPreviousPage() {
-    const currentPage = parseInt("<%= currentPage %>");
-    const searchQuery = "<%= searchQuery %>";
-    if (currentPage > 1) {
-      updatePage(currentPage - 1, searchQuery);
-    }
-  }
-
-  // Function to handle click event on "Next" button
-  function goToNextPage() {
-    const currentPage = parseInt("<%= currentPage %>");
-    const pageCount = parseInt("<%= pageCount %>");
-    const searchQuery = "<%= searchQuery %>";
-      updatePage(currentPage + 1, searchQuery);
-  };
-</script>
-
-
-
-<%- include(`templates/footer${headerSession}`) %>
+<%- include("templates/footer") %>
 

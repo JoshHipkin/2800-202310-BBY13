@@ -8,3 +8,25 @@
 .recipal-logo {
     max-height: 40vh;
 }
+
+/* home page cards*/
+
+.rotated {
+    transform: rotate(-90deg);
+  }
+  
+  .custom-card {
+    width: 80%; 
+    height: auto; 
+  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   margin: 5%;
+}
+  
+.rotate {
+  transform: rotate(90deg);
+}

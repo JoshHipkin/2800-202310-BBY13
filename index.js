@@ -429,10 +429,7 @@ app.get("/home", async (req, res) => {
     const searchQuery = req.query.q;
     const searchTerm = req.query.q;
     const searchIngredients = searchQuery ? searchQuery.split(",") : [];
-    const page = parseInt(req.query.page) || 1;
-  
-    const recipesPerPage = 20;
-    const skip = (page - 1) * recipesPerPage;
+
   
     const query = {};
 
@@ -464,34 +461,6 @@ app.get("/home", async (req, res) => {
         query.$and.push({ $and: dietQuery });
       }
       
-  
-
-
-    const countPromise = recipesCollection.countDocuments(query);
-
-    const recipesPromise = recipesCollection
-      .find(query)
-      .project({ name: 1, description: 1, servings: 1, _id: 1, ingredients: 1 })
-      .skip(skip)
-      .limit(recipesPerPage)
-      .toArray();
-  
-    
-
-    const [recipeCount, recipeData] = await Promise.all([countPromise, recipesPromise]);
-  
-    const pageCount = Math.ceil(recipeCount / recipesPerPage);
-    const maxButtons = 10;
-    const visiblePages = 5;
-    const halfVisiblePages = Math.floor(visiblePages / 2);
-    let startPage = Math.max(1, page - halfVisiblePages);
-    let endPage = Math.min(startPage + visiblePages - 1, pageCount);
-  
-    if (endPage - startPage + 1 < visiblePages) {
-      startPage = Math.max(1, endPage - visiblePages + 1);
-    }
-  
-    const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 
     
     var headerSession = ""
@@ -500,18 +469,15 @@ app.get("/home", async (req, res) => {
     }
   
     res.render("homepage", {
-      recipe: recipeData,
-      currentPage: page,
-      pageCount: pageCount,
-      pages: pages,
-      maxButtons: maxButtons,
-      visiblePages: visiblePages,
-      startPage: startPage,
       searchQuery: searchQuery,
       searchIngredients: searchIngredients,
       headerSession
     });
-  });
+
+});
+
+
+// recipe detail page
 
   const { ObjectId } = require('mongodb');
 
@@ -536,14 +502,60 @@ app.get("/home", async (req, res) => {
     res.render("recipe", { 
         recipe: recipeData,
         headerSession
-    });
+    }); 
+  }); 
+
+
+  // browse recipe page (redirect from homepage)
+  app.get('/browseRecipe/:id', async (req, res) => {
+    const recipesPerPage = 20;
+    const page = req.params.id;
+    let query = {}; // Initialize an empty query object
+  
+    let specificTag = ""; // Specify the default tag value
+  
+    if (page == 1) {
+      specificTag = '30-minutes-or-less';
+    } else if (page == 2) {
+      specificTag = 'low-calorie';
+    } else if (page == 3) {
+      specificTag = 'desserts';
+    }
+  
+    // Construct the query to filter recipes with the specific tag
+    query = { tags: { $regex: specificTag, $options: "i" } };
+  
+    const countPromise = recipesCollection.countDocuments(query);
+    const recipesPromise = recipesCollection
+      .find(query)
+      .project({ name: 1, description: 1, servings: 1, _id: 1, ingredients: 1 })
+      .limit(recipesPerPage)
+      .toArray();
+  
+      var headerSession = ""
+      if (!(isValidSession(req))){
+          headerSession = "BeforeLogin"
+      }
+    
+    try {
+      const [recipeCount, recipeData] = await Promise.all([countPromise, recipesPromise]);
+  
+      res.render("browseRecipe", {
+        recipe: recipeData,
+        headerSession    
+      });
+    } catch (error) {
+      console.log(error);
+    }
   });
+
+
+
 
   
 
 
-
-
+//Image upload
 app.get("/imageUpload", async (req, res) => {
     var headerSession = ""
     if (!(isValidSession(req))){
