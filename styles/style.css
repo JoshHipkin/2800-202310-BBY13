@@ -155,42 +155,43 @@ canvas {
 
 /* home page cards*/
 
-.rotated {
-  transform: rotate(-90deg);
-}
-
-.custom-card {
-  width: 100%;
+.card-img-top.recipebrowse-1.custom-image {
+  width: 100%; 
   height: auto;
+    transform: rotate(-90deg);
+  }
+  
+  .card.mb-3.custom-card {
+    width: 100%; 
+    height: auto;
+    flex-basis: calc(50% - 5px);
+    border: none;
+    text-align: left; 
+  }
+
+  .container.recipe {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5%;
+
 }
-
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 5%;
-}
-
-.rotate {
-  transform: rotate(90deg);
-}
-
-
-.custom-image {
-  width: 100%;
+  
+.card-img-top.recipebrowse.custom-image {
+  width: 100%; 
   height: auto;
 }
 
 
 /* explore section (homepage)*/
-.card-container {
+.card-container.explore {
   display: flex;
   justify-content: space-between;
   gap: 10px;
   margin: 5%;
 }
 
-.card {
+.card.explorerecipe {
   flex-basis: calc(50% - 5px);
   border: none;
   text-align: left;
@@ -205,6 +206,14 @@ canvas {
   border-radius: 60%;
   overflow: hidden;
 }
+
+
+
+
+
+
+
+
 
 .rotated {
   transform: rotate(-90deg);
