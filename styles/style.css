@@ -150,13 +150,6 @@ canvas {
   font-size: 18px;
 }
 
-
-#loading {
-  /* position:static;
- bottom: -10%; */
-
-}
-
 #recipeNumber {
   background-color: #DD7373;
   border: white 8px;
@@ -229,4 +222,9 @@ canvas {
   width: 100%; 
   display:none;
   margin-top: 5vh ;
+}
+
+/* for shopping list strikethrough effect */
+.strikethrough-list .form-check-input:checked ~ .form-check-label {
+  text-decoration: line-through;
 }

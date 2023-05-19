@@ -143,7 +143,7 @@ app.post('/loggingin', async (req, res) => {
 // perform logout, and delete session
 app.get('/logout', (req, res) => {
     req.session.destroy();
-    res.redirect("/");
+    res.redirect("/home");
 });
 
 //sign up page
@@ -399,8 +399,7 @@ app.get("/profile", async (req, res) => {
     
     const email = req.session.email;
     const result = await userCollection.find({ email: email }).project({ username: 1, password: 1, _id: 1, email: 1 }).toArray();
-
-    res.render('profile', { tabContent: 'profile-info', user: result });
+    res.render('profile', { tabContent: 'profile-info', user: result[0] });
 });
 
 app.get("/profile/preferences", async (req, res) => {
@@ -410,7 +409,7 @@ app.get("/profile/preferences", async (req, res) => {
     const result = await userCollection.find({email: email})
     .project({allergens: 1, diet: 1, username: 1})
     .toArray();
-    res.render('profile', {tabContent: 'preferences', user: result[0]});
+    res.render('profile', {tabContent: 'preferences', user: result[0] });
 });
 
 app.post("/savePreferences", async (req, res) => {
@@ -570,7 +569,7 @@ app.get("/search", async (req, res) => {
           { ingredients: { $regex: new RegExp(ingredient, "i") } }
         ));
         query.$or = query.$or || [];
-        query.$or.push({ $or: ingredientQueries });
+        query.$or.push({ $and: ingredientQueries });
       }
       
       if (allergens && allergens.length > 0) {
@@ -864,7 +863,8 @@ app.get("/imageUpload", async (req, res) => {
 });
 
 app.get("/shoppingList", async (req, res) => {
-    try {
+  sessionValidation(req, res);  
+  try {
       const email = req.session.email;
       const user = await userCollection.findOne({ email });
     
