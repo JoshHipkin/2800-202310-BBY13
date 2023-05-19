@@ -17,9 +17,6 @@ const { Configuration, OpenAIApi } = require("openai");
 // Salt rounds for bcrypt password hashing
 const saltRounds = 12;     
 
-
-
-
 /* Secrets */
 const mongodb_host = process.env.MONGODB_HOST;
 const mongodb_user = process.env.MONGODB_USER;
@@ -94,6 +91,10 @@ app.use(session({
 
 // landing page
 app.get("/", (req, res) => {
+    if(isValidSession(req)){
+        res.redirect('home')
+        return
+    }
     res.render('index');
 });
 
@@ -395,7 +396,7 @@ app.get("/profile", async (req, res) => {
     const email = req.session.email;
     const result = await userCollection.find({ email: email }).project({ username: 1, password: 1, _id: 1, email: 1 }).toArray();
 
-    res.render('profile', { tabContent: 'profile-info', user: result });
+    res.render('profile', { tabContent: 'profile-info', user: result[0]});
 });
 
 app.get("/profile/preferences", async (req, res) => {
@@ -407,6 +408,14 @@ app.get("/profile/preferences", async (req, res) => {
     .toArray();
     res.render('profile', {tabContent: 'preferences', user: result[0]});
 });
+
+app.get("/profile/pantry", async (req, res) => {    
+    const email = req.session.email;
+    const result = await userCollection.find({ email: email }).project({ username: 1, password: 1, _id: 1, email: 1 }).toArray();
+
+    res.render('profile', {tabContent: 'pantry', user: result[0]})
+});
+
 
 app.post("/savePreferences", async (req, res) => {
     const allergies = req.body.allergy;
