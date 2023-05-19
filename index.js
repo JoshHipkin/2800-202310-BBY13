@@ -473,16 +473,18 @@ app.get("/search", async (req, res) => {
     const user = await userCollection.findOne({ email: req.session.email});
     var headerSession = "BeforeLogin";
    
+    //array for passing names for checkboxes
+    const availableOptions = ['dinner', 'dessert', 'lunch', 'breakfast', 'appetizer', 'low-calorie',];
 
     if (isValidSession(req)) {
         var allergens = user.allergens;
         var diet = user.diet;
         headerSession = ''; 
     }  
-
-
+    const refineSearch = req.query.s;
     const searchQuery = req.query.q;
     const searchTerm = req.query.q;
+        
     const searchIngredients = searchQuery ? searchQuery.split(",") : [];
     const page = parseInt(req.query.page) || 1;
     const recipesPerPage = 20;
@@ -513,6 +515,21 @@ app.get("/search", async (req, res) => {
 
 
  
+    /*Define Query for recipe database */
+
+    if (refineSearch && refineSearch.length > 0) {
+        let termQuery;
+        if (Array.isArray(refineSearch)) {
+          termQuery = refineSearch.map(term => ({ search_terms: new RegExp(term, "i") }));
+        } else {
+          termQuery = [{ search_terms: new RegExp(refineSearch, "i") }];
+        }
+        query.$and = query.$and || [];
+        query.$and.push({ $or: termQuery});
+    }
+      
+
+
     if (searchTerm && searchTerm.length > 0) {
         const recipeQuery = { name: { $regex: new RegExp(searchTerm, "i") } };
         query.$or = query.$and || [];
@@ -541,6 +558,8 @@ app.get("/search", async (req, res) => {
       }
       
       const countPromise = recipesCollection.countDocuments(query);
+
+      /* End of recipe query */
 
       const recipesPromise = recipesCollection
         .find(query)
@@ -605,17 +624,19 @@ app.get("/search", async (req, res) => {
     const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);    
     
     res.render("search", {
-        recipe: recipeData,
-        currentPage: page,
-        pageCount: pageCount,
-        pages: pages,
-        maxButtons: maxButtons,
-        visiblePages: visiblePages,
-        startPage: startPage,
-        searchQuery: searchQuery,
-        searchIngredients: searchIngredients,
-        filteredRatings: filteredRatings,
-        headerSession
+      recipe: recipeData,
+      currentPage: page,
+      pageCount: pageCount,
+      pages: pages,
+      maxButtons: maxButtons,
+      visiblePages: visiblePages,
+      startPage: startPage,
+      searchQuery: searchQuery,
+      searchIngredients: searchIngredients,
+      filteredRatings,
+      headerSession,
+      availableOptions,
+      selectedCategories: refineSearch
     });
 
 });
