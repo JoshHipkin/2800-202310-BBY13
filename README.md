@@ -22,8 +22,7 @@ http://repqxuwlgf.eu09.qoddiapp.com/
 - Working on ejs pantry page
 - Fixed bug on ejs script on preference and profile page
 - Build an array based on all the ingredients in mongodb database (2 hrs)
-- Troubleshoot and change all string in ingredients to array (2 hrs)
-- Iterate and troubleshoot all unique ingredients into array (2 hrs)
+- Iterate, troubleshoot, and save all unique ingredients into array (2 hrs)
 - Save array into json file (2hr)
 - Implement autosuggest feature on form using array (2 hrs)
 
