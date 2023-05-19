@@ -1,3 +1,22 @@
+
+@media (min-width: 1000px) {
+  #desktop {
+    display: block;
+  }
+
+  #mobile {
+    display: none;
+  }
+
+}
+
+@media (max-width: 900px) {
+  #desktop {
+    display: none;
+  }
+}
+
+
 body {
   min-height: 400px;
   margin-bottom: 100px;
@@ -44,23 +63,13 @@ nav {
 
 }
 
-
-@media (min-width: 1000px) {
-  #desktop {
-    display: block;
-  }
-
-  #mobile {
-    display: none;
-  }
-
+#recipeNumber {
+  background-color: #DD7373;
+  border: white 8px;
+  border-radius: 4px;
 }
 
-@media (max-width: 900px) {
-  #desktop {
-    display: none;
-  }
-}
+
 
 
 /* home page cards*/
