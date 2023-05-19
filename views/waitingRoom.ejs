@@ -1,0 +1,32 @@
+<%- include(`templates/header`) %> 
+
+
+
+
+
+<div class = "container card d-flex justify-content-center">
+            <img src="/public/images/chef.gif">
+
+            
+            <h1>Waiting room..</h1>
+            <p>Preparing a custom recipe from the following ingredients:<br/> <%= ingredientsAI %></p>
+            
+</div>
+
+
+
+
+
+
+
+
+
+
+    <% let url = "/airecipe/?q=" + ingredientsAI %>
+    <script type="text/javascript">
+        console.log("redirecting to " + "<%= url %>")
+        window.location.href = "<%= url %>";
+    </script>
+
+
+<%- include("templates/footer") %>

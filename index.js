@@ -889,17 +889,32 @@ app.post('/process-image', upload.single('image'), (req, res) => {
   });
 
 
-app.get(/airecipe/, async (req, res) => {
+app.get('/waitingroom', async (req, res) => {
     const ingredientsAI = req.query.q;
+
+    console.log(ingredientsAI);
+
+    res.render("waitingRoom", { ingredientsAI: ingredientsAI});
+
+
+});
+
+  
+
+app.get('/airecipe', async (req, res) => {
+
+    const ingredientsAI = req.query.q;
+
+   
     console.log(ingredientsAI);
 
     const response = await openai.createCompletion({
         model: "text-davinci-003",
         prompt: "recipe from only these ingredients: "
         +  ingredientsAI
-        + "\nas JSON {name, ingredients_raw_str, steps}",
+        + "\nas JSON: {\"name\", \"ingredients_raw_str\", \"steps\"}",
         temperature: 0.3,
-        max_tokens: 420,
+        max_tokens: 600,
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
