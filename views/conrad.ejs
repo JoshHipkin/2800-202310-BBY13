@@ -46,10 +46,10 @@
         function resizeCanvas() {
             canvas.width = window.innerWidth;
 
-            if (canvas.width > 900) {
-                canvas.width = 900;
+            if (canvas.width > 1100) {
+                canvas.width = 1100;
             }
-            canvas.height = window.innerHeight * 0.6;
+            canvas.height = window.innerHeight * 0.7;
         }
             canvas = document.getElementById('gameCanvas');
             canvasContext = canvas.getContext('2d');
@@ -78,6 +78,7 @@
             chefConradImage.src = 'public/images/chefconrad.png';
 
             canvas.addEventListener('mousemove', updateToasterPosition);
+            canvas.addEventListener('touchmove', updateToasterPosition); // For mobile
             // Start game loop
             setInterval(updateGame, 20);
             // Start generating breads at the predetermined interval
@@ -88,8 +89,15 @@
         // Update the position of the toaster based on mouse movement
         function updateToasterPosition(event) {
             var rect = canvas.getBoundingClientRect();
-            var mouseX = event.clientX - rect.left;
-            targetX = mouseX - TOASTER_WIDTH / 2;
+            var mouseX, touchX;
+
+            if (event.type === 'mousemove') {
+                mouseX = event.clientX - rect.left;
+                targetX = mouseX - TOASTER_WIDTH / 2;
+            } else if (event.type === 'touchmove') {
+                touchX = event.touches[0].clientX - rect.left;
+                targetX = touchX - TOASTER_WIDTH / 2;
+            }
         }
 
         // Update the game state

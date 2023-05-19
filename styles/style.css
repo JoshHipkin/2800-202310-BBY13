@@ -68,6 +68,10 @@ canvas {
   margin: 20px;
 }
 
+
+#gameCanvas {
+margin-top: 5vh;
+}
 #gameOverlay p {
   color: white;
   margin-bottom: 20px;
@@ -215,4 +219,5 @@ canvas {
 #youtubeVideo{
   width: 100%; 
   display:none;
+  margin-top: 5vh ;
 }
