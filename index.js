@@ -16,6 +16,8 @@ const stub = ClarifaiStub.grpc();
 const { Configuration, OpenAIApi } = require("openai");
 // Salt rounds for bcrypt password hashing
 const saltRounds = 12;     
+// For generating random id's
+const { v4: uuidv4 } = require('uuid');
 
 
 
@@ -188,10 +190,11 @@ app.post('/createUser', async (req, res) => {
 
     const allergens = [];
     const diet = [];
+    const shoppinglist = [];
     var result = await userCollection.find({email: email}).toArray()
 
     if (result.length == 0) {
-        await userCollection.insertOne({ username: username, email: email, password: hashedPassword, allergens: allergens, diet: diet });
+        await userCollection.insertOne({ username: username, email: email, password: hashedPassword, allergens: allergens, diet: diet, shoppinglist: shoppinglist });
     } else {
         res.render('signupEmailTaken');
         return;
@@ -830,6 +833,103 @@ app.get("/imageUpload", async (req, res) => {
         headerSession
     });
 });
+
+app.get("/shoppingList", async (req, res) => {
+    try {
+      const email = req.session.email;
+      const user = await userCollection.findOne({ email });
+    
+      if (user) {
+        const shoppingLists = user.shoppinglists || [];
+    
+        res.render("shoppingList", { shoppingLists });
+      } else {
+        res.render("shoppingList", { shoppingLists: [] });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+
+app.post("/createList", async (req, res) => {
+    try {
+      const email = req.session.email;
+      const listName = req.body.listName;
+      const listId = uuidv4();
+      
+  
+      // Assuming you have a userCollection variable representing the MongoDB collection
+      const result = await userCollection.updateOne(
+        { email },
+        { $push: { shoppinglists: { id: listId, name: listName, items: [] } } }
+      );
+  
+      if (result.modifiedCount === 1) {
+        console.log("New shopping list created successfully.");
+      } else {
+        console.log("Failed to create a new shopping list.");
+      }
+  
+      res.redirect("/shoppingList"); // Redirect to the shopping list page
+    } catch (error) {
+      // Handle any potential errors
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+
+  app.post("/addItem", async (req, res) => {
+    try {
+      const email = req.session.email;
+      const listId = req.body.listId;
+      const itemName = req.body.itemName;
+    
+      // Assuming you have a userCollection variable representing the MongoDB collection
+      const result = await userCollection.updateOne(
+        { email, "shoppinglists.id": listId },
+        { $push: { "shoppinglists.$.items": { name: itemName } } }
+      );
+    
+      if (result.modifiedCount === 1) {
+        console.log("Item added to the shopping list successfully.");
+      } else {
+        console.log("Failed to add the item to the shopping list.");
+      }
+    
+      res.redirect("/shoppingList"); // Redirect to the shopping list page
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+  
+
+  app.post("/deleteList/:listId", async (req, res) => {
+    try {
+      const email = req.session.email;
+      const listId = req.params.listId;
+    
+      // Assuming you have a userCollection variable representing the MongoDB collection
+      const result = await userCollection.updateOne(
+        { email },
+        { $pull: { shoppinglists: { id: listId } } }
+      );
+    
+      if (result.modifiedCount === 1) {
+        console.log("Shopping list deleted successfully.");
+      } else {
+        console.log("Failed to delete the shopping list.");
+      }
+    
+      res.redirect("/shoppingList"); // Redirect to the shopping list page
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+  
+
 
     // This will be used by every Clarifai endpoint call
     const metadata = new grpc.Metadata();

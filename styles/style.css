@@ -74,7 +74,7 @@ nav {
 
 /* home page cards*/
 
-.rotated {
+/* .rotated {
   transform: rotate(-90deg);
 }
 
@@ -166,4 +166,4 @@ nav {
   object-fit: cover;
   border-radius: 60%;
   overflow: hidden;
-}
+} 
