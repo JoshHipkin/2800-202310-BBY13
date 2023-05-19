@@ -476,7 +476,7 @@ app.get("/home", async (req, res) => {
 
         var headerSession = ""
         if (!(isValidSession(req))){
-            headerSession = "BeforeLoginHome"
+            headerSession = "BeforeLogin"
         }
       
         res.render("homepage", {
@@ -497,8 +497,10 @@ app.get("/home", async (req, res) => {
 
 app.get("/search", async (req, res) => {
     const user = await userCollection.findOne({ email: req.session.email});
-    var headerSession = "BeforeLogin";
-   
+    var headerSession = ""
+    if (!(isValidSession(req))){
+        headerSession = "BeforeLogin"
+    }   
     //array for passing names for checkboxes
     const availableOptions = ['dinner', 'dessert', 'lunch', 'breakfast', 'appetizer', 'low-calorie',];
 
@@ -757,6 +759,10 @@ app.post('/commentPost', async(req, res) => {
 
 // browse recipe page (redirect from homepage)
 app.get('/browseRecipe/:id', async (req, res) => {
+    if (!(isValidSession(req))){
+        headerSession = "BeforeLogin"
+    } 
+
     const recipesPerPage = 20;
     const page = req.params.id;
     let query = {}; // Initialize an empty query object
@@ -1013,11 +1019,16 @@ app.post('/process-image', upload.single('image'), (req, res) => {
 
 
 app.get('/waitingroom', async (req, res) => {
+    var headerSession = ""
+    if (!(isValidSession(req))){
+        headerSession = "BeforeLogin"
+    } 
+
     const ingredientsAI = req.query.q;
 
     console.log(ingredientsAI);
 
-    res.render("waitingRoom", { ingredientsAI: ingredientsAI});
+    res.render("waitingRoom", { ingredientsAI: ingredientsAI, headerSession});
 
 
 });
@@ -1062,7 +1073,12 @@ app.get('/airecipe', async (req, res) => {
 // recipe Upload 
 app.get('/recipeUpload', async (req, res) => {
 
-    res.render("recipeUpload");
+    var headerSession = ""
+    if (!(isValidSession(req))){
+        headerSession = "BeforeLogin"
+    }
+
+    res.render("recipeUpload", {headerSession});
 });
 
 
@@ -1089,6 +1105,10 @@ app.post('/uploadRecipe', async (req, res) => {
   //display community recipes details
 
   app.get('/communityRecipe', async (req, res) => {
+    var headerSession = ""
+    if (!(isValidSession(req))){
+        headerSession = "BeforeLogin"
+    }   
 
     const recipeId = req.query.id;
 
@@ -1100,7 +1120,7 @@ app.post('/uploadRecipe', async (req, res) => {
 
   res.render("communityRecipeDetail", { 
     recipe: recipeData,
-
+    headerSession
 }); 
 }); 
   
