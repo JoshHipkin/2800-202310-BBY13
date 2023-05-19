@@ -1072,7 +1072,7 @@ app.get('/airecipe', async (req, res) => {
 
 // recipe Upload 
 app.get('/recipeUpload', async (req, res) => {
-
+    sessionValidation(req, res);
     var headerSession = ""
     if (!(isValidSession(req))){
         headerSession = "BeforeLogin"
@@ -1084,6 +1084,7 @@ app.get('/recipeUpload', async (req, res) => {
 
 //recipe upload to database
 app.post('/uploadRecipe', async (req, res) => {
+    
     var name = req.body.name;
     var servings = req.body.servings;
     var ingredientsArray = JSON.parse(req.body.ingredientsArray) || [];
