@@ -505,7 +505,7 @@ app.get("/search", async (req, res) => {
             bread = true;
         }
         if(conrad && bread){
-            res.render('conrad');
+            res.render("conrad",{headerSession});
             return;
         }
 
