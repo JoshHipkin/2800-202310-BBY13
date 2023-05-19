@@ -1,4 +1,4 @@
-<%- include(`templates/header${headerSession}`) %>
+<%- include("templates/headerBeforeLoginHome") %>
 
   <div class="text-center mt-4">
     <h3>Start by searching for recipes using our image detection AI, or simply by using the search bar</h3>
@@ -83,6 +83,7 @@
         </a>
         <h3>Dessert</h3>
       </div>
+
     </div>
     
      
@@ -91,6 +92,8 @@
       <h3 class="display-6">Try some of ReciPAL's community recipes!</h3>
   </div>
 </div>
+
+<!-- 
   <div class="box-shadow">
 
   <div id="carouselExampleCaptions" class="carousel slide">
@@ -99,6 +102,7 @@
         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
       </div>
+
       <div class="carousel-inner">
         <div class="carousel-item active">
           <a href="#"><img src="/public/images/dish1.jpg" class="d-block w-100 carousel-img" alt="..."></a>
@@ -129,10 +133,29 @@
         </button>
       </div>
 
-      
 
       <script>
         const carousel = new bootstrap.Carousel('#carouselExampleCaptions')
-      </script>
+      </script> -->
+      
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        <% for (let i = 0; i < recipe.length; i++) { %>
+          <div class="col">
+            <div class="card" style="width: 20rem; margin: 10%;">
+              <img src="/public/images/community.jpeg" class="card-img-top" alt="community">
+              <div class="card-body">
+                <h5 class="card-title"><%= recipe[i].name %></h5>
+                <p class="card-text"><%= recipe[i].description %></p>
+                <a href="/communityRecipe?id=<%= recipe[i]._id %>" class="btn btn-primary">Read More</a>
+                <small class="text-body-secondary"><%= recipe[i].servings %> Servings</small>
+              </div>
+            </div>
+          </div>
+        <% } %>
+      </div>
+      
+      
+      
 
+      
     <%- include("templates/footer") %>

@@ -1,0 +1,110 @@
+<%- include("templates/headerBeforeLoginHome") %>
+
+<div class="row justify-content-center mt-5">
+<div class="col-md-7 col-lg-8">
+    <div class="text-center">
+        <h4 class="mb-3">Upload Your Own Recipe</h4>
+      </div>
+    <img src="/public/images/dinner.jpeg" class="card-img-top mx-auto d-block" alt="dinner" style="width: 30%; height: auto;" >
+    <form class="needs-validation mt-5" action="/uploadRecipe" method="post">
+      <div class="row g-3">
+        <div class="col-sm-6">
+          <label for="recipename" class="form-label">Recipe Name</label>
+          <input name="name" type="text" class="form-control" id="recipeName" placeholder="Enter Name" value="" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+          <textarea name="description" class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Enter brief description of recipe"></textarea>
+        </div>
+
+        <div class="col-md-5">
+          <label for="country" class="form-label">Servings</label>
+          <select name="servings" class="form-select" id="country" required>
+            <option value="">Choose...</option>
+            <option>1-2</option>
+            <option>3-4</option>
+            <option>4-5</option>
+            <option>6-7</option>
+            <option>8-9</option>
+            <option>10+</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="ingredient" class="form-label">Ingredients</label>
+          <div class="input-group">
+            <input type="text" class="form-control" name="ingredients" placeholder="Ingredient 1" required>
+            <button type="button" class="btn btn-secondary" id="addIngredient">Add</button>
+          </div>
+          <div id="ingredientList"></div>
+        </div>
+  
+  
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Instructions</label>
+            <textarea name="steps" class="form-control" id="exampleFormControlTextarea1" rows="10" placeholder="Please end each step with period (.)"></textarea>
+          </div>
+          
+  
+  
+        <hr class="my-4">
+  
+        <button class="w-100 btn btn-primary btn-lg" type="submit">Submit Recipe</button>
+      </div>
+    </form>
+  </div>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      var ingredientCount = 1;
+  
+      $('#addIngredient').click(function() {
+        var ingredientInput = '<input type="text" class="form-control mt-2" name="ingredients" placeholder="Ingredient ' + (ingredientCount + 1) + '" required>';
+        $('#ingredientList').append(ingredientInput);
+        ingredientCount++;
+      });
+  
+      // Handle form submission
+      $('form').submit(function(e) {
+        // Prevent the default form submission
+        e.preventDefault();
+  
+        // Collect all ingredient inputs and store them in an array
+        var ingredientsArray = [];
+        $('[name="ingredients"]').each(function() {
+          var ingredientValue = $(this).val().trim();
+          if (ingredientValue !== '') {
+            ingredientsArray.push(ingredientValue);
+          }
+        });
+  
+        // Assign the array of ingredients to a hidden input field
+        $('<input>').attr({
+          type: 'hidden',
+          name: 'ingredientsArray',
+          value: JSON.stringify(ingredientsArray)
+        }).appendTo('form');
+  
+
+          
+// Get the instructions text and split it into an array using semicolon (;) as the delimiter
+var instructionsText = $('[name="steps"]').val().trim();
+      var instructionsArray = instructionsText.split('.').map(function(instruction) {
+        return instruction.trim();
+      });
+
+      // Assign the array of instructions to a hidden input field
+      $('<input>').attr({
+        type: 'hidden',
+        name: 'instructionsArray',
+        value: JSON.stringify(instructionsArray)
+      }).appendTo('form');
+
+
+        // Submit the form
+        this.submit();
+      });
+    });
+  </script>
+

@@ -57,6 +57,8 @@ const userCollection = database.db(mongodb_database).collection("users");
 const recipesCollection = database.db(mongodb_database).collection("recipes");
 //accessing comment collection
 const commentCollection = database.db(mongodb_database).collection("comments");
+//accessing recipeUpload collection
+const recipeUploadCollection = database.db(mongodb_database).collection("recipeUpload");
 
 /* setting up file usage */
 app.set('view engine', 'ejs');
@@ -460,16 +462,37 @@ app.post("/preferences/delete", async (req, res) => {
 app.get("/home", async (req, res) => {
 
     const searchQuery = req.query.q;
-   
-    var headerSession = ""
-    if (!(isValidSession(req))){
-        headerSession = "BeforeLoginHome"
-    }
+
+    const query = {}; // You can customize the query to filter specific recipes if needed
   
-    res.render("homepage", {
-        headerSession,
-        searchQuery
-    });
+      try {
+        const [recipeCount, recipeData] = await Promise.all([
+          recipeUploadCollection.countDocuments(query),
+          recipeUploadCollection
+            .find(query)
+            .project({ name: 1, servings: 1,  ingredients: 1 , steps: 1, description: 1 , _id: 1})
+            .toArray()
+        ]);
+
+        var headerSession = ""
+        if (!(isValidSession(req))){
+            headerSession = "BeforeLoginHome"
+        }
+      
+        res.render("homepage", {
+            headerSession,
+            searchQuery,
+            recipe: recipeData
+        });
+      
+  
+      } catch (error) {
+        console.error('Error retrieving recipe data:', error);
+        // Handle the error accordingly
+        res.render('errorPage');
+      }
+    
+
 });
 
 app.get("/search", async (req, res) => {
@@ -1034,6 +1057,56 @@ app.get('/airecipe', async (req, res) => {
 
 
 });
+
+
+// recipe Upload 
+app.get('/recipeUpload', async (req, res) => {
+
+    res.render("recipeUpload");
+});
+
+
+//recipe upload to database
+app.post('/uploadRecipe', async (req, res) => {
+    var name = req.body.name;
+    var servings = req.body.servings;
+    var ingredientsArray = JSON.parse(req.body.ingredientsArray) || [];
+    var instructionsArray = JSON.parse(req.body.instructionsArray) || [];
+    var description = req.body.description;
+ 
+
+    const ingredients = JSON.stringify(ingredientsArray);
+    const steps = JSON.stringify(instructionsArray);
+
+    await recipeUploadCollection.insertOne({ name: name, ingredients: ingredients, servings: servings, steps: steps, description: description});
+  
+    res.render("validUploadRecipe");
+  });
+  
+
+ 
+  
+  //display community recipes details
+
+  app.get('/communityRecipe', async (req, res) => {
+
+    const recipeId = req.query.id;
+
+ const recipeData = await recipeUploadCollection.findOne({ _id: new ObjectId(recipeId) });
+    if (!recipeData) {
+      res.send("Recipe not found");
+      return;
+    }
+
+  res.render("communityRecipeDetail", { 
+    recipe: recipeData,
+
+}); 
+}); 
+  
+  
+    
+  
       
 app.get("*", (req, res) => {
     res.status(404);
