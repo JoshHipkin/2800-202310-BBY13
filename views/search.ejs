@@ -4,16 +4,48 @@
         <a href="/imageUpload" class="btn btn-success btn-lg d-flex justify-content-center mx-5 mb-3">
       <i class="bi bi-camera me-2"></i>Search By Image!
     </a>
-    <div class="form-group mx-5">
+    <form class="form-inline my-5 mx-5" action="/search" method="GET">
+      <div class="form-group">
         
-      <label for="search_input">Search by recipe name or add as many ingredients as you want, separated by commas</label>
-      <div class="input-group">
-          <input type="text" class="form-control mb-3" id="search_input" name="q" placeholder="">
-          <button type="submit" class="btn btn-success mb-3" id="">
-              <i class="bi bi-search"></i>
-      </div>
-  </div>
+            <label for="search_input">Search by recipe name or add as many ingredients as you want, separated by commas</label>
+            <div class="input-group">
+                <input type="text" class="form-control mb-3" id="search_input" value="<%- searchQuery %>" name="q" placeholder="">
+                <button type="submit" class="btn btn-success mb-3" id="">
+                    <i class="bi bi-search"></i>
+            </div>
+
+            <!-- <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+              <label class="form-check-label" for="flexSwitchCheckDefault">Check this to sort by fewest ingredients</label>
+            </div> -->
+            
+        
+
+            <h4>Filters:</h4>
+              <% for (const category of availableOptions) { %>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="<%= category %>" name="s" value="<%= category %>"
+                    <% if (selectedCategories && selectedCategories.includes(category)) { %>
+                      checked
+                    <% } %>
+                  >
+                  <label class="form-check-label" for="<%= category %>"><%= category %></label>
+                </div>
+                    <% } %>
+
+              
+                 
+            
+
     
+      
+
+        </div>
+    </form>
+    <!-- Inside the <div class="text-center mb-5 mt-5"> -->
+
+<!-- Add more checkboxes for other categories as needed -->
+
 
     
     
@@ -87,6 +119,27 @@
     const searchQuery = "<%= searchQuery %>";
       updatePage(currentPage + 1);
   };
+
+  // Function to handle checkbox clicks and update the search query
+// function updateSearchQuery() {
+//   const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+//   const checkedCategories = Array.from(checkboxes)
+//     .filter(checkbox => checkbox.checked)
+//     .map(checkbox => checkbox.value);
+
+//   const searchInput = document.getElementById('search_input');
+//   const currentSearchQuery = searchInput.value.trim();
+//   const updatedSearchQuery = checkedCategories.join(',') + (currentSearchQuery ? ',' + currentSearchQuery : '');
+
+//   searchInput.value = updatedSearchQuery;
+// }
+
+// Attach click event listeners to checkboxes
+// const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+// checkboxes.forEach(checkbox => {
+//   checkbox.addEventListener('change', updateSearchQuery);
+// });
+
 </script>
 
 
