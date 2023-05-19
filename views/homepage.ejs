@@ -1,6 +1,6 @@
-<%- include("templates/header") %>
+<%- include(`templates/header${headerSession}`) %>
 
-  <div class="text-center mb-5 mt-5">
+  <div class="text-center mt-4">
     <h3>Start by searching for recipes using our image detection AI, or simply by using the search bar</h3>
   </div>
         <a href="/imageUpload" class="btn btn-success btn-lg d-flex justify-content-center mx-5">
@@ -24,7 +24,7 @@
         <div class="card-body">
           <h1 class="card-title">Easy 30-minutes-or-less Dinners</h1>
           <p class="card-text">Here you'll find a collection of delicious recipes that your family will love! Flavored, well-rounded dishes with layer after layer of fresh goodness.</p>
-          <p class="card-text"><a class="btn btn-primary" href="/browseRecipe/1" role="button">Explore</a></p>
+          <p class="card-text"><a class="btn btn-success" href="/browseRecipe/1" role="button">Explore</a></p>
         </div>
       </div>      
     </div>
@@ -35,7 +35,7 @@
         <div class="card-body">
           <h1 class="card-title">Healthy and Low Calorie Recipes</h1>
           <p class="card-text">These nutritious and low-calorie recipes offer a perfect balance between nourishment and culinary delight.</p>
-          <p class="card-text"><a class="btn btn-primary" href="/browseRecipe/2" role="button">Explore</a></p>
+          <p class="card-text"><a class="btn btn-success" href="/browseRecipe/2" role="button">Explore</a></p>
         </div>
       </div>      
     </div>
@@ -47,7 +47,7 @@
         <div class="card-body">
           <h1 class="card-title">Recipe of the Day</h1>
           <p class="card-text">Explore the top delicious recipes! They make any occasion feel extra-special, even everyday dinners.</p>
-          <p class="card-text"><a class="btn btn-primary" href="/browseRecipe/3" role="button">Explore</a></p>
+          <p class="card-text"><a class="btn btn-success" href="/browseRecipe/3" role="button">Explore</a></p>
         </div>
       </div>      
     </div>

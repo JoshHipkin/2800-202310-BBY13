@@ -1,94 +1,93 @@
 body {
-    min-height: 400px;
-    margin-bottom: 100px;
-    clear: both;
+  min-height: 400px;
+  margin-bottom: 100px;
+  clear: both;
 }
+
 nav {
-    background-color: #DD7373;
-  }
-  
-  #footer {
-    background-color: #DD7373;
-  }
+  background-color: #DD7373;
+}
+
+#footer {
+  background-color: #DD7373;
+}
 
 .recipal-logo {
-    max-height: 40vh;
+  max-height: 40vh;
 }
 
 
 #image-preview {
-    width: 94vw; 
-    height: 40vh; 
-    object-fit: cover; 
-    display:none;
-    justify-content: center;
+  width: 94vw;
+  height: 40vh;
+  object-fit: cover;
+  display: none;
+  justify-content: center;
 
-    border-radius: 20px;
+  border-radius: 20px;
 }
 
-#image-box{
-    width: 94vw; 
-    height: 40vh; 
-    border-radius: 20px;
-    justify-content: center;
-    margin: auto;
-    background-color: aliceblue;
-    margin-bottom: 10px;
-    
-
-
+#image-box {
+  width: 94vw;
+  height: 40vh;
+  border-radius: 20px;
+  justify-content: center;
+  margin: auto;
+  background-color: aliceblue;
+  margin-bottom: 10px;
 }
 
 
-#loading{
- /* position:static;
+#loading {
+  /* position:static;
  bottom: -10%; */
 
 }
 
 
 @media (min-width: 1000px) {
-    #desktop {
-        display: block;
-    }
-    #mobile {
-        display: none;
-    }
-    
+  #desktop {
+    display: block;
+  }
+
+  #mobile {
+    display: none;
+  }
+
 }
 
 @media (max-width: 900px) {
-    #desktop {
-        display: none;
-    }
+  #desktop {
+    display: none;
+  }
 }
 
 
 /* home page cards*/
 
 .rotated {
-    transform: rotate(-90deg);
-  }
-  
-  .custom-card {
-    width: 100%; 
-    height: auto; 
-  }
-
-  .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-   margin: 5%;
+  transform: rotate(-90deg);
 }
-  
+
+.custom-card {
+  width: 100%;
+  height: auto;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5%;
+}
+
 .rotate {
   transform: rotate(90deg);
 }
 
 
 .custom-image {
-  width: 100%; 
+  width: 100%;
   height: auto;
 }
 
@@ -105,7 +104,7 @@ nav {
   flex-basis: calc(50% - 5px);
   border: none;
   text-align: left;
-  
+
 }
 
 .card-img-top-1 {
@@ -117,33 +116,25 @@ nav {
   overflow: hidden;
 }
 
-
-
-
-
-
-
-
 .rotated {
-    transform: rotate(-90deg);
-  }
-  
-  .custom-card {
-    width: 80%; 
-    height: auto; 
-  }
-
-  .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-   margin: 5%;
+  transform: rotate(-90deg);
 }
-  
+
+.custom-card {
+  width: 80%;
+  height: auto;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5%;
+}
+
 .rotate {
   transform: rotate(90deg);
 }
-
 
 /* explore section (homepage)*/
 .card-container {
@@ -156,7 +147,7 @@ nav {
 .card {
   flex-basis: calc(50% - 5px);
   border: none;
-  
+
 }
 
 .card-img-top-1 {
@@ -167,6 +158,3 @@ nav {
   border-radius: 60%;
   overflow: hidden;
 }
-
-
-
