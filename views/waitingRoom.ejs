@@ -5,7 +5,8 @@
 
 
 <div class = "container card d-flex justify-content-center">
-            <img src="/public/images/chef.gif">
+        <br/>
+            <img id="loadingImage" src="/public/images/chef.gif" alt="please be patient...">
 
             
             <h1>Waiting room..</h1>
@@ -24,8 +25,14 @@
 
     <% let url = "/airecipe/?q=" + ingredientsAI %>
     <script type="text/javascript">
-        console.log("redirecting to " + "<%= url %>")
-        window.location.href = "<%= url %>";
+        // Wait for the image to load
+ 
+            var loadingImage = document.getElementById('loadingImage');
+            loadingImage.addEventListener('load', function () {
+                window.location.href = "<%= url %>";
+
+            });
+
     </script>
 
 
