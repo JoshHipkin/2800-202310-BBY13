@@ -1,0 +1,21 @@
+<%- include("templates/headerBeforeLoginHome") %>
+
+<% for (let i = 0; i < recipe.length; i++) { %>
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <p class="card-text">
+          <h1><%= recipe[i].name %></h1>
+        </p>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="btn-group">
+            <a class="btn btn-sm btn-outline-secondary" href="/recipe?id=<%= recipe[i]._id %>">Read More</a>
+            <button type="button" class="btn btn-sm btn-outline-secondary">Save</button>
+          </div>
+          <small class="text-body-secondary"><%= recipe[i].servings %> Servings</small>
+        </div>
+      </div>
+    </div>
+  <% } %>
+  
+  
+  <%- include("templates/footer") %>

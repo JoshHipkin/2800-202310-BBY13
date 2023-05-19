@@ -1,4 +1,4 @@
-<%- include(`templates/header${headerSession}`) %>
+<%- include("templates/headerBeforeLoginHome") %>
 
   <div class="text-center mt-4">
     <h3>Start by searching for recipes using our image detection AI, or simply by using the search bar</h3>
@@ -83,6 +83,13 @@
         </a>
         <h3>Dessert</h3>
       </div>
+
+      <div class="card explorerecipe">
+        <a href="/browseCommunity">
+          <img src="/public/images/community.jpeg" class="card-img-top-1" alt="community">
+        </a>
+        <h3>Community Recipes</h3>
+      </div>
     </div>
     
      
@@ -91,6 +98,8 @@
       <h3 class="display-6">Try some of ReciPAL's community recipes!</h3>
   </div>
 </div>
+
+
   <div class="box-shadow">
 
   <div id="carouselExampleCaptions" class="carousel slide">
@@ -99,6 +108,7 @@
         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
       </div>
+
       <div class="carousel-inner">
         <div class="carousel-item active">
           <a href="#"><img src="/public/images/dish1.jpg" class="d-block w-100 carousel-img" alt="..."></a>

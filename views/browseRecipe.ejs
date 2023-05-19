@@ -1,4 +1,4 @@
-<%- include(`templates/header${headerSession}`) %> 
+<%- include("templates/headerBeforeLoginHome") %> 
 
 <% for (let i = 0; i < recipe.length; i++) { %>
   <%- include('templates/recipeCard', {recipe: recipe[i], filteredRatings: filteredRatings}) %>
