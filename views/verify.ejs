@@ -1,14 +1,4 @@
-<%- include("templates/header") %> 
-<% var question = ""; %>
-<% if (account.at(0) == 1) {
-    question = "What is the middle name of your youngest child?";
-} %>
-<% if (account.at(0) == 2) {
-    question = "What is name of your first stuffed animal?";
-} %>
-<% if (account.at(0) == 3) {
-    question = "What city/town did your mother and father meet?";
-} %>
+<%- include("templates/headerBeforeLogin") %>
 <div class="container">
     <h1>Security Verification </h1>
     <form action="/securityPasswordVerify" method="post">
@@ -22,8 +12,9 @@
             <label for="floatingPassword">Security Question Answer</label>
             <input name='password' type='password' class="form-control" id="floatingPassword" placeholder="Answer">
         </div>
-        <button type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>
+        <button type="submit" class="w-100 btn btn-lg btn-success">Submit</button>
     </form>
 </div>
 
-<%- include("templates/footer") %>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<%- include("templates/headerBeforeLogin") %>
+<div class="container">
+    <h1>Security Verification </h1>
+    <form action="/securityPasswordVerify" method="post">
+        <fieldset class="mb-3" id="personalInfoFields" disabled>
+            <div class="form-group">
+                <label>Security Question ID</label>
+                <textarea type="text" id="IDProfile" class="form-control"><%-question%></textarea>
+            </div>
+        </fieldset>
+        <div class="form-group">
+            <label for="floatingPassword">Security Question Answer</label>
+            <input name='password' type='password' class="form-control" id="floatingPassword" placeholder="Answer">
+        </div>
+        <button type="submit" class="w-100 btn btn-lg btn-success">Submit</button>
+    </form>
+</div>
+<div style="text-align: center;"><p>Answer Invalid</p></div>
+
+
+</body>
+</html>

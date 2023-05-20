@@ -1,0 +1,5 @@
+- Successfully implemented browse specific recipes based on tags feature
+- Successfully implemented explore button that directs to recipe browse page
+- Successfully implemented read more button for each recipe
+- Successfully implemented each read more button direct to corresponding recipe detail page
+- Successfully implemented explore section that direct to each recipe browse categrories 

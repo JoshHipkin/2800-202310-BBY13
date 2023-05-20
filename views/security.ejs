@@ -1,4 +1,4 @@
-<%- include("templates/header") %>
+<%- include("templates/headerBeforeLogin") %>
     <main class="form-signin w-100 m-auto">
         <div class="d-flex gap-2 justify-content-center py-5">
             <form action="/securityRecovery" method="post">
@@ -14,13 +14,15 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="securityPassword" class="form-label">Security Password</label>
+                        <label for="securityPassword" class="form-label">Security Answer</label>
                         <input name="securityPassword" type="text" class="form-control form-select-sm" placeholder="Security Password">
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-success">Submit</button>
                 </fieldset>
             </form>
         </div>
     </main>
 
-    <%- include("templates/footer") %>
+
+</body>
+</html>

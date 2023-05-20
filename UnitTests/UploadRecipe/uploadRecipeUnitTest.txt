@@ -1,0 +1,3 @@
+Successfully able to enter recipe details in form and inserts to recipe upload collection in database
+Successfully able to read from database and display recipe on homepage
+Sucessfully able to access upload recipe detail page through Read More button

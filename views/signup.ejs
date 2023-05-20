@@ -1,10 +1,10 @@
-<%- include("templates/header") %>
+<%- include("templates/headerBeforeLogin") %>
 <!-- Similar bootstrap structre from COMP2537 Assignment Signup Page -->
 <main class="form-signin w-100 m-auto">
     <div class="d-flex gap-2 justify-content-center py-5">
     <!-- runs to createUser -->
     <form action='/createUser' method='post' class="text-center">
-        <h1 class="h3 mb-3 fw-normal">Create a User!</h1>
+        <h1 class="h3 mb-3 fw-normal">Create a Profile!</h1>
         <div class="form-floating mb-2">
             <input name='username' type='text' class="form-control" id="floatingInput" placeholder='username'>
             <label for="floatingInput">Username</label>
@@ -17,8 +17,14 @@
             <input name='password' type='password' class="form-control" id="floatingInput" placeholder='password'>
             <label for="floatingInput">Password</label>
         </div>
-        <button type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>
+        <button type="submit" class="w-100 btn btn-lg btn-success">Submit</button>
     </form>
 </div>
+<div class="text-center pb-2">
+    <p class=>Already have an account? <a href="/login">log in!</a></p>
+</div>
 </main>
-<%- include("templates/footer") %>
+
+
+</body>
+</html>

@@ -1,0 +1,133 @@
+<%- include(`templates/header${headerSession}`) %> 
+  <div class="text-center mb-5 mt-5">
+  </div>
+        <a href="/imageUpload" class="btn btn-success btn-lg d-flex justify-content-center mx-5 mb-3">
+      <i class="bi bi-camera me-2"></i>Search By Image!
+    </a>
+    <form class="form-inline my-5 mx-5" action="/search" method="GET">
+      <div class="form-group">
+        
+            <label for="search_input">Search by recipe name or add as many ingredients as you want, separated by commas</label>
+            <div class="input-group">
+                <input type="text" class="form-control mb-3" id="search_input" value="<%- searchQuery %>" name="q" placeholder="">
+                <button type="submit" class="btn btn-success mb-3" id="">
+                    <i class="bi bi-search"></i>
+            </div>
+
+            
+
+            
+        
+
+            <h4>Filters:</h4>
+              <% for (const category of availableOptions) { %>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="<%= category %>" name="s" value="<%= category %>"
+                    <% if (selectedCategories && selectedCategories.includes(category)) { %>
+                      checked
+                    <% } %>
+                  >
+                  <label class="form-check-label" for="<%= category %>"><%= category %></label>
+                </div>
+                    <% } %>
+
+              
+                 
+            
+
+    
+      
+
+        </div>
+    </form><div id="aiRecipeButton-box"></div>
+    <!-- Inside the <div class="text-center mb-5 mt-5"> -->
+
+
+<div class="text-center mx-5" id="recipeNumber">
+  <h3>You can make <%- (pageCount * 20) %> recipes!</h3>
+</div>
+    
+
+<% for(let i=0; i < recipe.length; i++) { %>
+  <%- include('templates/recipeCard', {recipe: recipe[i], filteredRatings: filteredRatings}) %>
+<% } %> 
+
+
+
+<div class="pagination d-flex justify-content-center">
+  <% if (currentPage > 1) { %>
+    <a class="page-link" href="/search?page=<%= currentPage - 1 %>"><button class="btn btn-primary">Prev</button></a>
+
+
+  <% } %>
+
+  <% if (startPage > 1) { %>
+    <a class="page-link" href="/search?q=<%= searchQuery %>&page=<%= startPage - 1 %>">...</a>
+  <% } %>
+
+  <% for (let i = 0; i < pages.length; i++) { %>
+    <% if (currentPage === pages[i]) { %>
+      <span class="page-link current-page active"><%= pages[i] %></span>
+    <% } else { %>
+      <a class="page-link" href="/search?q=<%= searchQuery %>&page=<%= pages[i] %>"><%= pages[i] %></a>
+    <% } %>
+  <% } %>
+
+  <% if (currentPage < pageCount ) { %>
+    <a class="page-link" href="/search?page=<%= currentPage + 1 %>"><button class="btn btn-primary">Next</button></a>
+
+  <% } %>
+</div>
+
+
+<script>
+    // add Custom with AI button
+    const AIRecipeButton = document.createElement("link");
+    AIRecipeButton.className = "btn btn-success btn-lg d-flex justify-content-center mx-5 mb-3";
+    AIRecipeButton.innerHTML = "Get AI Custom Recipe... ";
+    document.getElementById("aiRecipeButton-box").appendChild(AIRecipeButton);
+  console.log("script loaded");
+        // add event listener to send GET request with ingredients array
+        AIRecipeButton.addEventListener("click", function() {
+          console.log("clicked");
+        let ingredientsString = document.getElementById("search_input").value;
+       console.log(ingredientsString);
+       let url = "/waitingRoom/?q=" + ingredientsString;
+        console.log(url);
+       window.location.href = url;
+    });
+
+  function updatePage(page) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("page", page);
+    window.location.href = url.toString();
+  }
+
+  // Function to handle click event on "Previous" button
+  function goToPreviousPage() {
+    const currentPage = parseInt("<%= currentPage %>");
+    const searchQuery = "<%= searchQuery %>";
+    if (currentPage > 1) {
+      updatePage(currentPage - 1);
+    }
+  }
+
+  // Function to handle click event on "Next" button
+  function goToNextPage() {
+    const currentPage = parseInt("<%= currentPage %>");
+    const pageCount = parseInt("<%= pageCount %>");
+    const searchQuery = "<%= searchQuery %>";
+      updatePage(currentPage + 1);
+  };
+
+
+
+
+
+
+</script>
+
+
+
+<%- include("templates/footer") %>
+

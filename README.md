@@ -5,7 +5,11 @@
 - Conrad Christian
 - Josh Hipkin
 - Emily Yao
+- Emily Yao
 
+# Hosted App
+The app is hosted on Qoddi at the following link:
+http://repqxuwlgf.eu09.qoddiapp.com/
 
 # How to Run the App:
 1. Only those with the required .env variables can access the mongodb database.
@@ -13,6 +17,64 @@
 3. Install Node.JS.
 4. download all required node packages by typing 'npm i' into the console.
 5. run using 'node index.js' OR 'nodemon index.js'.
+
+# Conrad_RecipeReviews
+Conrad_HotFixRatings
+(May 18, 2023)
+With the new implemented pages of browsing and search. Improved code to work on new pages, created ejs recipe card template, improved interator processes of reviews on ejs cards. Fixed bug where multiple lines of ratings were printing depending on length of comment array 
+- Improved ejs code
+- Applied ratings to recipes on both browsing and search pages
+- Created recipe card template ejs files to refer to 
+- Fixed bug with multiple lines of ratings printing
+
+(May 17, 2023)
+Implemented the ability to leave reviews on recipes. Comments, comment topic header and ratings are available for the user to rate and review recipes. Changes to homepage displays the avg rating based on user reviews, as well as in profile for each recipe. Used chatGPT to develop function to iterate though an array and return the index of a desired value in object. 
+
+- Hotfixed redirect to text prompts in forgot user id process
+- Studied teammates recipe code
+- Created comment collection in database
+- Created const variable and reference to right location
+- Implement backend code to store username, comment and recipeID to comment collection
+- Create form with bootstrap to allow user to type comments
+- Troubleshoot recipeID not showing up
+- Improve and optimize code to pass clean variables into ejs
+- Implement code to display other user comments on recipe page
+- Fix front end to at least functionality 
+- Added comment title to reviews
+- Store user rating out of 5
+- Display rating with review at the bottom with comments
+- Fix a little form front end to display comments a little better
+- Decide how to sort array to display average of ratings 
+- Troubleshooting changing rating values to return average 
+- Researching array methods
+- Implement average ratings on recipe cards in homepage
+- Added delimiter to parse avg rating 
+- Added total number of reviews displayed (based on X reviews)
+
+- Prevent unsigned in user to post reviews
+
+# Conrad_AuthenticationUserImprovements
+Conrad_HeaderHotFix
+(May 17, 2023)
+Changed some code to improve header and footer not working on certain pages. Also optimized code and passed clean variables into ejs.
+- Changed code to function on js instead of ejs
+- Improved ejs code for header and footer
+- Ensured pages recipe, imageUpload and Homepage worked with new header and footer
+
+(May 16, 2023)
+Improvements made to creating and logging into a user. Changed redirects on pages. Implemented invalid credential prompts if user 
+types in existing email. Changed header and footer depending on user login. Redirect page to login if user tries to access
+user session validation pages.
+
+- Added validation if user is logged in or not to restrict pages, ex. Profile
+- Changed header and footer for pages before accessing home
+- Changed redirect of logo button if user is already at homepage 
+- Implemented continue without logging in button on landing page
+- Change user id into username in profile
+- Fixing session validation functions and valid session functions
+- Change header if user is logged in or not when on homepage
+- Prevent additional users to be created if email is already in database
+- Improve prompts to show user if they used incorrect login details, account already exists, and password restrictions
 
 # Conrad_LoginSecurityRecovery
 Conrad_SecurityQuestionFix

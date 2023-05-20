@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        /* Disable zooming and panning on the entire page */
+        html, body {
+            touch-action: manipulation;
+            overflow: hidden;
+        }
+        </style>
+ <meta charset="UTF-8">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+ <title>ReciPAL</title>
+ <link rel="icon" href="/public/images/favicon.ico">
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+ <link href="/styles/style.css" rel="stylesheet">
+</head>
+
+ <!-- Our own files -->
+ <link href="/styles/style.css" rel="stylesheet">
+ <link href="/styles/home.css" rel="stylesheet">
+</head>
+<body>
+
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/home">ReciPAL</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/home">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/imageUpload">Upload</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/signup">Signup</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+<div id="gameOverlay">
+    <h1>Help Conrad make his signature toast recipe!</h1>
+    <p>Move left & right to catch the bread.</p>
+    <button id="startButton">START</button>
+</div>
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <div id="youtube-container"></div>
+    <style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style><div class='embed-container' id="youtubeVideo"><iframe src='https://www.youtube.com/embed/x0xNIjZldck' frameborder='0' allowfullscreen></iframe></div>
+
+
+    <script>
+
+        const youtubeVideo= document.getElementById('youtubeVideo');
+        
+
+
+
+        var breads = [];
+        const MAX_BREADS = 4; // Maximum number of breads falling at a time
+
+        // Game variables
+        var canvas;
+        var canvasContext;
+        var toasterX;
+        var breadX;
+        var breadY;
+        var score;
+        var targetX;
+        var toasterSpeed = 5;
+
+        // Constants
+        const TOASTER_WIDTH = 80;
+        const TOASTER_HEIGHT = 50;
+        const BREAD_WIDTH = 36;
+        const BREAD_HEIGHT = 36;
+        const BREAD_SPEED = 4;
+        const WIN_SCORE = 10;
+
+        // Images
+        var toasterImage;
+        var breadImage;
+        var chefConradImage;
+
+        // Resize the canvas based on the viewport size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+
+            if (canvas.width > 1100) {
+                canvas.width = 1100;
+            }
+            canvas.height = window.innerHeight * 0.7;
+        }
+            canvas = document.getElementById('gameCanvas');
+            canvasContext = canvas.getContext('2d');
+            
+            resizeCanvas();
+        // Initialize the game
+        function gameInit() {
+
+            toasterX = canvas.width / 2 - TOASTER_WIDTH / 2;
+            breadX = Math.random() * (canvas.width - BREAD_WIDTH);
+            breadY = 0;
+            score = 0;
+            targetX = toasterX;
+
+
+            
+
+            // Load images
+            toasterImage = new Image();
+            toasterImage.src = 'public/images/toaster.png';
+
+            breadImage = new Image();
+            breadImage.src = 'public/images/bread.png';
+               
+            chefConradImage = new Image();
+            chefConradImage.src = 'public/images/chefconrad.png';
+
+            canvas.addEventListener('mousemove', updateToasterPosition);
+            canvas.addEventListener('touchmove', updateToasterPosition); // For mobile
+            // Start game loop
+            setInterval(updateGame, 20);
+            // Start generating breads at the predetermined interval
+            setInterval(createBread, 800);
+
+        }
+
+        // Update the position of the toaster based on mouse movement
+        function updateToasterPosition(event) {
+            var rect = canvas.getBoundingClientRect();
+            var mouseX, touchX;
+
+            if (event.type === 'mousemove') {
+                mouseX = event.clientX - rect.left;
+                targetX = mouseX - TOASTER_WIDTH / 2;
+            } else if (event.type === 'touchmove') {
+                touchX = event.touches[0].clientX - rect.left;
+                targetX = touchX - TOASTER_WIDTH / 2;
+            }
+        }
+
+        // Update the game state
+        function updateGame() {
+            moveBread();
+            moveToaster();
+            drawGame();
+            checkCollision();
+        }
+
+        // Create a new bread
+function createBread() {
+    // Generate a new bread
+    if (breads.length < MAX_BREADS) {
+        var newBread = {
+            x: Math.random() * (canvas.width - BREAD_WIDTH),
+            y: 0
+        };
+        breads.push(newBread);
+    }
+}
+
+// Move the bread downwards
+function moveBread() {
+    // Update each bread's position
+    for (var i = 0; i < breads.length; i++) {
+        var bread = breads[i];
+        bread.y += BREAD_SPEED;
+
+        // Remove bread if it reaches the bottom
+        if (bread.y > canvas.height) {
+            breads.splice(i, 1);
+            i--;
+        }
+    }
+
+}
+
+        // Move the toaster towards the target position
+        function moveToaster() {
+            if (toasterX < targetX) {
+                toasterX += toasterSpeed;
+                if (toasterX > targetX) {
+                    toasterX = targetX;
+                }
+            } else if (toasterX > targetX) {
+                toasterX -= toasterSpeed;
+                if (toasterX < targetX) {
+                    toasterX = targetX;
+                }
+            }
+        }
+
+// Check if the toaster catches the bread
+function checkCollision() {
+    for (var i = 0; i < breads.length; i++) {
+        var bread = breads[i];
+        if (
+            bread.y + BREAD_HEIGHT > canvas.height - TOASTER_HEIGHT &&
+            bread.x + BREAD_WIDTH / 2 > toasterX &&
+            bread.x + BREAD_WIDTH / 2 < toasterX + TOASTER_WIDTH
+        ) {
+            
+            scorePoint();
+
+            breads.splice(i, 1);
+            i--;
+            if (score === WIN_SCORE) {
+                alert('You won the game!');
+                canvas.remove();
+                youtubeVideo.style.display = 'block';
+            
+
+            } 
+        }
+    }
+}
+
+
+function scorePoint(){
+    score++;
+
+}
+
+        // Draw the game
+        function drawGame() {
+            // Clear canvas
+            canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw toaster
+            canvasContext.drawImage(toasterImage, toasterX, canvas.height - TOASTER_HEIGHT, TOASTER_WIDTH, TOASTER_HEIGHT);
+
+            // Draw breads
+            for (var i = 0; i < breads.length; i++) {
+                var bread = breads[i];
+                canvasContext.drawImage(breadImage, bread.x, bread.y, BREAD_WIDTH, BREAD_HEIGHT);
+            }
+
+ 
+    var chefConradWidth = TOASTER_WIDTH*1.5;
+    var chefConradHeight = TOASTER_WIDTH*1.7;
+    var chefConradX = toasterX - (chefConradWidth/1.3);
+    var chefConradY = canvas.height - chefConradHeight;
+    canvasContext.drawImage(chefConradImage, chefConradX, chefConradY, chefConradWidth, chefConradHeight);
+
+            // Draw score
+            canvasContext.fillStyle = 'black';
+            canvasContext.font = '40px Arial';
+            canvasContext.fillText('Score: ' + score, 10, 50);
+        }
+
+        // Reset the game
+        function resetGame() {
+            score = 0;
+        }
+
+
+        // Remove the overlay and start the game
+        function startGame() {
+            var gameOverlay = document.getElementById('gameOverlay');
+            gameOverlay.style.display = 'none';
+
+            gameInit();
+
+        }
+
+
+
+        // Start the game when the page is loaded
+            window.onload = function () {
+             // Clear canvas
+            canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        // Add event listener to start button
+        var startButton = document.getElementById('startButton');
+        startButton.addEventListener('click', startGame);
+
+        // Resize the canvas when the window is resized
+        window.addEventListener('resize', resizeCanvas);
+
+        };
+
+        // Resize the canvas when the window is resized
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+    <br/>
+    <!--<a href="https://www.vecteezy.com/free-vector/kitchen-background" style="font-size: 8pt; color:lightgray;">Kitchen Background Vectors by Vecteezy</a>-->
+
+    
+    <%- include(`templates/footer${headerSession}`) %>

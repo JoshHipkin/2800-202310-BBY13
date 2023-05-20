@@ -1,38 +1,29 @@
+<%- include(`templates/header${headerSession}`) %> 
 
-<%- include("templates/header") %> 
-
-<h3 class="d-flex justify-content-center">image upload</h3>
-
-
+<h3 class="d-flex justify-content-center">Search Ingredients By Photo</h3>
 
 <div id="image-box" class="card d-flex justify-content-center">
-    <img id="image-preview" src="" alt="" style="width: 100%; height: 100%; object-fit: contain; display:hidden">
+    <img id="image-preview" src="" alt="">
+    <img id="loading" src="/public/images/loading-gif.gif" alt="" style="width: 20vw; height: auto; object-fit: contain; display:none; left:40%; position:fixed;">
 
-    <div id="upload-button" class="d-flex justify-content-center">
-        <input type="file" name="image" id="image-upload" style="display:none" accept="image/*" capture="environment">
-        <button class="button" id="" style="padding:10px;font-size:30pt" type="button"
-        onclick="document.getElementById('image-upload').click()"><span> +
-        </span></button>
 
-    <button id="analyze-button" style="display: none;" onclick="processImage()">Analyze Photo</button>
-    </div>
+</div>    
+<div id="upload-button" class="d-flex justify-content-center">
+    <input type="file" name="image" id="image-upload" style="display:none" accept="image/*" capture="environment">
+    <button class="btn btn-success btn-lg btn-block" id="" style="padding:6px;" type="button"
+        onclick="document.getElementById('image-upload').click()">
+        Add <i class="bi bi-camera me-2">+</i>
+    </button>
+
 </div>
-<img id="loading" src="/public/images/loading-gif.gif" alt="" style="width: 20vw; height: auto; object-fit: contain; display:none">
+
 <h3 class="d-flex justify-content-center">Ingredients:</h3>
-<div id="ingredients-box">
+<div id="ingredients-box" class="container">
 </div>
 <div id="searchButton-box" class="d-flex justify-content-center mt-3 "> 
 </div>
-
-
-
-
-
-
-
-
-
-
+<div id="aiRecipeButton-box" class="d-flex justify-content-center mt-3 "> 
+</div>
 
 <script>
 
@@ -42,6 +33,9 @@
     attribution: listenImageSelect code adapted from snippet by user "nkron" on StackOverflow.
     https://stackoverflow.com/questions/4459379/preview-an-image-before-it-is-uploaded
     */
+
+    const ingredientsArr = []; // Global variable to store ingredients
+
     function listenImageSelect() {
         console.log("listening for image select");
         var imgInput = document.getElementById("image-upload"); 
@@ -53,22 +47,40 @@
             const blob = URL.createObjectURL(ImageFile);
             preview.src = blob;
             preview.style.display = "block";
-            document.getElementById("analyze-button").style.display = "block";
+
+            processImage()
+            //document.getElementById("analyze-button").style.display = "block";
         });
     } listenImageSelect();
 
-        // add 'Search by ingredient(s)' button
-        const searchButton = document.createElement("button");
-        searchButton.innerHTML = "Search by ingredient(s)";
-        searchButton.style.display = "none";
-        document.getElementById("searchButton-box").appendChild(searchButton);
+    // add 'Search by ingredient(s)' button
+    const searchButton = document.createElement("button");
+    searchButton.className = "btn btn-success btn-lg btn-block";
+    searchButton.innerHTML = "<i class=\"bi bi-search\"></i> Search by ingredient(s)...  ";
+    searchButton.style.display = "none";
+    document.getElementById("searchButton-box").appendChild(searchButton);
 
-        // add event listener to send GET request with ingredients array
-        searchButton.addEventListener("click", function() {
-            let ingredientsString = ingredientsArr.join(",");
-            let url = "/home?q=" + ingredientsString;
-            window.location.href = url;
-        });
+    // add Custom with AI button
+    const AIRecipeButton = document.createElement("button");
+    AIRecipeButton.className = "btn btn-success btn-lg btn-block";
+    AIRecipeButton.innerHTML = "Get AI Custom Recipe... ";
+    AIRecipeButton.style.display = "none";
+    document.getElementById("aiRecipeButton-box").appendChild(AIRecipeButton);
+
+    // add event listener to send GET request with ingredients array
+    searchButton.addEventListener("click", function() {
+        let ingredientsString = ingredientsArr.join(", ");
+        let url = "/search?q=" + ingredientsString;
+        window.location.href = url;
+    });
+
+    // add event listener to send GET request with ingredients array
+    AIRecipeButton.addEventListener("click", function() {
+        let ingredientsString = ingredientsArr.join(", ");
+        let url = "waitingRoom/?q=" + ingredientsString;
+        window.location.href = url;
+    });
+
 
 
     function processImage() {
@@ -100,13 +112,20 @@
         });
 
     }
-    var ingredientsArr = [];
+
+
+
+
+
     function populateIngredients(data) {
         let ingredientsBox = document.getElementById("ingredients-box");
         ingredientsBox.innerHTML = "";
 
 
-        ingredientsArr.push(data[0].name);
+        ingredientsArr.push(data[0].name); //always include first ingredient
+
+        /* add ingredients to ingredientsArr if they meet the threshold
+         & are not less than a third as likely as prior one */
         let threshold = 0.1;
         for (let i = 1; i < 5; i++) {
             if (data[i].value > threshold && (data[i-1].value / data[i].value) < 3 ) {
@@ -114,26 +133,46 @@
             }
 
         }
+        console.log("thresh" + ingredientsArr);
+        // Check for and remove duplicates
+        for (let i=0; i<ingredientsArr.length; i++) {
+            for (let j=i+1; j<ingredientsArr.length; j++) {
+                if (ingredientsArr[i] === ingredientsArr[j]) {
+                    ingredientsArr.splice(j, 1);
+                }
+            }
+        }
+        console.log("dupes"+ingredientsArr);
 
+        // add ingredients to ingredientsBox
         for (let i = 0; i < ingredientsArr.length; i++) {
             let ingredient = document.createElement("button");
-            ingredient.innerHTML = ingredientsArr[i] + "  \t X";
+            ingredient.className = "btn btn-outline-success";
+            ingredient.innerHTML = ingredientsArr[i] +  " \t <i class=\"bi bi-x-circle-fill\"></i>";
             ingredientsBox.appendChild(ingredient);
 
             // add event listener to remove ingredient and button
              ingredient.addEventListener("click", function() {
-                ingredientsArr.splice(i, 1); // remove ingredient from array
+                console.log(ingredientsArr);
+                for (let j=0; j<ingredientsArr.length; j++) {
+                    if (ingredientsArr[j] === ingredient.innerHTML.split(" ")[0]) {
+                        ingredientsArr.splice(j, 1);
+                    }
+                }
+                 // remove ingredient from array
                 ingredient.remove(); // remove button from ingredientsBox
+                console.log(ingredientsArr);
              });
         }
 
         console.log(ingredientsArr);
 
         searchButton.style.display = "block";
+        AIRecipeButton.style.display = "block";
 
     }
 
     
 </script>
 
-<%- include("templates/footer") %>
+<%- include(`templates/footer`) %>
