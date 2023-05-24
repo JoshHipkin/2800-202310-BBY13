@@ -1,25 +1,67 @@
 <div class="card shadow-sm">
-    <div class="card-body">
-      <p class="card-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><h1> <%= recipe.name %> </h1></font><font style="vertical-align: inherit;"> 
-        <% var rateExists = false %>
-        <% for(count = 0; count < filteredRatings.length; count++) { %>
-          <% if(filteredRatings[count].recipeID == recipe._id) { %>
-            <% rateExists = true %>
-            <p>Rating: <%-((filteredRatings[count].rating) / (filteredRatings[count].ratingTotal)).toFixed(1)%>/5.0 (based on <%-filteredRatings[count].ratingTotal%> reviews)</p>
+  <div class="card-body">
+    <p class="card-text">
+      <font style="vertical-align: inherit;">
+        <font style="vertical-align: inherit;">
+          <h1><%= recipe.name %></h1>
+        </font>
+        <font style="vertical-align: inherit;">
+          <% var rateExists = false %>
+          <% for(count = 0; count < filteredRatings.length; count++) { %>
+            <% if(filteredRatings[count].recipeID == recipe._id) { %>
+              <% rateExists = true %>
+              <p>Rating: <%-((filteredRatings[count].rating) / (filteredRatings[count].ratingTotal)).toFixed(1)%>/5.0 (based on <%-filteredRatings[count].ratingTotal%> reviews)</p>
+            <% } %>
           <% } %>
-        <% } %>
-        <% if(!(rateExists)){ %>
-          <p>No ratings</p>
-        <% } %>
-        <p><%= recipe.description %> </p></font></font></p>
-      <div class="d-flex justify-content-between align-items-center">
-        <div class="btn-group">
-         
-          <a class="btn btn-sm btn-outline-secondary" href="/recipe?id=<%= recipe._id %>">Read More</a>
-
-          <button type="button" class="btn btn-sm btn-outline-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Save</font></font></button>
-        </div>
-        <small class="text-body-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> <%= recipe.servings %> Servings</font></font></small>
+          <% if(!(rateExists)){ %>
+            <p>No ratings</p>
+          <% } %>
+          <p><%= recipe.description %></p>
+        </font>
+      </font>
+    </p>
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="btn-group">
+        <a class="btn btn-sm btn-outline-secondary" href="/recipe?id=<%= recipe._id %>">Read More</a>
+        <button class="toggle-favorite-btn" data-recipe-id="<%= recipe._id %>" data-user-id="<%= user ? user._id : '' %>">
+          <i class="far fa-heart"></i>
+        </button>  
       </div>
+      <small class="text-body-secondary">
+        <font style="vertical-align: inherit;">
+          <font style="vertical-align: inherit;"> <%= recipe.servings %> Servings</font>
+        </font>
+      </small>
     </div>
   </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('.toggle-favorite-btn').click(function() {
+      const button = $(this); // Store the button reference
+
+      const recipeId = button.data('recipe-id');
+      const userEmail = button.data('user-email');
+
+      // Send an AJAX request to the server
+      $.ajax({
+        url: '/toggleFavoriteRecipe',
+        method: 'POST',
+        data: { recipeId: recipeId, userEmail: userEmail },
+        success: function(response) {
+          if (response.status === 'saved') {
+            // Recipe was saved to favorites
+            button.find('i').removeClass('far fa-heart').addClass('fas fa-heart');
+          } else if (response.status === 'removed') {
+            // Recipe was removed from favorites
+            button.find('i').removeClass('fas fa-heart').addClass('far fa-heart');
+          }
+        },
+        error: function(error) {
+          console.log(error);
+        }
+      });
+    });
+  });
+</script>

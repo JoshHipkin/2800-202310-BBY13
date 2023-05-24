@@ -60,6 +60,9 @@ const commentCollection = database.db(mongodb_database).collection("comments");
 //accessing recipeUpload collection
 const recipeUploadCollection = database.db(mongodb_database).collection("recipeUpload");
 
+
+
+
 /* setting up file usage */
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
@@ -196,7 +199,7 @@ app.post('/createUser', async (req, res) => {
     var result = await userCollection.find({email: email}).toArray()
 
     if (result.length == 0) {
-        await userCollection.insertOne({ username: username, email: email, password: hashedPassword, allergens: allergens, diet: diet, shoppinglist: shoppinglist });
+        await userCollection.insertOne({ username: username, email: email, password: hashedPassword, allergens: allergens, diet: diet, shoppinglist: shoppinglist, favourite: [] });
     } else {
         res.render('signupEmailTaken');
         return;
@@ -762,6 +765,10 @@ app.get('/browseRecipe/:id', async (req, res) => {
         headerSession = "BeforeLogin"
     } 
 
+    const userEmail = req.body.email;
+    const user = await userCollection.findOne({ email: userEmail });
+
+
     const recipesPerPage = 20;
     const page = req.params.id;
     let query = {}; // Initialize an empty query object
@@ -843,7 +850,8 @@ app.get('/browseRecipe/:id', async (req, res) => {
       res.render("browseRecipe", {
         recipe: recipeData,
         filteredRatings: filteredRatings,
-        headerSession    
+        headerSession,
+        user    
       });
     } catch (error) {
       console.log(error);
@@ -1126,8 +1134,37 @@ app.post('/uploadRecipe', async (req, res) => {
 }); 
   
   
-    
-  
+// save or remove recipe from favorites
+app.post('/toggleFavoriteRecipe', async (req, res) => {
+  const recipeId = req.body.recipeId;
+  const userEmail = req.session.email;
+  const user = await userCollection.findOne({ email: userEmail });
+
+  if (user) {
+    const favoriteRecipes = user.favourite || [];
+
+    const recipeIndex = favoriteRecipes.indexOf(recipeId);
+    if (recipeIndex !== -1) {
+      // Recipe is already in favorites, remove it
+      favoriteRecipes.splice(recipeIndex, 1);
+      await userCollection.updateOne({ email: userEmail }, { $set: { favourite: favoriteRecipes } });
+      res.send({ status: "removed" });
+    } else {
+      // Recipe is not in favorites, add it
+      favoriteRecipes.push(recipeId);
+      await userCollection.updateOne({ email: userEmail }, { $set: { favourite: favoriteRecipes } });
+      res.send({ status: "saved" });
+    }
+  } else {
+    res.status(404).send({ error: "User not found" });
+  }
+});
+
+
+
+
+
+
       
 app.get("*", (req, res) => {
     res.status(404);
