@@ -40,21 +40,22 @@
 </li>
 <% } %>
 </ul>
+
 <script>
-    fetch("/json/filteredIngredientArray.json")
+//auto complete script from https://www.educative.io/answers/how-to-add-autocomplete-to-an-input-field-in-javascript
+async function autocomplete(input) {
+var list = []
+//ChatGPT helped with fetching array from JSON file
+await fetch("/json/filteredIngredientArray.json")
     .then(response => response.json())
     .then(data => {
         // Access the array from the JSON data
-        var jsonArray = data;
-
-        // Use the array
-        console.log(jsonArray);
+        list = data;
     })
     .catch(error => {
         console.error('Error fetching JSON file:', error);
     });
-//auto complete script from https://www.educative.io/answers/how-to-add-autocomplete-to-an-input-field-in-javascript
-function autocomplete(input, list) {
+
     //Add an event listener to compare the input value with all countries
     input.addEventListener('input', function () {
         //Close the existing list if it is open
@@ -100,6 +101,7 @@ function autocomplete(input, list) {
     }
 }
 
-autocomplete(document.getElementById('input'), <%- include("templates/ingredientArray") %>);
+autocomplete(document.getElementById('input'))
+
 </script>
 

@@ -63,6 +63,7 @@ const pantryCollection = database.db(mongodb_database).collection("pantry");
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
 app.use("/public/images/", express.static("./public/images"));
+app.use("/json", express.static("./json"));
 app.use("/styles", express.static("./styles"));
 app.use(express.static('./scripts'));
 
