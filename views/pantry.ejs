@@ -40,8 +40,19 @@
 </li>
 <% } %>
 </ul>
-
 <script>
+    fetch("/json/filteredIngredientArray.json")
+    .then(response => response.json())
+    .then(data => {
+        // Access the array from the JSON data
+        var jsonArray = data;
+
+        // Use the array
+        console.log(jsonArray);
+    })
+    .catch(error => {
+        console.error('Error fetching JSON file:', error);
+    });
 //auto complete script from https://www.educative.io/answers/how-to-add-autocomplete-to-an-input-field-in-javascript
 function autocomplete(input, list) {
     //Add an event listener to compare the input value with all countries
@@ -88,6 +99,7 @@ function autocomplete(input, list) {
             suggestions.parentNode.removeChild(suggestions);
     }
 }
+
 autocomplete(document.getElementById('input'), <%- include("templates/ingredientArray") %>);
 </script>
 

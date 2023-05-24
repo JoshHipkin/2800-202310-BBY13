@@ -19,6 +19,17 @@ http://repqxuwlgf.eu09.qoddiapp.com/
 5. run using 'node index.js' OR 'nodemon index.js'.
 
 # Conrad_PantryInventory
+Feature implemented to allow the user to have a saved inventory of items, instead of searching the ingredients everytime.
+Conrad PantryFix
+(May 24, 2023)
+- Optimize for mobile devices
+- Fix error in pantry ejs
+(May 23, 2023)
+- Saved user input into database
+- Allows the items to be displayed on page
+- Implemented a feature that allows the user to delete the item from db
+- Implemented a search button to search with pantry items
+(May 19, 2023)
 - Working on ejs pantry page
 - Fixed bug on ejs script on preference and profile page
 - Build an array based on all the ingredients in mongodb database (2 hrs)
