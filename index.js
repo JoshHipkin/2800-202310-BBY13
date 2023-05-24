@@ -52,6 +52,8 @@ const userCollection = database.db(mongodb_database).collection("users");
 const recipesCollection = database.db(mongodb_database).collection("recipes");
 //accessing comment collection
 const commentCollection = database.db(mongodb_database).collection("comments");
+//accessing pantry collection
+const pantryCollection = database.db(mongodb_database).collection("pantry");
 
 /* setting up file usage */
 app.set('view engine', 'ejs');
@@ -396,7 +398,7 @@ app.get("/profile", async (req, res) => {
     const email = req.session.email;
     const result = await userCollection.find({ email: email }).project({ username: 1, password: 1, _id: 1, email: 1 }).toArray();
 
-    res.render('profile', { tabContent: 'profile-info', user: result[0]});
+    res.render('profile', { tabContent: 'profile-info', user: result[0], pantry: null});
 });
 
 app.get("/profile/preferences", async (req, res) => {
@@ -406,16 +408,35 @@ app.get("/profile/preferences", async (req, res) => {
     const result = await userCollection.find({email: email})
     .project({allergens: 1, diet: 1, username: 1})
     .toArray();
-    res.render('profile', {tabContent: 'preferences', user: result[0]});
+
+    res.render('profile', {tabContent: 'preferences', user: result[0], pantry: null});
 });
 
 app.get("/profile/pantry", async (req, res) => {    
     const email = req.session.email;
     const result = await userCollection.find({ email: email }).project({ username: 1, password: 1, _id: 1, email: 1 }).toArray();
+    const result2 = await pantryCollection.find({ email: email }).project({ item: 1 }).toArray();  
 
-    res.render('profile', {tabContent: 'pantry', user: result[0]})
+    res.render('profile', {tabContent: 'pantry', user: result[0], pantry: result2})
 });
 
+app.post("/savePantry", async (req, res) => {
+  const email = req.session.email;
+  const pantry = req.body.pantry;
+
+  await pantryCollection.insertOne({email: email, item: pantry});
+
+  res.redirect("/profile/pantry")
+})
+
+app.post("/deletePantry", async (req, res) => {
+  const email = req.session.email;
+  const item = req.body.item;
+
+  pantryCollection.deleteOne({email: email, item: item})
+  
+  res.redirect("/profile/pantry")
+})
 
 app.post("/savePreferences", async (req, res) => {
     const allergies = req.body.allergy;

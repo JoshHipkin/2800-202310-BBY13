@@ -9,16 +9,40 @@
       <a href="/profile/pantry" class="nav-link active" id="pantry" >Pantry</a>
   </li>
 </ul>
-<form autocomplete="off">
+<form action='/savePantry' method='post' autocomplete="off">
     <label for="input">Add to pantry:</label>
     <div>            
-        <input type="text" id="input">
+        <input type="text" name="pantry" id="input">
     </div>
 </form>
 
+<h3>Pantry:</h3>
+<% ingredientsArr = []; %>
+    <% for(var i = 0; pantry.length > i; i++){ %>
+    <% ingredientsArr.push(pantry[i].item)%>
+<% } %>
+<% let ingredientsString = ingredientsArr.join(", ");%>
+<form class="form-inline" action="/search" method="GET">
+    <div class="form-group"> 
+            <input type="text" class="form-control mb-3" id="search_input" value="<%- ingredientsString %>" name="q" placeholder="" hidden>
+            <button type="submit" class="btn btn-success mb-3" id="">
+            <i class="bi bi-search"> Search by pantry</i>
+    </div>
+</form>
+
+<ul>    
+<% for(var i = 0; pantry.length > i; i++){ %>
+<li><%- pantry[i].item %>
+    <form action='/deletePantry' method="post">
+        <input name="item" value="<%-pantry[i].item%>" hidden>
+        <button class="btn btn-outline-danger btn-sm">Delete</button>
+    </form>
+</li>
+<% } %>
+</ul>
+
 <script>
 //auto complete script from https://www.educative.io/answers/how-to-add-autocomplete-to-an-input-field-in-javascript
-
 function autocomplete(input, list) {
     //Add an event listener to compare the input value with all countries
     input.addEventListener('input', function () {
@@ -34,6 +58,7 @@ function autocomplete(input, list) {
         suggestions.setAttribute('id', 'suggestions');
         this.parentNode.appendChild(suggestions);
 
+        var count = 0;
         //Iterate through all entries in the list and find matches
         for (let i=0; i<list.length; i++) {
             if (list[i].toUpperCase().includes(this.value.toUpperCase())) {
@@ -47,7 +72,11 @@ function autocomplete(input, list) {
                 });
                 suggestion.style.cursor = 'pointer';
 
-                suggestions.appendChild(suggestion);
+
+                if (!(count == 5)){
+                    suggestions.appendChild(suggestion);
+                    count++
+                }
             }
         }
 
