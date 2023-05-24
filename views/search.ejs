@@ -17,7 +17,7 @@
 
             
 
-            <button class="btn btn-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Filters</button>
+<button class="btn btn-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Filters</button>
 
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
   <div class="offcanvas-header">
@@ -51,7 +51,7 @@
               <label class="form-check-label" for="<%= category %>"><%= category %></label>
             </div>
                 <% } %>
-
+                
                 <h3 class="mt-3">Diet Type:</h3>
                 <% for (const category of dietType) { %>
                   
@@ -64,6 +64,19 @@
                     <label class="form-check-label" for="<%= category %>"><%= category %></label>
                   </div>
                       <% } %>
+                      <div class="form-check form-switch">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="exclude-diet"
+                          name="excludeDiet"
+                          <%= excludeDiet ? 'checked' : '' %>
+                        />
+                       
+                        <label class="form-check-label" for="exclude-diet"
+                          >Exclude Diet retreved from profile</label
+                        >
+                      </div>
         </div>
 </div>
         
@@ -83,7 +96,13 @@
 
 
 <div class="text-center mx-5" id="recipeNumber">
-  <h3>You can make <%- (pageCount * 20) %> recipes!</h3>
+  
+    <% if (pageCount === 1) { %>
+   <h3>You can make <%= recipe.length %> Recipes!</h3> 
+  <% } else { %>
+  <h3>You can make <%= pageCount * 20 %> Recipes!</h3>
+<% } %>
+ 
 </div>
     
 

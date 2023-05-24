@@ -499,30 +499,35 @@ app.get("/home", async (req, res) => {
 
 app.get("/search", async (req, res) => {
     const user = await userCollection.findOne({ email: req.session.email});
-    var headerSession = ""
-    if (!(isValidSession(req))){
-        headerSession = "BeforeLogin"
+    var headerSession = "BeforeLogin"
+    if (isValidSession(req)){
+        headerSession = "";
+        var allergens = user.allergens;
+        var diet = user.diet;
     }   
     //array for passing names for checkboxes
     
     const meal = ['dinner', 'dessert', 'lunch', 'breakfast', 'appetizer'];
     const cuisine = ['italian', 'mexican', 'caribbean', 'french', 'moroccan', 'english', 'southern', 'indian'];
     const dietType = ['gluten-free', 'vegan', 'vegetarian', 'low-sodium', 'low-calorie', 'low-fat', 'low-carb'];
-
-        var allergens = user.allergens;
-        var diet = user.diet;
-    
+    const excludeDiet = req.query.excludeDiet === 'on';
+    console.log(excludeDiet);
     const mealFilter = req.query.m;
     const cuisineFilter = req.query.c;
     const searchQuery = req.query.q;
     const searchTerm = req.query.q;
-    const dietFilter = diet ? [...diet] : [];
-
+    var dietFilter = [];
+    
+    if (!excludeDiet) {
+      dietFilter = diet ? [...diet] : [];
+    }
+console.log(dietFilter);
     if (Array.isArray(req.query.d)) {
       dietFilter.push(...req.query.d);
     } else if (req.query.d) {
       dietFilter.push(req.query.d);
     }
+    console.log(dietFilter);
     const selectedCategories = [];
 
 if (mealFilter) {
@@ -533,15 +538,14 @@ if (mealFilter) {
   }
 }
 
-if (cuisine) {
+if (cuisineFilter) {
   if (Array.isArray(cuisineFilter)) {
     selectedCategories.push(...cuisineFilter);
   } else {
     selectedCategories.push(cuisineFilter);
   }
 }
-
-if (dietType) {
+if (dietFilter) {
   if (Array.isArray(dietFilter)) {
     selectedCategories.push(...dietFilter);
   } else {
@@ -599,7 +603,7 @@ if (dietType) {
         termQuery = [{ search_terms: new RegExp(cuisineFilter, "i" ) }];
       }
       query.$and = query.$and || [];
-      query.$and.push({ $or: termQuery});
+      query.$and.push({ $or: termQuery });
     }
       
 
@@ -625,8 +629,8 @@ if (dietType) {
         query.$and.push({ $and: allergenQuery });
       }
       
-      if (dietType && dietType.length > 0) {
-        const dietQuery = diet.map((tag) => ({ search_terms: { $regex: new RegExp(tag, "i") } }));
+      if (dietFilter && dietFilter.length > 0) {
+        const dietQuery = dietFilter.map((tag) => ({ search_terms: { $regex: new RegExp(tag, "i") } }));
         query.$and = query.$and || [];
         query.$and.push({ $and: dietQuery });
       }
@@ -712,9 +716,9 @@ if (dietType) {
       selectedCategories: selectedCategories,
       meal: meal,
       cuisine: cuisine,
-      dietType: dietType
-    });
-
+      dietType: dietType,
+      excludeDiet: excludeDiet
+      });
 });
 
 
