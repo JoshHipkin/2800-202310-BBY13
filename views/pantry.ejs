@@ -10,36 +10,41 @@
   </li>
 </ul>
 <form action='/savePantry' method='post' autocomplete="off">
-    <label for="input">Add to pantry:</label>
-    <div>            
-        <input type="text" name="pantry" id="input">
-    </div>
+    <fieldset class="mb-3" id="personalInfoFields">
+        <div class="form-group">
+            <label for="input">Add to pantry:</label>
+            <input type="text" name="pantry" id="input" class="form-control">
+        </div>
+    </fieldset>
 </form>
 
-<h3>Pantry:</h3>
-<% ingredientsArr = []; %>
-    <% for(var i = 0; pantry.length > i; i++){ %>
-    <% ingredientsArr.push(pantry[i].item)%>
-<% } %>
-<% let ingredientsString = ingredientsArr.join(", ");%>
-<form class="form-inline" action="/search" method="GET">
-    <div class="form-group"> 
-            <input type="text" class="form-control mb-3" id="search_input" value="<%- ingredientsString %>" name="q" placeholder="" hidden>
-            <button type="submit" class="btn btn-success mb-3" id="">
-            <i class="bi bi-search"> Search by pantry</i>
-    </div>
-</form>
-
-<ul>    
-<% for(var i = 0; pantry.length > i; i++){ %>
-<li><%- pantry[i].item %>
-    <form action='/deletePantry' method="post">
-        <input name="item" value="<%-pantry[i].item%>" hidden>
-        <button class="btn btn-outline-danger btn-sm">Delete</button>
+<div class="text-center">
+    <h3>Pantry:</h3>
+    <% ingredientsArr = []; %>
+        <% for(var i = 0; pantry.length > i; i++){ %>
+        <% ingredientsArr.push(pantry[i].item)%>
+    <% } %>
+    <% let ingredientsString = ingredientsArr.join(", ");%>
+    <form class="form-inline" action="/search" method="GET">
+        <div class="form-group"> 
+                <input type="text" class="form-control mb-3" id="search_input" value="<%- ingredientsString %>" name="q" placeholder="" hidden>
+                <button type="submit" class="btn btn-success mb-3" id="">
+                <i class="bi bi-search"> Search by pantry</i>
+        </div>
     </form>
-</li>
-<% } %>
-</ul>
+
+    <ul class="list-group">    
+    <% for(var i = 0; pantry.length > i; i++){ %>
+    <%- pantry[i].item %>
+        <form action='/deletePantry' method="post">
+            <input name="item" value="<%-pantry[i].item%>" hidden>
+            <button class="btn btn-danger btn-sm">Delete</button>
+        </form>
+    
+    <% } %>
+    </ul>
+</div>
+
 
 <script>
 //auto complete script from https://www.educative.io/answers/how-to-add-autocomplete-to-an-input-field-in-javascript
