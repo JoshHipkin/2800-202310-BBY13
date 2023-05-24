@@ -45,6 +45,9 @@ nav {
 
   border-radius: 20px;
 }
+.offcanvas {
+  background-color: #dd7373;
+}
 
 #image-box {
   width: 94vw;
@@ -148,6 +151,9 @@ canvas {
   border: none;
   cursor: pointer;
   font-size: 18px;
+}
+#filter-caret {
+  font-size: 36px;
 }
 
 #recipeNumber {

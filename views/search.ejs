@@ -12,24 +12,76 @@
                 <input type="text" class="form-control mb-3" id="search_input" value="<%- searchQuery %>" name="q" placeholder="">
                 <button type="submit" class="btn btn-success mb-3" id="">
                     <i class="bi bi-search"></i>
+                    </button>
             </div>
 
             
 
-            
+<button class="btn btn-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Filters</button>
+
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Filters</h5>
+    <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="bi bi-caret-left" id="filter-caret"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <h3 class="mt-3">Meal:</h3>
+    <% for (const category of meal) { %>
+      <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="<%= category %>" name="m" value="<%= category %>"
+          <% if (selectedCategories && selectedCategories.includes(category)) { %>
+            checked
+          <% } %>
+        
+        <label class="form-check-label" for="<%= category %>"><%= category %></label>
+      </div>
+          <% } %>
+
+          <h3 class="mt-3">Cuisine:</h3>
+          <% for (const category of cuisine) { %>
+           
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="<%= category %>" name="c" value="<%= category %>"
+                <% if (selectedCategories && selectedCategories.includes(category)) { %>
+                  checked
+                <% } %>
+              
+              <label class="form-check-label" for="<%= category %>"><%= category %></label>
+            </div>
+                <% } %>
+                
+                <h3 class="mt-3">Diet Type:</h3>
+                <% for (const category of dietType) { %>
+                  
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" id="<%= category %>" name="d" value="<%= category %>"
+                      <% if (selectedCategories && selectedCategories.includes(category)) { %>
+                        checked
+                      <% } %>
+                    
+                    <label class="form-check-label" for="<%= category %>"><%= category %></label>
+                  </div>
+                      <% } %>
+                      <div class="form-check form-switch">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="exclude-diet"
+                          name="excludeDiet"
+                          <%= excludeDiet ? 'checked' : '' %>
+                        />
+                       
+                        <label class="form-check-label" for="exclude-diet"
+                          >Exclude Diet retreved from profile</label
+                        >
+                      </div>
+        </div>
+</div>
         
 
-            <h4>Filters:</h4>
-              <% for (const category of availableOptions) { %>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="<%= category %>" name="s" value="<%= category %>"
-                    <% if (selectedCategories && selectedCategories.includes(category)) { %>
-                      checked
-                    <% } %>
-                  >
-                  <label class="form-check-label" for="<%= category %>"><%= category %></label>
-                </div>
-                    <% } %>
+            
 
               
                  
@@ -44,7 +96,13 @@
 
 
 <div class="text-center mx-5" id="recipeNumber">
-  <h3>You can make <%- (pageCount * 20) %> recipes!</h3>
+  
+    <% if (pageCount === 1) { %>
+   <h3>You can make <%= recipe.length %> Recipes!</h3> 
+  <% } else { %>
+  <h3>You can make <%= pageCount * 20 %> Recipes!</h3>
+<% } %>
+ 
 </div>
     
 
@@ -56,26 +114,27 @@
 
 <div class="pagination d-flex justify-content-center">
   <% if (currentPage > 1) { %>
-    <a class="page-link" href="/search?page=<%= currentPage - 1 %>"><button class="btn btn-primary">Prev</button></a>
-
-
+    <a class="page-link" href="/search?q=<%- searchQuery %>&page=<%= currentPage - 1 %>&s=<%= Array.isArray(selectedCategories) ? selectedCategories.join(',') : '' %>">
+      <button class="btn btn-primary">Prev</button>
+    </a>
   <% } %>
 
   <% if (startPage > 1) { %>
-    <a class="page-link" href="/search?q=<%= searchQuery %>&page=<%= startPage - 1 %>">...</a>
+    <a class="page-link" href="/search?q=<%- searchQuery %>&page=<%= startPage - 1 %>&s=<%= Array.isArray(selectedCategories) ? selectedCategories.join(',') : '' %>">...</a>
   <% } %>
 
   <% for (let i = 0; i < pages.length; i++) { %>
     <% if (currentPage === pages[i]) { %>
       <span class="page-link current-page active"><%= pages[i] %></span>
     <% } else { %>
-      <a class="page-link" href="/search?q=<%= searchQuery %>&page=<%= pages[i] %>"><%= pages[i] %></a>
+      <a class="page-link" href="/search?q=<%- searchQuery %>&page=<%= pages[i] %>&s=<%= Array.isArray(selectedCategories) ? selectedCategories.join(',') : '' %>"><%= pages[i] %></a>
     <% } %>
   <% } %>
 
-  <% if (currentPage < pageCount ) { %>
-    <a class="page-link" href="/search?page=<%= currentPage + 1 %>"><button class="btn btn-primary">Next</button></a>
-
+  <% if (currentPage < pageCount) { %>
+    <a class="page-link" href="/search?q=<%- searchQuery %>&page=<%= currentPage + 1 %>&s=<%= Array.isArray(selectedCategories) ? selectedCategories.join(',') : '' %>">
+      <button class="btn btn-primary">Next</button>
+    </a>
   <% } %>
 </div>
 
@@ -96,35 +155,6 @@
         console.log(url);
        window.location.href = url;
     });
-
-  function updatePage(page) {
-    const url = new URL(window.location.href);
-    url.searchParams.set("page", page);
-    window.location.href = url.toString();
-  }
-
-  // Function to handle click event on "Previous" button
-  function goToPreviousPage() {
-    const currentPage = parseInt("<%= currentPage %>");
-    const searchQuery = "<%= searchQuery %>";
-    if (currentPage > 1) {
-      updatePage(currentPage - 1);
-    }
-  }
-
-  // Function to handle click event on "Next" button
-  function goToNextPage() {
-    const currentPage = parseInt("<%= currentPage %>");
-    const pageCount = parseInt("<%= pageCount %>");
-    const searchQuery = "<%= searchQuery %>";
-      updatePage(currentPage + 1);
-  };
-
-
-
-
-
-
 </script>
 
 

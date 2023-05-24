@@ -98,11 +98,10 @@ app.use(session({
 
 // landing page
 app.get("/", (req, res) => {
-    if(isValidSession(req)){
-        res.redirect('home')
-        return
-    }
-    res.render('index');
+  if (sessionValidation) {
+    res.redirect("/home");
+  }  
+  res.render('index');
 });
 
 //login page
@@ -528,21 +527,60 @@ app.get("/home", async (req, res) => {
 
 app.get("/search", async (req, res) => {
     const user = await userCollection.findOne({ email: req.session.email});
-    var headerSession = ""
-    if (!(isValidSession(req))){
-        headerSession = "BeforeLogin"
-    }   
-    //array for passing names for checkboxes
-    const availableOptions = ['dinner', 'dessert', 'lunch', 'breakfast', 'appetizer', 'low-calorie',];
-
-    if (isValidSession(req)) {
+    var headerSession = "BeforeLogin"
+    if (isValidSession(req)){
+        headerSession = "";
         var allergens = user.allergens;
         var diet = user.diet;
-        headerSession = ''; 
-    }  
-    const refineSearch = req.query.s;
+    }   
+    //array for passing names for checkboxes
+    
+    const meal = ['dinner', 'dessert', 'lunch', 'breakfast', 'appetizer'];
+    const cuisine = ['italian', 'mexican', 'caribbean', 'french', 'moroccan', 'english', 'southern', 'indian'];
+    const dietType = ['gluten-free', 'vegan', 'vegetarian', 'low-sodium', 'low-calorie', 'low-fat', 'low-carb'];
+    const excludeDiet = req.query.excludeDiet === 'on';
+    console.log(excludeDiet);
+    const mealFilter = req.query.m;
+    const cuisineFilter = req.query.c;
     const searchQuery = req.query.q;
     const searchTerm = req.query.q;
+    var dietFilter = [];
+    
+    if (!excludeDiet) {
+      dietFilter = diet ? [...diet] : [];
+    }
+console.log(dietFilter);
+    if (Array.isArray(req.query.d)) {
+      dietFilter.push(...req.query.d);
+    } else if (req.query.d) {
+      dietFilter.push(req.query.d);
+    }
+    console.log(dietFilter);
+    const selectedCategories = [];
+
+if (mealFilter) {
+  if (Array.isArray(mealFilter)) {
+    selectedCategories.push(...mealFilter);
+  } else {
+    selectedCategories.push(mealFilter);
+  }
+}
+
+if (cuisineFilter) {
+  if (Array.isArray(cuisineFilter)) {
+    selectedCategories.push(...cuisineFilter);
+  } else {
+    selectedCategories.push(cuisineFilter);
+  }
+}
+if (dietFilter) {
+  if (Array.isArray(dietFilter)) {
+    selectedCategories.push(...dietFilter);
+  } else {
+    selectedCategories.push(dietFilter);
+  }
+}
+   
         
     const searchIngredients = searchQuery ? searchQuery.split(",") : [];
     const page = parseInt(req.query.page) || 1;
@@ -550,7 +588,7 @@ app.get("/search", async (req, res) => {
     const skip = (page -1) * recipesPerPage;
 
   
-    const query = {};
+    
 
     //Easter Egg
     var conrad = false;
@@ -570,21 +608,30 @@ app.get("/search", async (req, res) => {
 
     }
 
-
-
-
- 
     /*Define Query for recipe database */
 
-    if (refineSearch && refineSearch.length > 0) {
+    const query = {};
+
+    if (mealFilter && mealFilter.length > 0) {
         let termQuery;
-        if (Array.isArray(refineSearch)) {
-          termQuery = refineSearch.map(term => ({ search_terms: new RegExp(term, "i") }));
+        if (Array.isArray(mealFilter)) {
+          termQuery = mealFilter.map(term => ({ search_terms: new RegExp(term, "i") }));
         } else {
-          termQuery = [{ search_terms: new RegExp(refineSearch, "i") }];
+          termQuery = [{ search_terms: new RegExp(mealFilter, "i") }];
         }
         query.$and = query.$and || [];
         query.$and.push({ $or: termQuery});
+    }
+
+    if (cuisineFilter && cuisineFilter.length > 0) {
+      let termQuery;
+      if (Array.isArray(cuisineFilter)) {
+        termQuery = cuisineFilter.map(term => ({ search_terms: new RegExp(term, "i") } ));
+      } else {
+        termQuery = [{ search_terms: new RegExp(cuisineFilter, "i" ) }];
+      }
+      query.$and = query.$and || [];
+      query.$and.push({ $or: termQuery });
     }
       
 
@@ -610,8 +657,8 @@ app.get("/search", async (req, res) => {
         query.$and.push({ $and: allergenQuery });
       }
       
-      if (diet && diet.length > 0) {
-        const dietQuery = diet.map((tag) => ({ search_terms: { $regex: new RegExp(tag, "i") } }));
+      if (dietFilter && dietFilter.length > 0) {
+        const dietQuery = dietFilter.map((tag) => ({ search_terms: { $regex: new RegExp(tag, "i") } }));
         query.$and = query.$and || [];
         query.$and.push({ $and: dietQuery });
       }
@@ -694,10 +741,12 @@ app.get("/search", async (req, res) => {
       searchIngredients: searchIngredients,
       filteredRatings,
       headerSession,
-      availableOptions,
-      selectedCategories: refineSearch
-    });
-
+      selectedCategories: selectedCategories,
+      meal: meal,
+      cuisine: cuisine,
+      dietType: dietType,
+      excludeDiet: excludeDiet
+      });
 });
 
 
