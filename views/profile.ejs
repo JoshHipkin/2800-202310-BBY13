@@ -3,8 +3,7 @@
 <div class="container">
     <h1><%- user.username %>'s Profile </h1>
 <div class="tab-content">
-    <%- include(tabContent, {user: user}) %>
-</div>
-        
+    <%- include(tabContent, {user: user, pantry: pantry}) %>
 </div>
 <%- include("templates/footer") %>
+

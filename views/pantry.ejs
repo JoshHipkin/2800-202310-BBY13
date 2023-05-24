@@ -1,0 +1,93 @@
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a href="/profile" class="nav-link" id="profile-info">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a href="/profile/preferences" class="nav-link" id="preferences" >Preferences</a>
+    </li>
+    <li class="nav-item">
+      <a href="/profile/pantry" class="nav-link active" id="pantry" >Pantry</a>
+  </li>
+</ul>
+<form action='/savePantry' method='post' autocomplete="off">
+    <label for="input">Add to pantry:</label>
+    <div>            
+        <input type="text" name="pantry" id="input">
+    </div>
+</form>
+
+<h3>Pantry:</h3>
+<% ingredientsArr = []; %>
+    <% for(var i = 0; pantry.length > i; i++){ %>
+    <% ingredientsArr.push(pantry[i].item)%>
+<% } %>
+<% let ingredientsString = ingredientsArr.join(", ");%>
+<form class="form-inline" action="/search" method="GET">
+    <div class="form-group"> 
+            <input type="text" class="form-control mb-3" id="search_input" value="<%- ingredientsString %>" name="q" placeholder="" hidden>
+            <button type="submit" class="btn btn-success mb-3" id="">
+            <i class="bi bi-search"> Search by pantry</i>
+    </div>
+</form>
+
+<ul>    
+<% for(var i = 0; pantry.length > i; i++){ %>
+<li><%- pantry[i].item %>
+    <form action='/deletePantry' method="post">
+        <input name="item" value="<%-pantry[i].item%>" hidden>
+        <button class="btn btn-outline-danger btn-sm">Delete</button>
+    </form>
+</li>
+<% } %>
+</ul>
+
+<script>
+//auto complete script from https://www.educative.io/answers/how-to-add-autocomplete-to-an-input-field-in-javascript
+function autocomplete(input, list) {
+    //Add an event listener to compare the input value with all countries
+    input.addEventListener('input', function () {
+        //Close the existing list if it is open
+        closeList();
+
+        //If the input is empty, exit the function
+        if (!this.value)
+            return;
+
+        //Create a suggestions <div> and add it to the element containing the input field
+        suggestions = document.createElement('div');
+        suggestions.setAttribute('id', 'suggestions');
+        this.parentNode.appendChild(suggestions);
+
+        var count = 0;
+        //Iterate through all entries in the list and find matches
+        for (let i=0; i<list.length; i++) {
+            if (list[i].toUpperCase().includes(this.value.toUpperCase())) {
+                //If a match is found, create a suggestion <div> and add it to the suggestions <div>
+                suggestion = document.createElement('div');
+                suggestion.innerHTML = list[i];
+                
+                suggestion.addEventListener('click', function () {
+                    input.value = this.innerHTML;
+                    closeList();
+                });
+                suggestion.style.cursor = 'pointer';
+
+
+                if (!(count == 5)){
+                    suggestions.appendChild(suggestion);
+                    count++
+                }
+            }
+        }
+
+    });
+
+    function closeList() {
+        let suggestions = document.getElementById('suggestions');
+        if (suggestions)
+            suggestions.parentNode.removeChild(suggestions);
+    }
+}
+autocomplete(document.getElementById('input'), <%- include("templates/ingredientArray") %>);
+</script>
+

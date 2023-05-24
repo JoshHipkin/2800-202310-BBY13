@@ -18,6 +18,14 @@ http://repqxuwlgf.eu09.qoddiapp.com/
 4. download all required node packages by typing 'npm i' into the console.
 5. run using 'node index.js' OR 'nodemon index.js'.
 
+# Conrad_PantryInventory
+- Working on ejs pantry page
+- Fixed bug on ejs script on preference and profile page
+- Build an array based on all the ingredients in mongodb database (2 hrs)
+- Iterate, troubleshoot, and save all unique ingredients into array (2 hrs)
+- Save array into json file (2hr)
+- Implement autosuggest feature on form using array (2 hrs)
+
 # Conrad_RecipeReviews
 Conrad_HotFixRatings
 (May 18, 2023)
