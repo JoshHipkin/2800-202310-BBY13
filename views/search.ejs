@@ -56,26 +56,27 @@
 
 <div class="pagination d-flex justify-content-center">
   <% if (currentPage > 1) { %>
-    <a class="page-link" href="/search?page=<%= currentPage - 1 %>"><button class="btn btn-primary">Prev</button></a>
-
-
+    <a class="page-link" href="/search?q=<%- searchQuery %>&page=<%= currentPage - 1 %>&s=<%= Array.isArray(selectedCategories) ? selectedCategories.join(',') : '' %>">
+      <button class="btn btn-primary">Prev</button>
+    </a>
   <% } %>
 
   <% if (startPage > 1) { %>
-    <a class="page-link" href="/search?q=<%= searchQuery %>&page=<%= startPage - 1 %>">...</a>
+    <a class="page-link" href="/search?q=<%- searchQuery %>&page=<%= startPage - 1 %>&s=<%= Array.isArray(selectedCategories) ? selectedCategories.join(',') : '' %>">...</a>
   <% } %>
 
   <% for (let i = 0; i < pages.length; i++) { %>
     <% if (currentPage === pages[i]) { %>
       <span class="page-link current-page active"><%= pages[i] %></span>
     <% } else { %>
-      <a class="page-link" href="/search?q=<%= searchQuery %>&page=<%= pages[i] %>"><%= pages[i] %></a>
+      <a class="page-link" href="/search?q=<%- searchQuery %>&page=<%= pages[i] %>&s=<%= Array.isArray(selectedCategories) ? selectedCategories.join(',') : '' %>"><%= pages[i] %></a>
     <% } %>
   <% } %>
 
-  <% if (currentPage < pageCount ) { %>
-    <a class="page-link" href="/search?page=<%= currentPage + 1 %>"><button class="btn btn-primary">Next</button></a>
-
+  <% if (currentPage < pageCount) { %>
+    <a class="page-link" href="/search?q=<%- searchQuery %>&page=<%= currentPage + 1 %>&s=<%= Array.isArray(selectedCategories) ? selectedCategories.join(',') : '' %>">
+      <button class="btn btn-primary">Next</button>
+    </a>
   <% } %>
 </div>
 
@@ -96,35 +97,6 @@
         console.log(url);
        window.location.href = url;
     });
-
-  function updatePage(page) {
-    const url = new URL(window.location.href);
-    url.searchParams.set("page", page);
-    window.location.href = url.toString();
-  }
-
-  // Function to handle click event on "Previous" button
-  function goToPreviousPage() {
-    const currentPage = parseInt("<%= currentPage %>");
-    const searchQuery = "<%= searchQuery %>";
-    if (currentPage > 1) {
-      updatePage(currentPage - 1);
-    }
-  }
-
-  // Function to handle click event on "Next" button
-  function goToNextPage() {
-    const currentPage = parseInt("<%= currentPage %>");
-    const pageCount = parseInt("<%= pageCount %>");
-    const searchQuery = "<%= searchQuery %>";
-      updatePage(currentPage + 1);
-  };
-
-
-
-
-
-
 </script>
 
 

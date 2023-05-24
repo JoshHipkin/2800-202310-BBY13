@@ -98,7 +98,10 @@ app.use(session({
 
 // landing page
 app.get("/", (req, res) => {
-    res.render('index');
+  if (sessionValidation) {
+    res.redirect("/home");
+  }  
+  res.render('index');
 });
 
 //login page
