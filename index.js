@@ -681,7 +681,6 @@ if (dietFilter) {
       
   
       const [recipeCount, recipeData] = await Promise.all([countPromise, recipesPromise]);
-    
       const pageCount = Math.ceil(recipeCount / recipesPerPage);
       const maxButtons = 10;
       const visiblePages = 5;
@@ -733,6 +732,11 @@ if (dietFilter) {
   
     const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);    
     
+    
+
+  
+    
+
     res.render("search", {
       recipe: recipeData,
       currentPage: page,

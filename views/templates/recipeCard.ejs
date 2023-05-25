@@ -1,6 +1,19 @@
-<div class="card shadow-sm">
-    <div class="card-body">
-      <p class="card-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><h1> <%= recipe.name.replaceAll("&amp;","&").replaceAll("&quot;","\"").replaceAll("&ntilde;","ñ") %> </h1></font><font style="vertical-align: inherit;"> 
+
+
+<div class="card shadow-sm container" style="padding:0; margin-top: 20px;">
+
+        
+        <img class="card-img" src="/public/images/dish1.jpg" alt="Card image" style="height:180px">
+      
+        <div class="card-img-overlay text-white">
+          
+
+          <button type="button" class="btn btn-sm btn-outline-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Save</font></font></button>
+        </div>
+      
+      <p class="card-text">
+       <h1> <%= recipe.name.replaceAll("&amp;","&").replaceAll("&quot;","\"").replaceAll("&ntilde;","ñ") %></h1>
+        <!-- <p><%= recipe.description %> </p></font></font></p> -->
         <% var rateExists = false %>
         <% for(count = 0; count < filteredRatings.length; count++) { %>
           <% if(filteredRatings[count].recipeID == recipe._id) { %>
@@ -11,13 +24,13 @@
         <% if(!(rateExists)){ %>
           <p>No ratings</p>
         <% } %>
-        <p><%= recipe.description %> </p></font></font></p>
+      </p>
       <div class="d-flex justify-content-between align-items-center">
         <div class="btn-group">
          
           <a class="btn btn-sm btn-outline-secondary" href="/recipe?id=<%= recipe._id %>">Read More</a>
 
-          <button type="button" class="btn btn-sm btn-outline-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Save</font></font></button>
+          
         </div>
         <small class="text-body-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> <%= recipe.servings %> Servings</font></font></small>
       </div>

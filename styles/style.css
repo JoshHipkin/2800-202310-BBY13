@@ -287,3 +287,12 @@ canvas {
   cursor: pointer;
 }
 
+.card-img {
+ width: 100%;
+ object-fit: cover;
+}
+
+.card-text {
+  font-size: 14px;
+  margin:5px;
+}
