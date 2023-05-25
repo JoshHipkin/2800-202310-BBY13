@@ -1,11 +1,11 @@
 <%- include(`templates/header${headerSession}`) %> 
 
 <div class="row justify-content-center mt-5">
-<div class="col-md-7 col-lg-8">
+<div class="col-md-7 col-lg-8 ">
     <div class="text-center">
-        <h4 class="mb-3">Upload Your Own Recipe</h4>
+        <h2 class="mb-3">Upload Your Own Recipe</h2>
       </div>
-    <img src="/public/images/dinner.jpeg" class="card-img-top mx-auto d-block" alt="dinner" style="width: 30%; height: auto;" >
+    <img src="/public/images/dinner.jpeg" class="card-img-top mx-auto d-block" alt="dinner" style="width: 25%; height: auto; border-radius: 25px;" >
     <form class="needs-validation mt-5" action="/uploadRecipe" method="post">
       <div class="row g-3">
         <div class="col-sm-6">
@@ -34,7 +34,7 @@
           <label for="ingredient" class="form-label">Ingredients *</label>
           <div class="input-group">
             <input type="text" class="form-control" name="ingredients" placeholder="Ingredient 1" required>
-            <button type="button" class="btn btn-secondary" id="addIngredient">Add</button>
+            <button type="button" class="btn btn-success" id="addIngredient">Add</button>
           </div>
           <div id="ingredientList"></div>
         </div>
@@ -49,12 +49,14 @@
   
         <hr class="my-4">
   
-        <button class="w-100 btn btn-primary btn-lg" type="submit">Submit Recipe</button>
+        <button class="w-100 btn btn-success btn-lg" type="submit">Submit Recipe</button>
       </div>
     </form>
   </div>
   </div>
+
   <%- include("templates/footer") %>
+
   <script>
     $(document).ready(function() {
       var ingredientCount = 1;

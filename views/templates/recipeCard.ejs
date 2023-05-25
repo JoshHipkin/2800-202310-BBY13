@@ -1,25 +1,121 @@
 <div class="card shadow-sm">
-    <div class="card-body">
-      <p class="card-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><h1> <%= recipe.name.replaceAll("&amp;","&").replaceAll("&quot;","\"").replaceAll("&ntilde;","ñ") %> </h1></font><font style="vertical-align: inherit;"> 
-        <% var rateExists = false %>
-        <% for(count = 0; count < filteredRatings.length; count++) { %>
-          <% if(filteredRatings[count].recipeID == recipe._id) { %>
-            <% rateExists = true %>
-            <p>Rating: <%-((filteredRatings[count].rating) / (filteredRatings[count].ratingTotal)).toFixed(1)%>/5.0 (based on <%-filteredRatings[count].ratingTotal%> reviews)</p>
-          <% } %>
+  <div class="card-body">
+    <p class="card-text">
+      <h1><%= recipe.name.replaceAll("&amp;","&").replaceAll("&quot;","\"").replaceAll("&ntilde;","ñ") %></h1>
+      <% var rateExists = false %>
+      <% for(count = 0; count < filteredRatings.length; count++) { %>
+        <% if(filteredRatings[count].recipeID == recipe._id) { %>
+          <% rateExists = true %>
+          <p>Rating: <%-((filteredRatings[count].rating) / (filteredRatings[count].ratingTotal)).toFixed(1)%>/5.0 (based on <%-filteredRatings[count].ratingTotal%> reviews)</p>
         <% } %>
-        <% if(!(rateExists)){ %>
-          <p>No ratings</p>
-        <% } %>
-        <p><%= recipe.description %> </p></font></font></p>
-      <div class="d-flex justify-content-between align-items-center">
-        <div class="btn-group">
-         
-          <a class="btn btn-sm btn-outline-secondary" href="/recipe?id=<%= recipe._id %>">Read More</a>
-
-          <button type="button" class="btn btn-sm btn-outline-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Save</font></font></button>
-        </div>
-        <small class="text-body-secondary"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> <%= recipe.servings %> Servings</font></font></small>
+      <% } %>
+      <% if(!(rateExists)){ %>
+        <p>No ratings</p>
+      <% } %>
+      <p><%= recipe.description %></p>
+    </p>
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <a class="btn btn-sm btn-outline-secondary mr-2" href="/recipe?id=<%= recipe._id %>">Read More</a>
       </div>
+      <% if (userEmail) { %>
+        <div>
+          <button class="toggle-favorite-btn heart" data-recipe-id="<%= recipe._id %>" data-user-email="<%= user.email %>">
+            <% if (recipe.isFavorite) { %>
+              <i class="fas fa-heart filled-heart"></i>
+            <% } else { %>
+              <i class="far fa-heart"></i>
+            <% } %>
+          </button>
+          <small class="text-body-secondary ml-2">
+            <%= recipe.servings %> Servings
+          </small>
+        </div>
+      <% } else { %>
+        <div>
+          <small class="text-body-secondary ml-2">
+            <%= recipe.servings %> Servings
+          </small>
+        </div>
+      <% } %>
     </div>
   </div>
+</div>
+
+
+
+<script>
+  $(document).ready(function() {
+    // Retrieve the user's favorite recipes from local storage
+    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
+
+    $('.toggle-favorite-btn').each(function() {
+      const button = $(this);
+      const recipeId = button.data('recipe-id');
+
+      if (favoriteRecipes.includes(recipeId)) {
+        // Recipe is saved as a favorite
+        button.find('i').removeClass('far fa-heart').addClass('fas fa-heart filled-heart');
+      }
+    });
+
+    // Function to handle favorite click event
+    function handleFavoriteClick(event) {
+      event.stopPropagation(); 
+
+      const button = $(this);
+      const recipeId = button.data('recipe-id');
+      const userEmail = '<%= user ? user.email : '' %>'; 
+      
+      // Disable the button
+      button.prop('disabled', true);
+
+      // Send an AJAX request to the server
+      $.ajax({
+        url: '/toggleFavoriteRecipe',
+        method: 'POST',
+        data: { recipeId: recipeId, userEmail: userEmail },
+        success: function(response) {
+          if (response.status === 'saved') {
+            // Recipe was saved to favorites
+            button.find('i').removeClass('far fa-heart').addClass('fas fa-heart filled-heart');
+            updateFavoriteStatus(recipeId, true); // Update local storage
+          } else if (response.status === 'removed') {
+            // Recipe was removed from favorites
+            button.find('i').removeClass('fas fa-heart filled-heart').addClass('far fa-heart');
+            updateFavoriteStatus(recipeId, false); // Update local storage
+          }
+        },
+        error: function(error) {
+          console.log(error);
+        },
+        complete: function() {
+          // Enable the button after a short delay
+          setTimeout(function() {
+            button.prop('disabled', false);
+          }, 200); // Adjust the delay time as needed
+        }
+      });
+    }
+
+    // Attach the click event handler to the buttons
+    $('.toggle-favorite-btn').off('click').on('click', handleFavoriteClick);
+
+    // Function to update favorite status in local storage
+    function updateFavoriteStatus(recipeId, isFavorite) {
+      const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
+
+      if (isFavorite && !favoriteRecipes.includes(recipeId)) {
+        // Add recipeId to favoriteRecipes array
+        favoriteRecipes.push(recipeId);
+      } else if (!isFavorite && favoriteRecipes.includes(recipeId)) {
+        // Remove recipeId from favoriteRecipes array
+        const index = favoriteRecipes.indexOf(recipeId);
+        favoriteRecipes.splice(index, 1);
+      }
+
+      // Update local storage
+      localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
+    }
+  });
+</script>

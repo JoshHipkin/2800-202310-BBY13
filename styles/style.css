@@ -21,14 +21,15 @@ body {
   min-height: 400px;
   margin-bottom: 100px;
   clear: both;
+  background-color: rgba(17, 110, 17, 0.019);
 }
 
 nav {
-  background-color: #DD7373;
+  background-color: white;
 }
 
 #footer {
-  background-color: #DD7373;
+  background-color: white;
 }
 
 .recipal-logo {
@@ -46,7 +47,8 @@ nav {
   border-radius: 20px;
 }
 .offcanvas {
-  background-color: #dd7373;
+  background-color:  rgb(25, 111, 25);
+  color:rgb(31, 30, 30);
 }
 
 #image-box {
@@ -168,64 +170,11 @@ canvas {
 }
 
 
-
-
-/* home page cards*/
-
-.card-img-top.recipebrowse-1.custom-image {
-  width: 100%; 
-  height: auto;
-    transform: rotate(-90deg);
-  }
-  
-  .card.mb-3.custom-card {
-    width: 100%; 
-    height: auto;
-    flex-basis: calc(50% - 5px);
-    border: none;
-    text-align: left; 
-  }
-
-  .container.recipe {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 5%;
-
+.form-label {
+  font-size: 12pt;
+  font-weight: bold;
+  color:#333;
 }
-  
-.card-img-top.recipebrowse.custom-image {
-  width: 100%; 
-  height: auto;
-}
-
-
-/* explore section (homepage)*/
-.card-container.explore {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin: 5%;
-}
-
-.card.explorerecipe {
-  flex-basis: calc(50% - 5px);
-  border: none;
-  text-align: left;
-
-}
-
-.card-img-top-1 {
-  display: block;
-  width: 50%;
-  height: auto;
-  object-fit: cover;
-  border-radius: 60%;
-  overflow: hidden;
-}
-
-
-
 
 
 
@@ -291,4 +240,20 @@ canvas {
   font-size: 24px;
   cursor: pointer;
 }
+
+
+
+
+/* heart icon  */
+
+.toggle-favorite-btn.heart {
+  background: none;
+  border: none;
+  color: rgb(218, 3, 3);
+  font-size: 20px;
+
+}
+
+
+
 

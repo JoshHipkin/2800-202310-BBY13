@@ -1,0 +1,6 @@
+Successfully created field under User collection in database to store favoruites 
+Successfully saves recipes in user favourite field as an array
+Successfully display saved recipe on page with heart icon filled 
+Successfully displays unsaved recipes with heart icon unfilled
+Successfully displays saved recipe on favourite page
+Successfully implemented save and unsave recipe feaature by clicking on heart icon
