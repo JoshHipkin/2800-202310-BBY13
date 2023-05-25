@@ -23,12 +23,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 5%;
+    margin: 2%;
 
 }
 
 .card-img-top.recipebrowse.custom-image {
     object-fit: cover; 
+    height:270px;
     border-radius: 25px;
     overflow: hidden;
     display: block;
