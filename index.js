@@ -18,6 +18,7 @@ const { Configuration, OpenAIApi } = require("openai");
 const saltRounds = 12;     
 // For generating random id's
 const { v4: uuidv4 } = require('uuid');
+const he = require('he');
 
 /* Secrets */
 const mongodb_host = process.env.MONGODB_HOST;
@@ -509,6 +510,8 @@ app.get("/home", async (req, res) => {
         if (!(isValidSession(req))){
             headerSession = "BeforeLogin"
         }
+
+        
       
         res.render("homepage", {
             headerSession,
@@ -802,11 +805,18 @@ if (dietFilter) {
                 }
         }
     }
+
   
     var headerSession = ""
     if (!(isValidSession(req))){
         headerSession = "BeforeLogin"
     }
+
+    recipeData.name=he.decode(recipeData.name)
+    recipeData.description=he.decode(recipeData.description)
+    recipeData.ingredients=he.decode(recipeData.ingredients)
+    recipeData.steps=he.decode(recipeData.steps)
+    recipeData.ingredients_raw_str=he.decode(recipeData.ingredients_raw_str)
 
     res.render("recipe", { 
         recipe: recipeData,
