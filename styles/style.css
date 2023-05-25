@@ -239,3 +239,56 @@ canvas {
 .strikethrough-list .form-check-input:checked ~ .form-check-label {
   text-decoration: line-through;
 }
+
+.tabs {
+  width: 100%;
+
+}
+
+.tab-links {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex; 
+
+  text-align: center;
+}
+
+.tab-links li {
+  flex: 1; 
+}
+
+.tab-links li a {
+  display: block;
+  padding: 8px 8px;
+  background-color: #f3fbf8;
+  text-decoration: none;
+  color: #333;
+}
+
+.tab-links li a:hover {
+  background-color: #ddd;
+}
+.tab-links li a.active {
+  background-color: #c5f1ee;
+  text-decoration: underline;
+
+
+}
+
+
+
+.tab-content .tab {
+  display: none;
+  padding: 20px;
+}
+
+.tab-content .active {
+  display: block;
+}
+
+.rating-stars {
+  font-size: 24px;
+  cursor: pointer;
+}
+
