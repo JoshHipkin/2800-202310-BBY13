@@ -61,12 +61,12 @@
 
     // Function to handle favorite click event
     function handleFavoriteClick(event) {
-      event.stopPropagation(); // Stop event propagation
+      event.stopPropagation(); 
 
       const button = $(this);
       const recipeId = button.data('recipe-id');
-      const userEmail = '<%= user ? user.email : '' %>'; // User's email from server-side
-
+      const userEmail = '<%= user ? user.email : '' %>'; 
+      
       // Disable the button
       button.prop('disabled', true);
 

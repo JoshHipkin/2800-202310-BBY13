@@ -501,7 +501,7 @@ app.get("/search", async (req, res) => {
 
   const userEmail = req.session.email;
   const users = await userCollection.findOne({ email: userEmail });
-  
+
     const user = await userCollection.findOne({ email: req.session.email});
     var headerSession = ""
     if (!(isValidSession(req))){
@@ -1194,10 +1194,15 @@ app.post('/toggleFavoriteRecipe', async (req, res) => {
 
 
 // Display favorite recipe
+
 app.get('/favourite', async (req, res) => {
+
+  sessionValidation(req, res);
+  const userEmail = req.session.email;
+
+
   // Receive all ratings
   var ratings = await commentCollection.find({}).project({ rating: 1, recipeID: 1 }).toArray();
-
   // Same code as in the homepage to display the average rating on the recipe page
   var filteredRatings = [];
   for (count = 0; ratings.length > count; count++) {
@@ -1231,11 +1236,6 @@ app.get('/favourite', async (req, res) => {
       }
     }
   }
-
-
-  sessionValidation(req, res);
-  const userEmail = req.session.email;
-
 
   try {
     // Retrieve the user from the userCollection
