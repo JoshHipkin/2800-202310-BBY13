@@ -1,7 +1,10 @@
 
 <div class="card shadow-sm container recipe-card">
   <div class="card-body">
-    <p class="card-text">      
+
+    
+
+      <p class="card-text">      
       <button class="toggle-favorite-btn heart" data-recipe-id="<%= recipe._id %>" data-user-email="<%= user.email %>">
         <% if (recipe.isFavorite) { %>
           <i class="fas fa-heart filled-heart"></i>
@@ -21,7 +24,7 @@
       <% if(!(rateExists)){ %>
         <p><small><i>No ratings yet!</i></small></p>
       <% } %>
-      <p><%= recipe.description %></p>
+      <p><%- recipe.description %></p>
     </p>
     <div class="d-flex justify-content-between align-items-center">
       <div>
