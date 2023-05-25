@@ -297,3 +297,10 @@ canvas {
 }
 
 
+h1, h2, h3, h4, h5, h6, .btn {
+  font-family: 'Fjalla One', sans-serif;
+}
+
+.btn-success{
+  background-color: rgba(17, 85, 17, 0.746);
+}
