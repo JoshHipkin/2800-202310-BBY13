@@ -228,3 +228,19 @@ canvas {
 .strikethrough-list .form-check-input:checked ~ .form-check-label {
   text-decoration: line-through;
 }
+
+
+
+/* heart icon  */
+
+.toggle-favorite-btn.heart {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 20px;
+
+}
+
+
+
+

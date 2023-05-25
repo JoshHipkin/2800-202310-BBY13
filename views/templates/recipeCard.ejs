@@ -21,25 +21,27 @@
       </font>
     </p>
     <div class="d-flex justify-content-between align-items-center">
-      <div class="btn-group">
-        <a class="btn btn-sm btn-outline-secondary" href="/recipe?id=<%= recipe._id %>">Read More</a>
-        <button class="toggle-favorite-btn" data-recipe-id="<%= recipe._id %>" data-user-email="<%= user ? user.email : '' %>">
+      <div>
+        <a class="btn btn-sm btn-outline-secondary mr-2" href="/recipe?id=<%= recipe._id %>">Read More</a>
+      </div>
+      <div>
+        <button class="toggle-favorite-btn heart" data-recipe-id="<%= recipe._id %>" data-user-email="<%= user ? user.email : '' %>">
           <% if (user && user.favourite && user.favourite.includes(recipe._id.toString())) { %>
             <i class="fas fa-heart filled-heart"></i>
           <% } else { %>
             <i class="far fa-heart"></i>
           <% } %>
-          </button>        
-        
+        </button>
+        <small class="text-body-secondary ml-2">
+          <font style="vertical-align: inherit;">
+            <font style="vertical-align: inherit;"> <%= recipe.servings %> Servings</font>
+          </font>
+        </small>
       </div>
-      <small class="text-body-secondary">
-        <font style="vertical-align: inherit;">
-          <font style="vertical-align: inherit;"> <%= recipe.servings %> Servings</font>
-        </font>
-      </small>
     </div>
   </div>
 </div>
+
 
 <script>
 $(document).ready(function() {
