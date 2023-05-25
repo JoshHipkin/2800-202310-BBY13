@@ -194,6 +194,11 @@ canvas {
 
 }
 
+#addIngredient {
+  font-size: 1.8rem;
+  color: #198754;
+}
+
 .tab-links {
   list-style-type: none;
   margin: 0;
