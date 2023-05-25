@@ -202,7 +202,7 @@ canvas {
 
 #addIngredient {
   font-size: 1.8rem;
-  color: #198754;
+  color: rgba(17, 85, 17, 0.746);
 }
 
 .tab-links {
@@ -237,16 +237,16 @@ canvas {
 }
 
 .pagination a.page-link {
-  color: green;
+  color: rgba(17, 85, 17, 0.746);
 }
 
 .pagination a.page-link.current-page {
-  background-color: green;
+  background-color: rgba(17, 85, 17, 0.746);
   color: white;
 }
 
 .pagination .current-page {
-  background-color: green;
+  background-color: rgba(17, 85, 17, 0.746);
   color: white;
 }
 
