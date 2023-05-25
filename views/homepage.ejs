@@ -22,6 +22,7 @@
    
 
     <div class="container recipe" >
+      <div class="card-wrapper">
       <div class="card mb-3 custom-card">
         <img src="/public/images/recipehome1.jpeg" class="card-img-top recipebrowse custom-image" alt="dinner" >
         <div class="card-body">
@@ -29,10 +30,12 @@
           <p class="card-text">Here you'll find a collection of delicious recipes that your family will love! Flavored, well-rounded dishes with layer after layer of fresh goodness.</p>
           <p class="card-text"><a class="btn btn-success" href="/browseRecipe/1" role="button">Explore</a></p>
         </div>
+        </div>
       </div>      
     </div>
 
     <div class="container recipe" >
+      <div class="card-wrapper">
       <div class="card mb-3 custom-card">
         <img src="/public/images/recipehome2.jpeg" class="card-img-top recipebrowse custom-image" alt="dinner" >
         <div class="card-body">
@@ -40,11 +43,13 @@
           <p class="card-text">These nutritious and low-calorie recipes offer a perfect balance between nourishment and culinary delight.</p>
           <p class="card-text"><a class="btn btn-success" href="/browseRecipe/2" role="button">Explore</a></p>
         </div>
-      </div>      
+      </div>  
+      </div>    
     </div>
 
 
     <div class="container recipe" >
+      <div class="card-wrapper">
       <div class="card mb-3 custom-card">
         <img src="/public/images/recipehome3.jpeg" class="card-img-top recipebrowse custom-image" alt="dinner" >
         <div class="card-body">
@@ -52,7 +57,8 @@
           <p class="card-text">Explore the top delicious recipes! They make any occasion feel extra-special, even everyday dinners.</p>
           <p class="card-text"><a class="btn btn-success" href="/browseRecipe/3" role="button">Explore</a></p>
         </div>
-      </div>      
+      </div> 
+      </div>     
     </div>
     
     <h2 class="text-center explore-heading">Explore More</h2>
@@ -98,7 +104,7 @@
 
     <div class="jumbotron jumbotron-fluid text-light mx-5 mb-4">
       <div class="container text-center">
-        <h3 class="display-4" style="font-size: 32px; color: white;">Try some of ReciPAL's community recipes!</h3>
+        <h3 class="display-4" style="font-size: 1.5em; color: white;">Try some of ReciPAL's community recipes!</h3>
       </div>
     </div>
     
@@ -114,12 +120,15 @@
         <div class="carousel-inner">
           <% for (let i = 0; i < recipe.length; i++) { %>
             <div class="carousel-item <% if (i === 0) { %>active <% } %>">
-              <a href="/communityRecipe?id=<%= recipe[i]._id %>">
+              <a href="/communityRecipe?id=<%= recipe[i]._id %>" style="text-decoration: none; color: white;">
                 <img src="/public/images/community.jpeg" class="d-block w-100 carousel-img dimmed-image" alt="...">
-              </a>
+              
+
+            
               <div class="carousel-caption d-md-block">
-                <h4 style="font-size: 40px;"><%= recipe[i].name %></h4>
-                <p class="carousel-description" style="font-size: 14px;"><%= recipe[i].description %></p>
+                   <h4 style="font-size: 1em;"><%= recipe[i].name %></h4>
+                <p class="carousel-description" style="font-size: 0.5em;"><%= recipe[i].description %></p>
+              </a>
               </div>
             </div>
           <% } %>

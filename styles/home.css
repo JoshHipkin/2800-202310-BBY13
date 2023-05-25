@@ -5,12 +5,18 @@
 /* home page cards*/
   
   .card.mb-3.custom-card {
-    width: 100%; 
-    height: auto;
     flex-basis: calc(50% - 5px);
     border: none;
     text-align: left; 
     border-radius: 25px;
+  }
+
+  .card-wrapper {
+    width: 80%; /* Adjust the percentage as per your needs */
+  }
+  
+  .custom-card {
+    width: 100%;
   }
 
   .container.recipe {
@@ -21,9 +27,6 @@
 
 }
 
-
-
-/* cards (homepage)*/
 .card-img-top.recipebrowse.custom-image {
     object-fit: cover; 
     border-radius: 25px;
@@ -37,7 +40,7 @@
 /* explore (homepage)*/
 
 .explore-heading {
-  font-size: 40px; 
+  font-size: 2em; 
   color: rgb(39, 36, 36); 
   margin: 5%; 
 }
@@ -79,6 +82,8 @@
 h3 {
   margin-top: 10px;
   margin-bottom: 0;
+  font-size: 1em; 
+
 }
 
 
@@ -136,7 +141,7 @@ h3 {
     .carousel-caption h5,
     .carousel-caption p {
       color: white;
-      font-size: 1rem;
+      font-size: 6rem;
   }
 
   .carousel-img {
