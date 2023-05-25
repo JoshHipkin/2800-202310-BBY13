@@ -132,6 +132,11 @@ canvas {
   z-index: 9999;
 }
 
+#burnt-toast {
+  width: 40%;
+  display: block;
+}
+
 #gameOverlay h1 {
   color: white;
   font-size: 30pt;

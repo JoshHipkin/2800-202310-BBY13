@@ -134,7 +134,7 @@ app.post('/loggingin', async (req, res) => {
         req.session.email = email;
         req.session.cookie.maxAge = expire;
 
-        res.redirect('home');
+        res.redirect('/home');
         return;
     }
     else {
@@ -186,7 +186,7 @@ app.post('/createUser', async (req, res) => {
     const validationResultName = schema.validate({ username, email, password });
     if (validationResultName.error != null) {
         console.log(validationResultName.error);
-        res.redirect('signup');
+        res.redirect('/signup');
         return;
     }
 

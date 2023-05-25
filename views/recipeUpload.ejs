@@ -9,7 +9,7 @@
     <form class="needs-validation mt-5" action="/uploadRecipe" method="post">
       <div class="row g-3">
         <div class="col-sm-6">
-          <label for="recipename" class="form-label">Recipe Name</label>
+          <label for="recipename" class="form-label">Recipe Name *</label>
           <input name="name" type="text" class="form-control" id="recipeName" placeholder="Enter Name" value="" required>
         </div>
 
@@ -19,7 +19,7 @@
         </div>
 
         <div class="col-md-5">
-          <label for="country" class="form-label">Servings</label>
+          <label for="country" class="form-label">Servings *</label>
           <select name="servings" class="form-select" id="country" required>
             <option value="">Choose...</option>
             <option>1-2</option>
@@ -31,7 +31,7 @@
           </select>
         </div>
         <div class="mb-3">
-          <label for="ingredient" class="form-label">Ingredients</label>
+          <label for="ingredient" class="form-label">Ingredients *</label>
           <div class="input-group">
             <input type="text" class="form-control" name="ingredients" placeholder="Ingredient 1" required>
             <button type="button" class="btn btn-secondary" id="addIngredient">Add</button>
