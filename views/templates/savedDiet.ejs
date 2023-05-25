@@ -1,4 +1,5 @@
-<form action="/preferences/delete" method="post">
+<form action="/preferences/delete" method="post" onsubmit="return confirm('Are you sure you want to delete this from your profile?'
+)">
     <input type="hidden" name="type" value="diet">
     <input type="hidden" name="value" value="<%= diet %>">
     <%= diet %>

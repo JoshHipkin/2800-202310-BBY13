@@ -36,7 +36,8 @@
     <ul class="list-group">    
     <% for(var i = 0; pantry.length > i; i++){ %>
     <%- pantry[i].item %>
-        <form action='/deletePantry' method="post">
+        <form action='/deletePantry' method="post" onsubmit="return confirm('Are you sure you want to delete this from your pantry?'
+        )">
             <input name="item" value="<%-pantry[i].item%>" hidden>
             <button class="btn btn-danger btn-sm">Delete</button>
         </form>
