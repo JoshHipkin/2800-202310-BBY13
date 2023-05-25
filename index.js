@@ -201,7 +201,7 @@ app.post('/createUser', async (req, res) => {
     var result = await userCollection.find({email: email}).toArray()
 
     if (result.length == 0) {
-        await userCollection.insertOne({ username: username, email: email, password: hashedPassword, allergens: allergens, diet: diet, shoppinglist: shoppinglist });
+        await userCollection.insertOne({ username: username, email: email, password: hashedPassword, allergens: allergens, diet: diet, shoppinglist: shoppinglist, favourite: [] });
     } else {
         res.render('signupEmailTaken');
         return;
@@ -531,9 +531,14 @@ app.get("/home", async (req, res) => {
 
 app.get("/search", async (req, res) => {
     const user = await userCollection.findOne({ email: req.session.email});
-    var headerSession = "BeforeLogin"
-    if (isValidSession(req)){
-        headerSession = "";
+    var headerSession = ""
+    if (!(isValidSession(req))){
+        headerSession = "BeforeLogin"
+    }   
+    //array for passing names for checkboxes
+    const availableOptions = ['dinner', 'dessert', 'lunch', 'breakfast', 'appetizer', 'low-calorie',];
+
+    if (isValidSession(req)) {
         var allergens = user.allergens;
         var diet = user.diet;
     }   
@@ -730,6 +735,10 @@ if (dietFilter) {
                 }
         }
     }
+
+   
+   
+  
   
     const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);    
     
@@ -850,9 +859,15 @@ app.post('/commentPost', async(req, res) => {
 
 // browse recipe page (redirect from homepage)
 app.get('/browseRecipe/:id', async (req, res) => {
-    if (!(isValidSession(req))){
+    
+  if (!(isValidSession(req))){
         headerSession = "BeforeLogin"
     } 
+
+   
+    const userEmail = req.session.email;
+    const user = await userCollection.findOne({ email: userEmail });
+
 
     const recipesPerPage = 20;
     const page = req.params.id;
@@ -927,20 +942,23 @@ app.get('/browseRecipe/:id', async (req, res) => {
       var headerSession = ""
       if (!(isValidSession(req))){
           headerSession = "BeforeLogin"
+
       }
     
-    try {
-      const [recipeCount, recipeData] = await Promise.all([countPromise, recipesPromise]);
-  
-      res.render("browseRecipe", {
-        recipe: recipeData,
-        filteredRatings: filteredRatings,
-        headerSession    
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  });
+      try {
+        const [recipeCount, recipeData] = await Promise.all([countPromise, recipesPromise]);
+    
+        res.render("browseRecipe", {
+          recipe: recipeData,
+          filteredRatings: filteredRatings,
+          headerSession,
+          userEmail,
+          user
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    });
 
 
 app.get("/imageUpload", async (req, res) => {
@@ -1218,8 +1236,122 @@ app.post('/uploadRecipe', async (req, res) => {
 }); 
   
   
-    
-  
+
+// save or remove recipe from favorites
+
+app.post('/toggleFavoriteRecipe', async (req, res) => {
+  const recipeId = req.body.recipeId;
+  const userEmail = req.session.email;
+  const user = await userCollection.findOne({ email: userEmail });
+
+  if (user) {
+    const favoriteRecipes = user.favourite || [];
+
+    const recipeIndex = favoriteRecipes.indexOf(recipeId);
+    if (recipeIndex !== -1) {
+      // Recipe is already in favorites, remove it
+      favoriteRecipes.splice(recipeIndex, 1);
+      await userCollection.updateOne({ email: userEmail }, { $set: { favourite: favoriteRecipes } });
+      res.send({ status: "removed" });
+    } else {
+      // Recipe is not in favorites, add it
+      favoriteRecipes.push(recipeId);
+      await userCollection.updateOne({ email: userEmail }, { $set: { favourite: favoriteRecipes } });
+      res.send({ status: "saved" });
+    }
+
+    // Update the favorite status of the recipe in the recipesCollection
+    const updatedRecipe = await recipesCollection.findOneAndUpdate(
+      { _id: new ObjectId(recipeId) },
+      { $set: { isFavorite: favoriteRecipes.includes(recipeId) } },
+      { returnOriginal: false }
+    );
+
+    if (updatedRecipe) {
+      console.log("Recipe favorite status updated:", updatedRecipe);
+    } else {
+      console.log("Failed to update recipe favorite status");
+    }
+  } else {
+    res.status(404).send({ error: "User not found" });
+  }
+});
+
+
+
+
+
+// Display favorite recipe
+
+app.get('/favourite', async (req, res) => {
+
+  sessionValidation(req, res);
+  const userEmail = req.session.email;
+
+
+  // Receive all ratings
+  var ratings = await commentCollection.find({}).project({ rating: 1, recipeID: 1 }).toArray();
+  // Same code as in the homepage to display the average rating on the recipe page
+  var filteredRatings = [];
+  for (count = 0; ratings.length > count; count++) {
+    // Ignore all null or empty ratings
+    if (!(ratings[count].rating == null)) {
+      // Compare filteredRatings array object to object in ratings array
+      if (filteredRatings.some(e => e.recipeID == ratings[count].recipeID)) {
+
+        key = "recipeID";
+        value = ratings[count].recipeID;
+
+        // Function to find index based on key and value developed by ChatGPT
+        function findIndex(array, key, value) {
+          for (let index = 0; index < array.length; index++) {
+            const obj = array[index];
+            if (obj.hasOwnProperty(key) && obj[key] === value) {
+              return index;
+            }
+          }
+        }
+
+        objIndex = findIndex(filteredRatings, key, value);
+
+        // Adds the integer rating together and the total amount of ratings for average calculation later on
+        filteredRatings[objIndex].rating = parseInt(filteredRatings[objIndex].rating) + parseInt(ratings[count].rating);
+        filteredRatings[objIndex].ratingTotal = parseInt(filteredRatings[objIndex].ratingTotal) + parseInt(1);
+
+      } else {
+        // If there is no unique recipeID in the filtered ratings array, the object is added
+        filteredRatings.push({ recipeID: ratings[count].recipeID, rating: parseInt(ratings[count].rating), ratingTotal: parseInt(1) });
+      }
+    }
+  }
+
+  try {
+    // Retrieve the user from the userCollection
+    const user = await userCollection.findOne({ email: req.session.email });
+
+    if (user) {
+      // Retrieve the favorite recipe IDs from the user's favorite field
+      const favouriteRecipeIds = user.favourite || [];
+
+      // Fetch the favorite recipes from the recipesCollection
+      const favouriteRecipes = await recipesCollection.find({ _id: { $in: favouriteRecipeIds.map(id => new ObjectId(id)) } }).toArray();
+
+      var headerSession = "";
+      if (!isValidSession(req)) {
+        headerSession = "BeforeLogin";
+      }
+
+      res.render("favouriteRecipes", { recipes: favouriteRecipes, headerSession, user, filteredRatings, userEmail }); // Updated variable name and added user object
+    } else {
+      res.status(404).send({ error: "User not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: "An error occurred" });
+  }
+});
+
+
       
 app.get("*", (req, res) => {
     res.status(404);

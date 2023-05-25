@@ -292,3 +292,19 @@ canvas {
   cursor: pointer;
 }
 
+
+
+
+/* heart icon  */
+
+.toggle-favorite-btn.heart {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 20px;
+
+}
+
+
+
+
