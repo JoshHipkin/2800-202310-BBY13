@@ -56,8 +56,14 @@
       </div>
       
       <div id="reviews" class="tab">
+
+        <% if(commentData.length == 0) { %>
+          <p style="margin-bottom: 0px;">Be the first to leave a review!..</p>
+          <br/>
+        <% } %>
+        
 <!-- Button to trigger the modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#reviewModal">
   Write Review
 </button>
 
@@ -67,7 +73,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="reviewModalLabel">Leave a Review</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button " class="btn-close btn btn-success" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form action="/commentPost" method="post">
@@ -97,7 +103,7 @@
             <label for="idRecipe" hidden></label>
           </div>
 
-          <button type="submit" class="btn btn-primary">Post Review</button>
+          <button type="submit" class="btn btn-success">Post Review</button>
 
         </form>
       </div>
