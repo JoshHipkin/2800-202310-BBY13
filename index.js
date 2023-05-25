@@ -498,6 +498,10 @@ app.get("/home", async (req, res) => {
 });
 
 app.get("/search", async (req, res) => {
+
+  const userEmail = req.session.email;
+  const users = await userCollection.findOne({ email: userEmail });
+  
     const user = await userCollection.findOne({ email: req.session.email});
     var headerSession = ""
     if (!(isValidSession(req))){
@@ -651,8 +655,8 @@ app.get("/search", async (req, res) => {
         }
     }
 
-    const userEmail = req.session.email;
-    const users = await userCollection.findOne({ email: userEmail });
+   
+   
   
   
     const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);    
@@ -671,7 +675,8 @@ app.get("/search", async (req, res) => {
       headerSession,
       availableOptions,
       selectedCategories: refineSearch,
-      user: users
+      user: users,
+      userEmail
     });
 
 });
@@ -766,11 +771,13 @@ app.post('/commentPost', async(req, res) => {
 
 // browse recipe page (redirect from homepage)
 app.get('/browseRecipe/:id', async (req, res) => {
-    if (!(isValidSession(req))){
+    
+  if (!(isValidSession(req))){
         headerSession = "BeforeLogin"
     } 
 
-    const userEmail = req.body.email;
+   
+    const userEmail = req.session.email;
     const user = await userCollection.findOne({ email: userEmail });
 
 
@@ -847,21 +854,23 @@ app.get('/browseRecipe/:id', async (req, res) => {
       var headerSession = ""
       if (!(isValidSession(req))){
           headerSession = "BeforeLogin"
+
       }
     
-    try {
-      const [recipeCount, recipeData] = await Promise.all([countPromise, recipesPromise]);
-  
-      res.render("browseRecipe", {
-        recipe: recipeData,
-        filteredRatings: filteredRatings,
-        headerSession,
-        user    
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  });
+      try {
+        const [recipeCount, recipeData] = await Promise.all([countPromise, recipesPromise]);
+    
+        res.render("browseRecipe", {
+          recipe: recipeData,
+          filteredRatings: filteredRatings,
+          headerSession,
+          userEmail,
+          user
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    });
 
 
 app.get("/imageUpload", async (req, res) => {
@@ -1140,8 +1149,6 @@ app.post('/uploadRecipe', async (req, res) => {
   
   
 
-
-
 // save or remove recipe from favorites
 
 app.post('/toggleFavoriteRecipe', async (req, res) => {
@@ -1186,54 +1193,53 @@ app.post('/toggleFavoriteRecipe', async (req, res) => {
 
 
 
-
-//display favourite recipe
-
+// Display favorite recipe
 app.get('/favourite', async (req, res) => {
-     //recieved all ratings
-     var ratings = await commentCollection.find({}).project({rating: 1, recipeID: 1}).toArray();
+  // Receive all ratings
+  var ratings = await commentCollection.find({}).project({ rating: 1, recipeID: 1 }).toArray();
 
-     //Same code as in homepage to display rating avg in recipe page
-     var filteredRatings = []
-     for (count = 0; ratings.length > count; count++){
-         //ignores all null or empty ratings
-         if (!(ratings[count].rating == null)) { 
-                 //compares filteredRatings array object to object in ratings array
-                 if (filteredRatings.some(e => e.recipeID == ratings[count].recipeID)){
- 
-                     key = "recipeID"
-                     value = ratings[count].recipeID
- 
-                     //Function to find index based off key and value developed by ChatGPT
-                     function findIndex(array, key, value) {
-                         for (let index = 0; index < array.length; index++) {
-                           const obj = array[index];
-                           if (obj.hasOwnProperty(key) && obj[key] === value) {
-                             return index;
-                           }
-                         }
-                       }
- 
-                     objIndex = findIndex(filteredRatings, key, value)
- 
-                     //Adds integer of rating together and total amount of ratings for average calculation later on
-                     filteredRatings[objIndex].rating = parseInt(filteredRatings[objIndex].rating) + parseInt(ratings[count].rating)
-                     filteredRatings[objIndex].ratingTotal = parseInt(filteredRatings[objIndex].ratingTotal) + parseInt(1)
- 
-                 } else {
-                     //If there is no unique recipeID in filtered ratings array, the object is added 
-                     filteredRatings.push({recipeID: ratings[count].recipeID, rating: parseInt(ratings[count].rating), ratingTotal: parseInt(1)})
-                 }
-         }
-     }
-  
-     
-  // Retrieve the user's email from the session or request
+  // Same code as in the homepage to display the average rating on the recipe page
+  var filteredRatings = [];
+  for (count = 0; ratings.length > count; count++) {
+    // Ignore all null or empty ratings
+    if (!(ratings[count].rating == null)) {
+      // Compare filteredRatings array object to object in ratings array
+      if (filteredRatings.some(e => e.recipeID == ratings[count].recipeID)) {
+
+        key = "recipeID";
+        value = ratings[count].recipeID;
+
+        // Function to find index based on key and value developed by ChatGPT
+        function findIndex(array, key, value) {
+          for (let index = 0; index < array.length; index++) {
+            const obj = array[index];
+            if (obj.hasOwnProperty(key) && obj[key] === value) {
+              return index;
+            }
+          }
+        }
+
+        objIndex = findIndex(filteredRatings, key, value);
+
+        // Adds the integer rating together and the total amount of ratings for average calculation later on
+        filteredRatings[objIndex].rating = parseInt(filteredRatings[objIndex].rating) + parseInt(ratings[count].rating);
+        filteredRatings[objIndex].ratingTotal = parseInt(filteredRatings[objIndex].ratingTotal) + parseInt(1);
+
+      } else {
+        // If there is no unique recipeID in the filtered ratings array, the object is added
+        filteredRatings.push({ recipeID: ratings[count].recipeID, rating: parseInt(ratings[count].rating), ratingTotal: parseInt(1) });
+      }
+    }
+  }
+
+
+  sessionValidation(req, res);
   const userEmail = req.session.email;
+
 
   try {
     // Retrieve the user from the userCollection
-    const user = await userCollection.findOne({ email: userEmail });
+    const user = await userCollection.findOne({ email: req.session.email });
 
     if (user) {
       // Retrieve the favorite recipe IDs from the user's favorite field
@@ -1247,7 +1253,7 @@ app.get('/favourite', async (req, res) => {
         headerSession = "BeforeLogin";
       }
 
-      res.render("favouriteRecipes", { recipes: favouriteRecipes, headerSession, user, filteredRatings }); // Updated variable name and added user object
+      res.render("favouriteRecipes", { recipes: favouriteRecipes, headerSession, user, filteredRatings, userEmail }); // Updated variable name and added user object
     } else {
       res.status(404).send({ error: "User not found" });
     }
