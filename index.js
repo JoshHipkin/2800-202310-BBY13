@@ -530,7 +530,9 @@ app.get("/home", async (req, res) => {
 });
 
 app.get("/search", async (req, res) => {
+    const userEmail = req.session.email;
     const user = await userCollection.findOne({ email: req.session.email});
+
     var headerSession = ""
     if (!(isValidSession(req))){
         headerSession = "BeforeLogin"
@@ -758,7 +760,10 @@ if (dietFilter) {
       meal: meal,
       cuisine: cuisine,
       dietType: dietType,
-      excludeDiet: excludeDiet
+      excludeDiet: excludeDiet,
+      userEmail,
+      user
+      
       });
 });
 
