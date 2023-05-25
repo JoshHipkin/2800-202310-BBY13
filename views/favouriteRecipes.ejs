@@ -1,0 +1,10 @@
+<%- include(`templates/header${headerSession}`) %>
+
+<% for (let i = 0; i < recipes.length; i++) { %>
+  <%- include('templates/recipeCard', {recipe: recipes[i], user: user}) %> <!-- Updated variable name and added user object -->
+<% } %>
+
+<%- include("templates/footer") %>
+
+
+  

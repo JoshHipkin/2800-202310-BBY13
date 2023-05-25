@@ -23,9 +23,14 @@
     <div class="d-flex justify-content-between align-items-center">
       <div class="btn-group">
         <a class="btn btn-sm btn-outline-secondary" href="/recipe?id=<%= recipe._id %>">Read More</a>
-        <button class="toggle-favorite-btn" data-recipe-id="<%= recipe._id %>" data-user-id="<%= user ? user._id : '' %>">
-          <i class="far fa-heart"></i>
-        </button>  
+        <button class="toggle-favorite-btn" data-recipe-id="<%= recipe._id %>" data-user-email="<%= user ? user.email : '' %>">
+          <% if (user && user.favourite && user.favourite.includes(recipe._id.toString())) { %>
+            <i class="fas fa-heart filled-heart"></i>
+          <% } else { %>
+            <i class="far fa-heart"></i>
+          <% } %>
+          </button>        
+        
       </div>
       <small class="text-body-secondary">
         <font style="vertical-align: inherit;">
@@ -37,31 +42,80 @@
 </div>
 
 <script>
-  $(document).ready(function() {
-    $('.toggle-favorite-btn').click(function() {
-      const button = $(this); // Store the button reference
+$(document).ready(function() {
+  // Retrieve the user's favorite recipes from local storage
+  const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
 
-      const recipeId = button.data('recipe-id');
-      const userEmail = button.data('user-email');
+  $('.toggle-favorite-btn').each(function() {
+    const button = $(this);
+    const recipeId = button.data('recipe-id');
 
-      // Send an AJAX request to the server
-      $.ajax({
-        url: '/toggleFavoriteRecipe',
-        method: 'POST',
-        data: { recipeId: recipeId, userEmail: userEmail },
-        success: function(response) {
-          if (response.status === 'saved') {
-            // Recipe was saved to favorites
-            button.find('i').removeClass('far fa-heart').addClass('fas fa-heart');
-          } else if (response.status === 'removed') {
-            // Recipe was removed from favorites
-            button.find('i').removeClass('fas fa-heart').addClass('far fa-heart');
-          }
-        },
-        error: function(error) {
-          console.log(error);
-        }
-      });
-    });
+    if (favoriteRecipes.includes(recipeId)) {
+      // Recipe is saved as a favorite
+      button.find('i').removeClass('far fa-heart').addClass('fas fa-heart filled-heart');
+    }
   });
+
+  // Function to handle favorite click event
+  function handleFavoriteClick(event) {
+    event.stopPropagation(); // Stop event propagation
+
+    const button = $(this);
+    const recipeId = button.data('recipe-id');
+    const userEmail = button.data('user-email');
+
+    // Disable the button
+    button.prop('disabled', true);
+
+    // Send an AJAX request to the server
+    $.ajax({
+      url: '/toggleFavoriteRecipe',
+      method: 'POST',
+      data: { recipeId: recipeId, userEmail: userEmail },
+      success: function(response) {
+        if (response.status === 'saved') {
+          // Recipe was saved to favorites
+          button.find('i').removeClass('far fa-heart').addClass('fas fa-heart filled-heart');
+          updateFavoriteStatus(recipeId, true); // Update local storage
+        } else if (response.status === 'removed') {
+          // Recipe was removed from favorites
+          button.find('i').removeClass('fas fa-heart filled-heart').addClass('far fa-heart');
+          updateFavoriteStatus(recipeId, false); // Update local storage
+        }
+      },
+      error: function(error) {
+        console.log(error);
+      },
+      complete: function() {
+        // Enable the button after a short delay
+        setTimeout(function() {
+          button.prop('disabled', false);
+        }, 200); // Adjust the delay time as needed
+      }
+    });
+  }
+
+  // Attach the click event handler to the buttons
+  $('.toggle-favorite-btn').off('click').on('click', handleFavoriteClick);
+
+  // Function to update favorite status in local storage
+  function updateFavoriteStatus(recipeId, isFavorite) {
+    const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
+
+    if (isFavorite && !favoriteRecipes.includes(recipeId)) {
+      // Add recipeId to favoriteRecipes array
+      favoriteRecipes.push(recipeId);
+    } else if (!isFavorite && favoriteRecipes.includes(recipeId)) {
+      // Remove recipeId from favoriteRecipes array
+      const index = favoriteRecipes.indexOf(recipeId);
+      favoriteRecipes.splice(index, 1);
+    }
+
+    // Update local storage
+    localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
+  }
+});
+
+
+
 </script>
