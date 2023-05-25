@@ -233,8 +233,8 @@ canvas {
 .tab-content .tab {
   display: none;
   padding: 20px;
+ 
 
-  background-color: #daf2d9;
 }
 
 .tab-content .active {
