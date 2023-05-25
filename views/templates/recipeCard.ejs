@@ -4,14 +4,17 @@
 
     
 
-      <p class="card-text">      
-      <button class="toggle-favorite-btn heart" data-recipe-id="<%= recipe._id %>" data-user-email="<%= user.email %>">
+      <p class="card-text">
+        <% if (userEmail) { %>
+              
+      <button class="toggle-favorite-btn heart" data-recipe-id="<%= recipe._id %>" data-user-email="<%= userEmail %>">
         <% if (recipe.isFavorite) { %>
           <i class="fas fa-heart filled-heart"></i>
         <% } else { %>
           <i class="far fa-heart"></i>
         <% } %>
       </button>
+      <% } %>
       <h1 class="recipe-title"><%= recipe.name.replaceAll("&amp;","&").replaceAll("&quot;","\"").replaceAll("&ntilde;","ñ") %></h1>
 
       <% var rateExists = false %>
