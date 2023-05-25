@@ -114,7 +114,7 @@
 <div class="pagination d-flex justify-content-center">
   <% if (currentPage > 1) { %>
     <a class="page-link" href="/search?q=<%- searchQuery %>&page=<%= currentPage - 1 %>&s=<%= Array.isArray(selectedCategories) ? selectedCategories.join(',') : '' %>">
-      <button class="btn btn-danger">Prev</button>
+      <button class="btn btn-success">Prev</button>
     </a>
   <% } %>
 
@@ -132,7 +132,7 @@
 
   <% if (currentPage < pageCount) { %>
     <a class="page-link" href="/search?q=<%- searchQuery %>&page=<%= currentPage + 1 %>&s=<%= Array.isArray(selectedCategories) ? selectedCategories.join(',') : '' %>">
-      <button class="btn btn-danger">Next</button>
+      <button class="btn btn-success">Next</button>
     </a>
   <% } %>
 </div>

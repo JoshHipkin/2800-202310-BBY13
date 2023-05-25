@@ -16,6 +16,9 @@
   }
 }
 
+.pagination{
+  margin-top: 10px;
+}
 
 body {
   min-height: 400px;
@@ -231,6 +234,20 @@ canvas {
   text-decoration: underline;
 
 
+}
+
+.pagination a.page-link {
+  color: green;
+}
+
+.pagination a.page-link.current-page {
+  background-color: green;
+  color: white;
+}
+
+.pagination .current-page {
+  background-color: green;
+  color: white;
 }
 
 
