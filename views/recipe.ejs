@@ -7,7 +7,7 @@
   <% for(count = 0; count < filteredRatings.length; count++) { %>
     <% if(filteredRatings[count].recipeID == recipe._id) { %>
       <% rateExists = true %>
-      <p>Rating: <%-((filteredRatings[count].rating) / (filteredRatings[count].ratingTotal)).toFixed(1)%>/5.0 (based on <%-filteredRatings[count].ratingTotal%> reviews)</p>
+      <p>Rating: <%-((filteredRatings[count].rating) / (filteredRatings[count].ratingTotal)).toFixed(1)%> / 5 (based on <%-filteredRatings[count].ratingTotal%> reviews)</p>
     <% } %>
   <% } %>
   <% if(!(rateExists)){ %>
