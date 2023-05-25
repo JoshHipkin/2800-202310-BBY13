@@ -738,7 +738,17 @@ if (dietFilter) {
         }
     }
 
-   
+   recipeData.forEach(recipe => {
+
+    recipe.name=he.decode(recipe.name); // fixes html encoding issue
+    if (recipe.description && recipe.description.length> 160) {
+      recipe.description = recipe.description.substring(0, 160) + "...";
+    }
+
+
+   });
+
+
    
   
   
