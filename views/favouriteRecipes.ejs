@@ -1,5 +1,7 @@
 <%- include(`templates/header${headerSession}`) %>
 
+<h1 class="text-center my-5">My Favourites</h1>
+
 <% for (let i = 0; i < recipes.length; i++) { %>
   <%- include('templates/recipeCard', {recipe: recipes[i], user: user}) %> <!-- Updated variable name and added user object -->
 <% } %>

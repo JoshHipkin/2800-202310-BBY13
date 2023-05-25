@@ -170,7 +170,11 @@ canvas {
 }
 
 
-  
+.form-label {
+  font-size: 12pt;
+  font-weight: bold;
+  color:#333;
+}
 
 
 
