@@ -1,6 +1,6 @@
 <div class="card shadow-sm">
     <div class="card-body">
-      <p class="card-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><h1> <%= recipe.name %> </h1></font><font style="vertical-align: inherit;"> 
+      <p class="card-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"><h1> <%= recipe.name.replace("&amp;","&") %> </h1></font><font style="vertical-align: inherit;"> 
         <% var rateExists = false %>
         <% for(count = 0; count < filteredRatings.length; count++) { %>
           <% if(filteredRatings[count].recipeID == recipe._id) { %>
