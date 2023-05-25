@@ -1,32 +1,35 @@
-<div class="card shadow-sm">
+
+<div class="card shadow-sm container recipe-card">
   <div class="card-body">
-    <p class="card-text">
-      <h1><%= recipe.name.replaceAll("&amp;","&").replaceAll("&quot;","\"").replaceAll("&ntilde;","ñ") %></h1>
+    <p class="card-text">      
+      <button class="toggle-favorite-btn heart" data-recipe-id="<%= recipe._id %>" data-user-email="<%= user.email %>">
+        <% if (recipe.isFavorite) { %>
+          <i class="fas fa-heart filled-heart"></i>
+        <% } else { %>
+          <i class="far fa-heart"></i>
+        <% } %>
+      </button>
+      <h1 class="recipe-title"><%= recipe.name.replaceAll("&amp;","&").replaceAll("&quot;","\"").replaceAll("&ntilde;","ñ") %></h1>
+
       <% var rateExists = false %>
       <% for(count = 0; count < filteredRatings.length; count++) { %>
         <% if(filteredRatings[count].recipeID == recipe._id) { %>
           <% rateExists = true %>
-          <p>Rating: <%-((filteredRatings[count].rating) / (filteredRatings[count].ratingTotal)).toFixed(1)%>/5.0 (based on <%-filteredRatings[count].ratingTotal%> reviews)</p>
+          <p><small><i class="bi bi-star-fill"></i> <%-((filteredRatings[count].rating) / (filteredRatings[count].ratingTotal)).toFixed(1)%> <i> (<%-filteredRatings[count].ratingTotal%> reviews)</i></small></p>
         <% } %>
       <% } %>
       <% if(!(rateExists)){ %>
-        <p>No ratings</p>
+        <p><small><i>No ratings yet!</i></small></p>
       <% } %>
       <p><%= recipe.description %></p>
     </p>
     <div class="d-flex justify-content-between align-items-center">
       <div>
-        <a class="btn btn-sm btn-outline-secondary mr-2" href="/recipe?id=<%= recipe._id %>">Read More</a>
+        <a class="btn btn-sm btn-outline-secondary mr-2" href="/recipe?id=<%= recipe._id %>">View Recipe</a>
       </div>
       <% if (userEmail) { %>
         <div>
-          <button class="toggle-favorite-btn heart" data-recipe-id="<%= recipe._id %>" data-user-email="<%= user.email %>">
-            <% if (recipe.isFavorite) { %>
-              <i class="fas fa-heart filled-heart"></i>
-            <% } else { %>
-              <i class="far fa-heart"></i>
-            <% } %>
-          </button>
+
           <small class="text-body-secondary ml-2">
             <%= recipe.servings %> Servings
           </small>
@@ -118,4 +121,6 @@
       localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
     }
   });
+
+  
 </script>
