@@ -281,3 +281,9 @@ canvas {
 .tab-content .active {
   display: block;
 }
+
+.rating-stars {
+  font-size: 24px;
+  cursor: pointer;
+}
+
