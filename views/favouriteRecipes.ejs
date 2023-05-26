@@ -1,6 +1,10 @@
 <%- include(`templates/header${headerSession}`) %>
 
 <h1 class="text-center my-5">My Favourites</h1>
+
+<% if (recipes.length == 0) { %>
+  <h3 class="text-center my-5">You have no favourite recipes yet!</h3>
+<% } %>
 <!-- Show all user favorited recipes -->
 <% for (let i = 0; i < recipes.length; i++) { %>
   <%- include('templates/recipeCard', {recipe: recipes[i], user: user, userEmail: userEmail}) %> <!-- Updated variable name and added user object -->

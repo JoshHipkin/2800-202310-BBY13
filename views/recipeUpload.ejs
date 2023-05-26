@@ -1,15 +1,16 @@
-<%- include(`templates/header${headerSession}`) %> 
+<%- include(`templates/header${headerSession}`) %>
 
 <div class="row justify-content-center mt-5 px-5">
-<div class="col-md-7 col-lg-8 ">
+  <div class="col-md-7 col-lg-8">
     <div class="text-center">
-        <h2 class="mb-3">Upload Your Own Recipe</h2>
-      </div>
-    <img src="/public/images/dinner.jpeg" class="card-img-top mx-auto d-block" alt="dinner" style="width: 25%; height: auto; border-radius: 25px;" >
-    <form class="needs-validation mt-5" action="/uploadRecipe" method="post">
+      <h2 class="mb-3">Upload Your Own Recipe</h2>
+    </div>
+    <img src="/public/images/dinner.jpeg" class="card-img-top mx-auto d-block" alt="dinner" style="width: 25%; height: auto; border-radius: 25px;">
+    <div id="errorMessage" class="text-danger"></div>
+    <form class="needs-validation mt-5" action="/uploadRecipe" method="post" id="recipeForm">
       <div class="row g-3">
         <div class="col-sm-6">
-          <label for="recipename" class="form-label">Recipe Name *</label>
+          <label for="recipename" class="form-label">Recipe Name <p class="text-danger" style="display: inline;">*</p></label>
           <input name="name" type="text" class="form-control" id="recipeName" placeholder="Enter Name" value="" required>
         </div>
 
@@ -19,7 +20,7 @@
         </div>
 
         <div class="col-md-5">
-          <label for="country" class="form-label">Servings *</label>
+          <label for="country" class="form-label">Servings <p class="text-danger" style="display: inline;">*</p></label>
           <select name="servings" class="form-select" id="country" required>
             <option value="">Choose...</option>
             <option>1-2</option>
@@ -31,86 +32,97 @@
           </select>
         </div>
         <div class="mb-3">
-          <label for="ingredient" class="form-label">Ingredients *</label>
+          <label for="ingredient" class="form-label">Ingredients <p class="text-danger" style="display: inline;">*</p></label>
           <div class="input-group">
             <input type="text" class="form-control" name="ingredients" placeholder="Ingredient 1" required>
           </div>
           <div id="ingredientList"></div>
           <div class="text-center mt-2">
             <button type="button" class="btn" id="addIngredient">
-            <i class="bi bi-plus-circle-fill"></i>
+              <i class="bi bi-plus-circle-fill"></i>
             </button>
           </div>
         </div>
-  
-  
+
+
         <div class="mb-3">
-            <label for="exampleFormControlTextarea1" class="form-label">Instructions</label>
-            <textarea name="steps" class="form-control" id="exampleFormControlTextarea1" rows="10" placeholder="Please end each step with period (.)"></textarea>
-          </div>
-          
-  
-  
+          <label for="exampleFormControlTextarea1" class="form-label">Instructions</label>
+          <textarea name="steps" class="form-control" id="exampleFormControlTextarea1" rows="10" placeholder="Please end each step with period (.)"></textarea>
+        </div>
+
+
+
         <hr class="my-4">
-  
+
         <button class="w-100 btn btn-success btn-lg" type="submit">Submit Recipe</button>
       </div>
     </form>
   </div>
-  </div>
+</div>
 
-  <%- include("templates/footer") %>
+<%- include("templates/footer") %>
 
-  <script>
-$(document).ready(function() {
-  var ingredientCount = 1;
 
-  $('#addIngredient').click(function() {
-    var ingredientInput = '<input type="text" class="form-control mt-2" name="ingredients" placeholder="Ingredient ' + (ingredientCount + 1) + '" required>';
-    $('#ingredientList').append(ingredientInput);
-    ingredientCount++;
-  });
+<script>
+  $(document).ready(function() {
+    // Initialize form validation
+  $('#recipeForm').validate();
 
-  // Handle form submission
+    var ingredientCount = 1;
+
+    $('#addIngredient').click(function() {
+      var ingredientInput = '<input type="text" class="form-control mt-2" name="ingredients" placeholder="Ingredient ' + (ingredientCount + 1) + '" required>';
+      $('#ingredientList').append(ingredientInput);
+      ingredientCount++;
+    });
+
+   // Handle form submission
   $('form').submit(function(e) {
     // Prevent the default form submission
     e.preventDefault();
 
-    // Collect all ingredient inputs and store them in an array
-    var ingredientsArray = [];
-    $('[name="ingredients"]').each(function() {
-      var ingredientValue = $(this).val().trim();
-      if (ingredientValue !== '') {
-        ingredientsArray.push(ingredientValue);
+    // Check if all required fields are filled
+    var recipeName = $('#recipeName').val().trim();
+    var servings = $('#country').val();
+    if (recipeName === '' || servings === '') {
+      // Display error message
+      $('#errorMessage').text('* Please fill out all required fields.').addClass('text-danger');
+    } else {
+      // Hide any previous error message
+      $('#errorMessage').text('').removeClass('text-danger');
+
+        // Collect all ingredient inputs and store them in an array
+        var ingredientsArray = [];
+        $('[name="ingredients"]').each(function() {
+          var ingredientValue = $(this).val().trim();
+          if (ingredientValue !== '') {
+            ingredientsArray.push(ingredientValue);
+          }
+        });
+
+        // Assign the array of ingredients to a hidden input field
+        $('<input>').attr({
+          type: 'hidden',
+          name: 'ingredientsArray',
+          value: JSON.stringify(ingredientsArray)
+        }).appendTo('form');
+
+        // Get the instructions text and split it into an array using period (.) as the delimiter
+        var instructionsText = $('[name="steps"]').val().trim();
+        var instructionsArray = instructionsText.split('.').map(function(instruction) {
+          return instruction.trim();
+        });
+
+        // Assign the array of instructions to a hidden input field
+        $('<input>').attr({
+          type: 'hidden',
+          name: 'instructionsArray',
+          value: JSON.stringify(instructionsArray)
+        }).appendTo('form');
+
+        // Submit the form
+        this.submit();
       }
     });
-
-    // Assign the array of ingredients to a hidden input field
-    $('<input>').attr({
-      type: 'hidden',
-      name: 'ingredientsArray',
-      value: JSON.stringify(ingredientsArray)
-    }).appendTo('form');
-
-
-
-    // Get the instructions text and split it into an array using semicolon (;) as the delimiter
-    var instructionsText = $('[name="steps"]').val().trim();
-    var instructionsArray = instructionsText.split('.').map(function(instruction) {
-      return instruction.trim();
-    });
-
-    // Assign the array of instructions to a hidden input field
-    $('<input>').attr({
-      type: 'hidden',
-      name: 'instructionsArray',
-      value: JSON.stringify(instructionsArray)
-    }).appendTo('form');
-
-
-    // Submit the form
-    this.submit();
   });
-});
-  </script>
-
+</script>
