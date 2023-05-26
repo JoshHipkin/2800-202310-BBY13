@@ -62,10 +62,12 @@ nav {
 }
 
 canvas {
-  background-image: url("../public/images/kitchen.jpg");
-  background-size: cover;
-  margin-left: auto;
-  margin-right: auto;
+            
+    background-image: url("https://raw.githubusercontent.com/JoshHipkin/2800-202310-BBY13/main/public/images/kitchen.jpg");
+    background-size: cover;
+    margin-left: auto;
+    margin-right: auto;
+
 }
 
 #gameOverlay {
