@@ -888,21 +888,29 @@ app.get('/browseRecipe/:id', async (req, res) => {
     let query = {}; // Initialize an empty query object
   
     let specificTag = ""; // Specify the default tag value
+    let title = "";
   
     if (page == 1) {
       specificTag = '30-minutes-or-less';
+      title = "30-minutes-or-less Recipes"
     } else if (page == 2) {
       specificTag = 'low-calorie';
+      title = "Low-calories Recipes"
     } else if (page == 3) {
       specificTag = 'occasion';
+      title = "Recipes of the day"
     } else if (page == 4) {
         specificTag = 'breakfast';
+        title = "Breakfast Recipes"
       } else if (page == 5) {
         specificTag = 'lunch';
+        title = "Lunch Recipes"
       } else if (page == 6) {
         specificTag = 'dinner';
+        title = "Dinner Recipes"
       } else if (page == 7) {
         specificTag = 'dessert';
+        title = "Dessertt Recipes"
       }
   
 
@@ -967,7 +975,8 @@ app.get('/browseRecipe/:id', async (req, res) => {
           filteredRatings: filteredRatings,
           headerSession,
           userEmail,
-          user
+          user,
+          title
         });
       } catch (error) {
         console.log(error);
