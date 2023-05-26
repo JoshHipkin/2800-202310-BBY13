@@ -178,14 +178,23 @@ http://repqxuwlgf.eu09.qoddiapp.com/
 
 
 # How to install and run the app locally:
-1. Once the repo Is cloned you will need to install mongoDB, set up a database and link it with the project. You can do this by adding a file called .env with the following variables:
-NODE_SESSION_SECRET=cf4c5c5b-ef38-4930-84d4-ee60a0ef7838
-MONGODB_PASSWORD=Josh
-MONGODB_HOST=2800.x8sanqn.mongodb.net
-MONGODB_USER=Josh
-MONGODB_DATABASE=Recipal
-MONGODB_SESSION_SECRET=5ceebb1c-72eb-49b9-8b31-6fd611ab2ac5
-OPENAI_SECRET=<api key here>
+1. Once the repo Is cloned you will need to signup for mongoDB and optionally install studio3T, set up a database in mongodb and link it with the project. You can do this by adding a file called .env with the following variables:
+NODE_SESSION_SECRET=generated guid
+MONGODB_PASSWORD=database admin user
+MONGODB_HOST=host string from mongodb connection
+MONGODB_USER=database admin user
+MONGODB_DATABASE=database name
+MONGODB_SESSION_SECRET=generated guid
+OPENAI_SECRET=api key here
+CLARIFAI_SECRET=api key here
+*There is plenty of documentation and youtube videos about how to connect to mongo db.
+**Alternatively if you have the keys to access our database and api's, simply add them to a .env file at the top level of the repository. You may also skip steps 2, 5, and 6.
+2. You will need to import the Kaggle data set "Food.com Recipes with Search Terms and Tags" into the mongo db database. However the dataset is too large for the free version of mongodb. You can download and open the csv file in excel and remove roughly 1/2 or more of the data entries and save the file as a copy. You can then import the csv directly into mongodb using studio3T.
+3. Make you have nodeJS installed on your computer as this is a nodeJS run project and you will need to install npm packages to successfully run the app.
+4. Either in the command line inside of the repository or in a terminal window in your IDE (visual studio reccommended) type in 'npm i' to install all of the necessary node modules.
+5. You will need to sign up for Clarifai API key and instert it into the .env file
+6. You will also need to signup for an openAI API key and insert it into the .env file. All configurations are done in the routing of the index.js file.
+7. Finally to run the app you can open the terminal in the repository or in you IDE and type node index.js or nodemon index.js
 
 # Conrad_PantryInventory
 Feature implemented to allow the user to have a saved inventory of items, instead of searching the ingredients everytime.
