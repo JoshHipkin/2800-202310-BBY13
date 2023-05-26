@@ -14,7 +14,7 @@
         <!-- <h4 class>Ingredients:</h4>  -->
         <p class="mb-0">
           <ul>
-
+            <!-- ingredients for recipe -->
             <% const ingredients_raw_str = recipe.ingredients_raw_str.split(','); %>
             <% for(let i=0; i < ingredients_raw_str.length; i++) { %>
                 <% const ingredient_raw = ingredients_raw_str[i].trim().replace(/^\[|\]$/g, '').replace(/^"|"$/g, ''); %>
@@ -23,7 +23,7 @@
           </ul>
         </p>
       </div>
-      
+      <!-- Instructions for recipe -->
       <div id="instructions" class="tab">
         <!-- <h4 class="fst-italic">Instructions:</h4> -->
         <p class="mb-0">
@@ -53,22 +53,22 @@ tabContent[0].style.display = 'block';
 
 // Add event listener to each tab link
 tabLinks.forEach(function(link) {
-  link.addEventListener('click', function(e) {
-    e.preventDefault();
-    
-    // Remove 'active' class from all tab links and tab content elements
-    tabLinks.forEach(function(tabLink) {
-      tabLink.classList.remove('active');
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        // Remove 'active' class from all tab links and tab content elements
+        tabLinks.forEach(function(tabLink) {
+            tabLink.classList.remove('active');
+        });
+        tabContent.forEach(function(tab) {
+            tab.style.display = 'none';
+        });
+
+        // Add 'active' class to the clicked tab link and display the corresponding tab content
+        const selectedTab = document.querySelector(link.getAttribute('href'));
+        link.classList.add('active');
+        selectedTab.style.display = 'block';
     });
-    tabContent.forEach(function(tab) {
-      tab.style.display = 'none';
-    });
-    
-    // Add 'active' class to the clicked tab link and display the corresponding tab content
-    const selectedTab = document.querySelector(link.getAttribute('href'));
-    link.classList.add('active');
-    selectedTab.style.display = 'block';
-  });
 });
 </script>
 
