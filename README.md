@@ -127,10 +127,7 @@ http://repqxuwlgf.eu09.qoddiapp.com/
 │   └───UserPreferenceTest
 │           userPreferences
 │
-├───uploads
-│       616f2be763d5da5a01048ed5ebb5020d
-│       a638baad84a3c8dd71978037df586d41
-│       d1330f3efbe3bbd35bf46eabe0a04082
+├───uploads (for temporary storage)
 │
 └───views
     │   404.ejs
