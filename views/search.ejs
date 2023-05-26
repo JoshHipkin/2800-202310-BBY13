@@ -63,7 +63,7 @@
                     <label class="form-check-label" for="<%= category %>"><%= category %></label>
                   </div>
                       <% } %>
-                      <div class="form-check form-switch">
+                      <div class="form-check form-switch mt-3">
                         <input
                           class="form-check-input"
                           type="checkbox"
@@ -94,7 +94,7 @@
     <!-- Inside the <div class="text-center mb-5 mt-5"> -->
 
 
-<div class="text-center mx-5" id="recipeNumber">
+<div class="text-center" id="recipeNumber">
   
     <% if (pageCount === 1) { %>
    <h3>You can make <%= recipe.length %> Recipes!</h3> 
@@ -106,7 +106,7 @@
     
 
 <% for(let i=0; i < recipe.length; i++) { %>
-  <%- include('templates/recipeCard', {recipe: recipe[i], filteredRatings: filteredRatings}) %>
+  <%- include('templates/recipeCard', {recipe: recipe[i], filteredRatings: filteredRatings, user: user}) %>
 <% } %> 
 
 
@@ -114,7 +114,7 @@
 <div class="pagination d-flex justify-content-center">
   <% if (currentPage > 1) { %>
     <a class="page-link" href="/search?q=<%- searchQuery %>&page=<%= currentPage - 1 %>&s=<%= Array.isArray(selectedCategories) ? selectedCategories.join(',') : '' %>">
-      <button class="btn btn-danger">Prev</button>
+      <button class="btn btn-success">Prev</button>
     </a>
   <% } %>
 
@@ -132,7 +132,7 @@
 
   <% if (currentPage < pageCount) { %>
     <a class="page-link" href="/search?q=<%- searchQuery %>&page=<%= currentPage + 1 %>&s=<%= Array.isArray(selectedCategories) ? selectedCategories.join(',') : '' %>">
-      <button class="btn btn-danger">Next</button>
+      <button class="btn btn-success">Next</button>
     </a>
   <% } %>
 </div>

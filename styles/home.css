@@ -12,7 +12,7 @@
   }
 
   .card-wrapper {
-    width: 80%; /* Adjust the percentage as per your needs */
+    width: 92%; /* Adjust the percentage as per your needs */
   }
   
   .custom-card {
@@ -23,12 +23,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 5%;
+    margin: 2%;
 
 }
 
 .card-img-top.recipebrowse.custom-image {
     object-fit: cover; 
+    height:270px;
     border-radius: 25px;
     overflow: hidden;
     display: block;
@@ -116,7 +117,7 @@ h3 {
 
 
   .btn-success {
-    background-color: #198754;
+    background-color: rgba(17, 85, 17, 0.746);
   }
 
   #carouselExampleCaptions {

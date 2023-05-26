@@ -738,7 +738,17 @@ if (dietFilter) {
         }
     }
 
-   
+   recipeData.forEach(recipe => {
+
+    recipe.name=he.decode(recipe.name); // fixes html encoding issue
+    if (recipe.description && recipe.description.length> 160) {
+      recipe.description = recipe.description.substring(0, 160) + "...";
+    }
+
+
+   });
+
+
    
   
   
@@ -826,11 +836,10 @@ if (dietFilter) {
         headerSession = "BeforeLogin"
     }
 
-    recipeData.name=he.decode(recipeData.name)
-    recipeData.description=he.decode(recipeData.description)
-    recipeData.ingredients=he.decode(recipeData.ingredients)
-    recipeData.steps=he.decode(recipeData.steps)
-    recipeData.ingredients_raw_str=he.decode(recipeData.ingredients_raw_str)
+    recipeData.name=he.decode(recipeData.name);
+    recipeData.steps=he.decode(recipeData.steps);
+    if(recipeData.description){recipeData.description=he.decode(recipeData.description);}
+    recipeData.ingredients_raw_str=he.decode(recipeData.ingredients_raw_str);
 
     res.render("recipe", { 
         recipe: recipeData,

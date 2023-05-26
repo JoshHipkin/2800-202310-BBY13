@@ -16,7 +16,7 @@ body {
 display: block;
 margin-left: auto;
 margin-right: auto;
-width: 50vw;
+width: 60vw;
 }
 
 .buttons {
@@ -34,11 +34,17 @@ width: 50vw;
   }
 
   .btn {
-    font-size: 2rem;
+    font-size: 4.2rem;
     padding: 24px 48px;
   }
   .guest {
 
-    font-size: 2.6rem;
+    font-size: 3.6rem;
+  }
+  #login {
+    max-height: 58%
+  }
+  #signup {
+    max-height: 58%;
   }
 }
