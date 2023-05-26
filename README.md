@@ -197,6 +197,38 @@ CLARIFAI_SECRET=api key here
 6. You will also need to signup for an openAI API key and insert it into the .env file. All configurations are done in the routing of the index.js file.
 7. Finally to run the app you can open the terminal in the repository or in you IDE and type node index.js or nodemon index.js
 
+# Features:
+- User Sign Up and Login: You can customize your dietary preferences and have a unique username.
+- Search Functionality: There are plenty of filters that can be used to discover many different and unique recipes.
+- AI Ingredient Photo Recognition: You can upload photos which will be analyzed for ingredients, which you can use to search for recipes
+- AI Generated Recipes: you can get custom generated recipes using AI
+- Shopping List
+- Pantry List
+- Recipe Reviews and Favorites
+- Community Submitted Recipes
+- Filtering for Dietary Preferences or Allergens
+
+# Credits & References:
+Credit to ChatGPT for assisting code writing
+OpenAI and Clarifi for AI features (Photo Recognition and Generated Recipes)
+Auto complete feature from: https://www.educative.io/answers/how-to-add-autocomplete-to-an-input-field-in-javascript
+
+# How we used AI for our app:
+1. We used ChatGPT to help build our code and bug fix errors. If we struggled with coding, ChatGPT provided helpful feedback. It took a bit of prompt tweaking to get exactly what you wanted from ChatGPT but the AI proved to be a helpful coding tool throughout the project term.
+2. Our app uses a pre-trained food image classification model provided through the Clarifai API to allow users to select ingredients by taking photos of them.The Clarifai model returns an array of 20 ingredients with their probability values and then our algorithm adds at least 1, but no more than 5, of those ingredients based on a minimum threshold and comparison to prior probability values. This allows for only the most certain ingredients to show and allows the user to include 2 or 3 ingredients in a photo. Any erroneous ingredients can be easily deselected by the user. They can then use those ingredients for searching or custom AI generated recipe creation, which is provided by sending a prompt to the OpenAI API and requesting the response in our recipe JSON format.
+3. The Clarifai API was difficult to get consistent results so there was a lot of tinkering trying to set the threshold for probability scores to be at a good point where the model was accurate enough to be practical without giving unnecessary extra ingredients. Jake spent a lot of time configuring the AI manually to ensure it was capable enough to implement into our app.
+
+# Dev Contact info:
+Jake: jrobbins19@my.bcit.ca 
+Josh: jhipkin@my.bcit.ca 
+Emily: eyao8@my.bcit.ca
+Conrad: cchristian5@my.bcit.ca
+
+
+
+
+
+
 # Conrad_PantryInventory
 Feature implemented to allow the user to have a saved inventory of items, instead of searching the ingredients everytime.
 Conrad PantryFix
