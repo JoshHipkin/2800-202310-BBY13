@@ -16,13 +16,12 @@
 </div>
 
 <% let url = "/airecipe/?q=" + ingredientsAI %>
-<script type="text/javascript">
-  // Wait for the image to load
 
-  var loadingImage = document.getElementById("loadingImage");
-  loadingImage.addEventListener("load", function () {
+
+<script type="text/javascript">
+  setTimeout(function() {
     window.location.href = "<%= url %>";
-  });
+  }, 3000);
 </script>
 
 <%- include("templates/footer") %>
