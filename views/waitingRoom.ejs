@@ -1,35 +1,27 @@
-<%- include(`templates/header${headerSession}`) %> 
+<%- include(`templates/header${headerSession}`) %>
 
-<div class = "container card d-flex justify-content-center">
-        <br/>
-            <img id="loadingImage" src="https://raw.githubusercontent.com/JoshHipkin/2800-202310-BBY13/dev/public/images/chef.gif" alt="please be patient...">
+<div class="container card d-flex justify-content-center">
+  <br />
+  <img
+    id="loadingImage"
+    src="https://raw.githubusercontent.com/JoshHipkin/2800-202310-BBY13/dev/public/images/chef.gif"
+    alt="please be patient..."
+  />
 
-            
-            <h1>Waiting room..</h1>
-            <p>Preparing a custom recipe from the following ingredients:<br/> <%= ingredientsAI %></p>
-            
+  <h1>Waiting room..</h1>
+  <p>
+    Preparing a custom recipe from the following ingredients:<br />
+    <%= ingredientsAI %>
+  </p>
 </div>
 
+<% let url = "/airecipe/?q=" + ingredientsAI %>
 
 
-
-
-
-
-
-
-
-    <% let url = "/airecipe/?q=" + ingredientsAI %>
-    <script type="text/javascript">
-        // Wait for the image to load
- 
-            var loadingImage = document.getElementById('loadingImage');
-            loadingImage.addEventListener('load', function () {
-                window.location.href = "<%= url %>";
-
-            });
-
-    </script>
-
+<script type="text/javascript">
+  setTimeout(function() {
+    window.location.href = "<%= url %>";
+  }, 3000);
+</script>
 
 <%- include("templates/footer") %>

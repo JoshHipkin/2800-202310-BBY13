@@ -1,18 +1,21 @@
-<%- include("templates/headerBeforeLogin") %> 
-<main class="form-signin w-100 m-auto">
-    <div class="d-flex gap-2 justify-content-center py-5">
-    <form action='/forgotLogin' method='post' class="text-center">
-        <h1 class="h3 mb-3 fw-normal">Forgot user ID</h1>
-        <div class="form-floating">
-            <input name='email' type='text' class="form-control" id="floatingInput" placeholder="Email Address">
-            <label for="floatingInput">Email Address</label>
+<%- include("templates/headerBeforeLogin") %>
+    <main class="form-signin w-100 m-auto">
+        <div class="d-flex gap-2 justify-content-center py-5">
+            <form action='/forgotLogin' method='post' class="text-center">
+                <h1 class="h3 mb-3 fw-normal">Forgot user ID</h1>
+                <div class="form-floating">
+                    <input name='email' type='text' class="form-control" id="floatingInput" placeholder="Email Address">
+                    <label for="floatingInput">Email Address</label>
+                </div>
+                <button type="submit" class="w-100 btn btn-lg btn-success">Submit</button>
+            </form>
         </div>
-        <button type="submit" class="w-100 btn btn-lg btn-success">Submit</button>
-    </form>
-</div>
-<div style="text-align: center;"><p>Email Invalid</p></div>
+        <div style="text-align: center;">
+            <p>Email Invalid</p>
+        </div>
 
-</main>
+    </main>
 
-</body>
-</html>
+    </body>
+
+    </html>

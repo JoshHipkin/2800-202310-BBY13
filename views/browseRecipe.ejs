@@ -1,8 +1,7 @@
-<%- include(`templates/header${headerSession}`) %> 
+<%- include(`templates/header${headerSession}`) %>
 
-<% for (let i = 0; i < recipe.length; i++) { %>
-  <%- include('templates/recipeCard', {recipe: recipe[i], filteredRatings: filteredRatings}) %>
-
-  <% } %>
-  
-  <%- include("templates/footer") %>
+<h1 class="py-5 text-center"><%= title %></h1>
+<!-- Showing specified recipes selected from home page -->
+<% for (let i = 0; i < recipe.length; i++) { %> 
+<%- include('templates/recipeCard', {recipe: recipe[i], filteredRatings: filteredRatings, userEmail: userEmail}) %> <% } %> 
+<%- include("templates/footer") %>

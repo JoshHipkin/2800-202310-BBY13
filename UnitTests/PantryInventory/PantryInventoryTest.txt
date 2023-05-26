@@ -1,0 +1,4 @@
+successfully implemented autosuggest feature
+Successfully stores input into db
+Successfully loads user inputs into page
+Successfully deletes pantry item from db when click on delete button

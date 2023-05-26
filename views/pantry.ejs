@@ -1,0 +1,112 @@
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a href="/profile" class="nav-link" id="profile-info">Profile</a>
+    </li>
+    <li class="nav-item">
+        <a href="/profile/preferences" class="nav-link" id="preferences" >Preferences</a>
+    </li>
+    <li class="nav-item">
+      <a href="/profile/pantry" class="nav-link active" id="pantry" >Pantry</a>
+  </li>
+</ul>
+<form action='/savePantry' method='post' autocomplete="off">
+    <fieldset class="mb-3" id="personalInfoFields">
+        <div class="form-group">
+            <label for="input">Add to pantry:</label>
+            <input type="text" name="pantry" id="input" class="form-control">
+        </div>
+    </fieldset>
+</form>
+<!-- showing all items in users pantry with ability to delete each individual item -->
+<div class="text-center">
+    <h3>Pantry:</h3>
+    <% ingredientsArr = []; %>
+        <% for(var i = 0; pantry.length > i; i++){ %>
+        <% ingredientsArr.push(pantry[i].item)%>
+    <% } %>
+    <% let ingredientsString = ingredientsArr.join(", ");%>
+    <form class="form-inline" action="/search" method="GET">
+        <div class="form-group"> 
+                <input type="text" class="form-control mb-3" id="search_input" value="<%- ingredientsString %>" name="q" placeholder="" hidden>
+                <button type="submit" class="btn btn-success mb-3" id="">
+                <i class="bi bi-search"> Search by pantry</i>
+        </div>
+    </form>
+
+    <ul class="list-group">    
+    <% for(var i = 0; pantry.length > i; i++){ %>
+    <%- pantry[i].item %>
+        <form action='/deletePantry' method="post" onsubmit="return confirm('Are you sure you want to delete this from your pantry?'
+        )">
+            <input name="item" value="<%-pantry[i].item%>" hidden>
+            <button class="btn btn-danger btn-sm">Delete</button>
+        </form>
+    
+    <% } %>
+    </ul>
+</div>
+
+
+<script>
+//auto complete script from https://www.educative.io/answers/how-to-add-autocomplete-to-an-input-field-in-javascript
+async function autocomplete(input) {
+  var list = []
+  //ChatGPT helped with fetching array from JSON file
+  await fetch("/json/filteredIngredientArray.json")
+    .then(response => response.json())
+    .then(data => {
+      // Access the array from the JSON data
+      list = data;
+    })
+    .catch(error => {
+      console.error('Error fetching JSON file:', error);
+    });
+
+  //Add an event listener to compare the input value with all countries
+  input.addEventListener('input', function() {
+    //Close the existing list if it is open
+    closeList();
+
+    //If the input is empty, exit the function
+    if (!this.value)
+      return;
+
+    //Create a suggestions <div> and add it to the element containing the input field
+    suggestions = document.createElement('div');
+    suggestions.setAttribute('id', 'suggestions');
+    this.parentNode.appendChild(suggestions);
+
+    var count = 0;
+    //Iterate through all entries in the list and find matches
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].toUpperCase().includes(this.value.toUpperCase())) {
+        //If a match is found, create a suggestion <div> and add it to the suggestions <div>
+        suggestion = document.createElement('div');
+        suggestion.innerHTML = list[i];
+
+        suggestion.addEventListener('click', function() {
+          input.value = this.innerHTML;
+          closeList();
+        });
+        suggestion.style.cursor = 'pointer';
+
+
+        if (!(count == 5)) {
+          suggestions.appendChild(suggestion);
+          count++
+        }
+      }
+    }
+
+  });
+
+  function closeList() {
+    let suggestions = document.getElementById('suggestions');
+    if (suggestions)
+      suggestions.parentNode.removeChild(suggestions);
+  }
+}
+
+autocomplete(document.getElementById('input'))
+</script>
+

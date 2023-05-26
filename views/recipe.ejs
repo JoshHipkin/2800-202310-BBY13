@@ -1,96 +1,201 @@
 <%- include(`templates/header${headerSession}`) %> 
 
-<div class="p-4 mb-3 bg-body-tertiary rounded">
-  <h1 class="fst-italic"><%= recipe.name %></h1>
+<div class="p-4 mb-3  recipe-header">
+  <!-- <h1 class="fst-italic"><%= recipe.name.replace("&amp;", "&") %></h1> -->
+  <h1 class="fst-italic"><%= recipe.name%></h1>
+
   <% var rateExists = false %>
   <% for(count = 0; count < filteredRatings.length; count++) { %>
     <% if(filteredRatings[count].recipeID == recipe._id) { %>
       <% rateExists = true %>
-      <p>Rating: <%-((filteredRatings[count].rating) / (filteredRatings[count].ratingTotal)).toFixed(1)%>/5.0 (based on <%-filteredRatings[count].ratingTotal%> reviews)</p>
+      <div><i class="bi bi-star-fill"></i>  <%-((filteredRatings[count].rating) / (filteredRatings[count].ratingTotal)).toFixed(1)%> </div>
     <% } %>
   <% } %>
   <% if(!(rateExists)){ %>
-    <p>No ratings</p>
+    <div><i class="bi bi-star-fill"></i> Not yet rated!</div>
   <% } %>
-  <div class= "py-5">
-    <h4 class>Ingredients:</h4> 
-    <p class="mb-0">
-      <ul>
-          <% const ingredients_raw_str = recipe.ingredients_raw_str.split(','); %>
-          <% for(let i=0; i < ingredients_raw_str.length; i++) { %>
-          <% const ingredient_raw = ingredients_raw_str[i].trim().replace(/^\[|\]$/g, '').replace(/^"|"$/g, ''); %>
-            <li><%= ingredient_raw  %></li>
-          <% } %>
-      </ul>
-    </p>
+    <div><i class="bi bi-people-fill"></i> <%= recipe.servings %> Servings</div>
+</div>
+
+  <div class="tabs">
+    <ul class="tab-links">
+      <li><a href="#ingredients">Ingredients</a></li>
+      <li><a href="#instructions">Preparation</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+    </ul>
+    
+    <div class="tab-content">
+      <div id="ingredients" class="tab active">
+        <!-- <h4 class>Ingredients:</h4>  -->
+        <p class="mb-0">
+          <!-- All ingredients for recipes -->
+          <ul>
+              <% console.log(recipe.ingredients_raw_str) %>
+              <% const ingredients_raw_str = recipe.ingredients_raw_str.split('\",\"'); %>
+              <% for(let i=0; i < ingredients_raw_str.length; i++) { %>
+              <% const ingredient_raw = ingredients_raw_str[i].trim().replace(/^\[|\]$/g, '').replace(/^"|"$/g, '').replace("\\u0026", "&").replace(/&amp;/g, "&"); %>
+                <li><%= ingredient_raw  %></li>
+              <% } %>
+          </ul>
+        </p>
+      </div>
+      
+      <div id="instructions" class="tab">
+        <!-- <h4 class="fst-italic">Instructions:</h4> -->
+        <p class="mb-0">
+          <!-- All steps for recipe   -->
+          <ol>
+                <% const steps = recipe.steps.replace(/&amp;/g, "&").replace(/\u0026/g, "&").split(/[\s]*', '[\s]*|\. |;/) %>
+                <% for(let i=0; i < steps.length; i++) { %>
+                  <% const step = steps[i].trim().replace(/\[|\]|'|,/g, ''); %>
+                  <% if (step) { %>
+                    <li><%= step %></li>
+                  <% } %>
+                <% } %>
+            </ol>
+        </p>
+      </div>
+      
+      <div id="reviews" class="tab">
+
+        <% if(commentData.length == 0) { %>
+          <p style="margin-bottom: 0px;">Be the first to leave a review!..</p>
+          <br/>
+        <% } %>
+        
+<!-- Button to trigger the modal -->
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#reviewModal">
+  Write Review
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reviewModalLabel">Leave a Review</h5>
+        <button type="button " class="btn-close btn btn-success" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/commentPost" method="post">
+
+          <p class="fst-italic">Rating:
+          <div class="rating-stars">
+            <i class="bi bi-star" data-rating="1"></i>
+            <i class="bi bi-star" data-rating="2"></i>
+            <i class="bi bi-star" data-rating="3"></i>
+            <i class="bi bi-star" data-rating="4"></i>
+            <i class="bi bi-star" data-rating="5"></i>
+          </div></p>
+
+          <input type="hidden" name="rating" id="rating-value" value="">
+          <!-- Rest of the form -->
+
+          <div class="form-floating mb-2">
+            <input name="commentHeader" type="text" class="form-control" placeholder="Review Title" required>
+            <label for="commentHeader">Review Title</label>
+          </div>
+          <div class="form-floating mb-2">
+            <textarea name="comment" type="text" class="form-control" placeholder="Comment" rows="8" style="resize: none; height:25vh" required></textarea>
+            <label for="comment">Add a comment...</label>
+          </div>
+          <div class="form-floating mb-2">
+            <input name="idRecipe" type="text" class="form-control" placeholder="idRecipe" value="<%- recipe._id.toString() %>" hidden>
+            <label for="idRecipe" hidden></label>
+          </div>
+
+          <button type="submit" class="btn btn-success">Post Review</button>
+
+        </form>
+      </div>
+    </div>
   </div>
-  <h4 class="fst-italic">Instructions:</h4>
-  <p class="mb-0">
-      <ol>
-          <% const steps = recipe.steps.split(/[;.]/); %>
-          <% for(let i=0; i < steps.length; i++) { %>
-            <% const step = steps[i].trim().replace(/\[|\]|'|,/g, ''); %>
-            <% if (step) { %>
-              <li><%= step %></li>
+</div>
+
+      
+      <!-- Show all comments and ratings for individual recipe -->
+      <% for (count = commentData.length -1; count >= 0 ; count--){ %>
+        
+          <div class="form-floating mb-2">
+            <h5 style="margin-top: 10px; margin-bottom: 0px;"><%-commentData[count].commentHeader%></h5>
+            <% if(commentData[count].rating == null) { %>
+              <p style="margin-bottom: 0px;">No rating</p>
+            <% } else { %>
+              <p style="margin-bottom: 0px;"><%-commentData[count].rating %> out of 5</p>
             <% } %>
-          <% } %>
-      </ol>
-  </p>
-  <form action='/commentPost' method='post'>
-    <h4 class="fst-italic">Comments:</h4>
-    <p class="fst-italic">Rating</p>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="rating" id="rating" value="1">
-      <label class="form-check-label" for="rating">1</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="rating" id="rating" value="2">
-      <label class="form-check-label" for="rating">2</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="rating" id="rating" value="3">
-      <label class="form-check-label" for="rating">3</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="rating" id="rating" value="4">
-      <label class="form-check-label" for="rating">4</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="rating" id="rating" value="5">
-      <label class="form-check-label" for="rating">5</label>
-    </div>
-    <div class="form-floating mb-2">
-        <input name='commentHeader' type='text' class="form-control" placeholder="Review Title" required>
-        <label for="commentHeader">Review Title</label>
-    </div>
-    <div class="form-floating mb-2">
-      <input name='comment' type='text' class="form-control" placeholder="Comment" required>
-      <label for="comment">Add a comment...</label>
-    </div>
-    <div class="form-floating mb-2">
-      <input name='idRecipe' type='text' class="form-control" placeholder="idRecipe" value="<%- recipe._id.toString() %>" hidden>
-      <label for="idRecipe" hidden><label>
-  </div>
-    <button type="submit" class="w-20 btn btn-primary">Comment</button>
-</form>
-
-
-<% for (count = 0; commentData.length > count; count++){ %>
-  <form>
-    <div class="form-floating mb-2">
-      <h5 style="margin-top: 10px; margin-bottom: 0px;"><%-commentData[count].commentHeader%></h5>
-      <% if(commentData[count].rating == null) { %>
-        <p style="margin-bottom: 0px;">No rating</p>
-      <% } else { %>
-        <p style="margin-bottom: 0px;"><%-commentData[count].rating %> out of 5</p>
+            <small style="margin-bottom: 0px; ">Review by <%-commentData[count].username%></small>
+            <div><%-commentData[count].comment%></div>
+          </div>
+      
       <% } %>
-      <p style="margin-bottom: 0px;">Review by <%-commentData[count].username%></p>
-      <textarea type="text" class="form-control" disabled><%-commentData[count].comment%></textarea>
+      </div>
     </div>
-</form>
-<% } %>
+  </div>
+  
+
+
+<script>
+  // Get all the tab links and tab content elements
+const tabLinks = document.querySelectorAll('.tab-links a');
+const tabContent = document.querySelectorAll('.tab-content .tab');
+
+// Set the first tab as active by default
+tabLinks[0].classList.add('active');
+tabContent[0].style.display = 'block';
+
+// Add event listener to each tab link
+tabLinks.forEach(function(link) {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    // Remove 'active' class from all tab links and tab content elements
+    tabLinks.forEach(function(tabLink) {
+      tabLink.classList.remove('active');
+    });
+    tabContent.forEach(function(tab) {
+      tab.style.display = 'none';
+    });
+    
+    // Add 'active' class to the clicked tab link and display the corresponding tab content
+    const selectedTab = document.querySelector(link.getAttribute('href'));
+    link.classList.add('active');
+    selectedTab.style.display = 'block';
+  });
+});
+
+  // JavaScript to handle rating selection
+  const ratingStars = document.querySelectorAll('.rating-stars i');
+  const ratingValue = document.getElementById('rating-value');
+
+  ratingStars.forEach(star => {
+    star.addEventListener('click', () => {
+      const selectedRating = star.getAttribute('data-rating');
+      ratingValue.value = selectedRating;
+
+      ratingStars.forEach(star => {
+        const starRating = star.getAttribute('data-rating');
+        if (starRating <= selectedRating) {
+          star.classList.remove('bi-star');
+          star.classList.add('bi-star-fill');
+        } else {
+          star.classList.remove('bi-star-fill');
+          star.classList.add('bi-star');
+        }
+      });
+    });
+  });
+
+  
+
+
+
+
+
+</script>
+
+
+
 
 </div>
 <%- include(`templates/footer`) %>
-
 
