@@ -1,22 +1,191 @@
-# 2800-202310-BBY13
+# 2800-202310-BBY13 - ReciPAL
+
+# Hosted App
+The app is hosted on Qoddi at the following link:
+http://repqxuwlgf.eu09.qoddiapp.com/
 
 # Team Members:
 - Jake Robbins
 - Conrad Christian
 - Josh Hipkin
 - Emily Yao
-- Emily Yao
 
-# Hosted App
-The app is hosted on Qoddi at the following link:
-http://repqxuwlgf.eu09.qoddiapp.com/
+# Project Description:
+- BBY 13 is developing a new web app, ‘ReciPal’, that uses AI technology and Kaggle’s Recipe and ingredient dataset to recommend personalized recipes based on users’ available ingredients, food preferences, and dietary restrictions, making meal planning and cooking effortless.
 
-# How to Run the App:
-1. Only those with the required .env variables can access the mongodb database.
-2. clone the repository.
-3. Install Node.JS.
-4. download all required node packages by typing 'npm i' into the console.
-5. run using 'node index.js' OR 'nodemon index.js'.
+# Technologies used:
+- Front End: EJS, CSS, Javascript and Bootstrap.
+- Middleware: Multer, fs.
+- Backend & Database: NodeJS, Javascript, MongoDB.
+- API's: Clarifai API, openAI API.
+- Kaggle Dataset: "Food.com Recipes with Search Terms and Tags".
+- ChatGPT for coding assistance and bug fixing.
+
+# File Contents:
+├───public
+│   └───images
+│       │   background.jpg
+│       │   bread.png
+│       │   breakfast.jpeg
+│       │   burnttoast.webp
+│       │   chef.gif
+│       │   chefconrad.png
+│       │   community.jpeg
+│       │   dessert.jpeg
+│       │   dinner.jpeg
+│       │   dish1.jpg
+│       │   dish2.jpg
+│       │   dish3.jpg
+│       │   favicon.ico
+│       │   greencheck.png
+│       │   greenscreen.jpg
+│       │   kitchen.jpg
+│       │   loading-gif.gif
+│       │   logo-black.png
+│       │   logo-color.png
+│       │   logo-no-background.png
+│       │   logo-test.png
+│       │   logo-white.png
+│       │   lunch.jpeg
+│       │   recipal-logo.png
+│       │   recipehome1.jpeg
+│       │   recipehome2.jpeg
+│       │   recipehome3.jpeg
+│       │   toaster.png
+│       │
+│       └───__MACOSX
+│           │   ._png
+│           │
+│           └───png
+│                   ._logo-black.png
+│                   ._logo-color.png
+│                   ._logo-no-background.png
+│                   ._logo-white.png
+│
+├───scripts
+│       dbConnection.js
+│       utils.js
+│
+├───styles
+│       home.css
+│       landing-page.css
+│       style.css
+│
+├───UnitTests
+│   ├───AuthenticationUserImprovements
+│   │       AuthenticationUserImprovementTest.txt
+│   │
+│   ├───BasicPagesCreated
+│   │       PagesUnitTest.txt
+│   │
+│   ├───BrowseRecipe
+│   │       BrowseRecipeUnitTest.txt
+│   │
+│   ├───EJSImplementation
+│   │       EJSImplementationUnitTest.txt
+│   │
+│   ├───FrontEndIndex
+│   │       FrontEndIndexUnitTest.txt
+│   │
+│   ├───Homepage
+│   │       HomepageUnitTest
+│   │
+│   ├───LoginSecurityRecovery
+│   │       SecurityRecoveryTest.txt
+│   │
+│   ├───Logout
+│   │       LogoutUnitTest
+│   │
+│   ├───Node
+│   │       databaseUnitTest
+│   │
+│   ├───PantryInventory
+│   │       PantryInventoryTest.txt
+│   │
+│   ├───PopulatingProfilePage
+│   │       PopulatingProfilePageText.txt
+│   │
+│   ├───RecipeDetail
+│   │       RecipeDetailUnitTest
+│   │
+│   ├───RecipeFavourite
+│   │       ReicpeFavouriteUnitTest.txt
+│   │
+│   ├───RecipeReviews
+│   │       RecipeReviewsTest.txt
+│   │
+│   ├───SecurityQuestionFix
+│   │       SecurityQuestionFix.txt
+│   │
+│   ├───UploadRecipe
+│   │       uploadRecipeUnitTest.txt
+│   │
+│   ├───UserDatabase
+│   │       UserDatabaseTest.txt
+│   │
+│   └───UserPreferenceTest
+│           userPreferences
+│
+├───uploads
+│       616f2be763d5da5a01048ed5ebb5020d
+│       a638baad84a3c8dd71978037df586d41
+│       d1330f3efbe3bbd35bf46eabe0a04082
+│
+└───views
+    │   404.ejs
+    │   browseRecipe.ejs
+    │   changePassword.ejs
+    │   communityRecipeDetail.ejs
+    │   conrad.ejs
+    │   favouriteRecipes.ejs
+    │   forgot.ejs
+    │   forgotInvalid.ejs
+    │   generatedRecipe.ejs
+    │   homepage.ejs
+    │   imageUpload.ejs
+    │   index.ejs
+    │   login-invalid.ejs
+    │   login.ejs
+    │   pantry.ejs
+    │   preferences.ejs
+    │   preferencesSaved.ejs
+    │   profile-info.ejs
+    │   profile.ejs
+    │   recipe.ejs
+    │   recipeUpload.ejs
+    │   search.ejs
+    │   security.ejs
+    │   shoppingList.ejs
+    │   signup.ejs
+    │   signupAllergens.ejs
+    │   signupDiet.ejs
+    │   signupEmailTaken.ejs
+    │   template.ejs
+    │   validUploadRecipe.ejs
+    │   verify.ejs
+    │   verifyInvalid.ejs
+    │   waitingRoom.ejs
+    │
+    └───templates
+            footer.ejs
+            footerBeforeLogin.ejs
+            header.ejs
+            headerBeforeLogin.ejs
+            ingredientArray.ejs
+            recipeCard.ejs
+            savedAllergens.ejs
+            savedDiet.ejs
+
+
+# How to install and run the app locally:
+1. Once the repo Is cloned you will need to install mongoDB, set up a database and link it with the project. You can do this by adding a file called .env with the following variables:
+NODE_SESSION_SECRET=cf4c5c5b-ef38-4930-84d4-ee60a0ef7838
+MONGODB_PASSWORD=Josh
+MONGODB_HOST=2800.x8sanqn.mongodb.net
+MONGODB_USER=Josh
+MONGODB_DATABASE=Recipal
+MONGODB_SESSION_SECRET=5ceebb1c-72eb-49b9-8b31-6fd611ab2ac5
+OPENAI_SECRET=<api key here>
 
 # Conrad_PantryInventory
 Feature implemented to allow the user to have a saved inventory of items, instead of searching the ingredients everytime.
