@@ -22,6 +22,7 @@ http://repqxuwlgf.eu09.qoddiapp.com/
 - ChatGPT for coding assistance and bug fixing.
 
 # File Contents:
+```
 ├───public
 │   └───images
 │       │   background.jpg
@@ -175,7 +176,7 @@ http://repqxuwlgf.eu09.qoddiapp.com/
             recipeCard.ejs
             savedAllergens.ejs
             savedDiet.ejs
-
+```
 
 # How to install and run the app locally:
 1. Once the repo Is cloned you will need to signup for mongoDB and optionally install studio3T, set up a database in mongodb and link it with the project. You can do this by adding a file called .env with the following variables:
