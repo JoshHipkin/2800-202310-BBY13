@@ -1392,21 +1392,6 @@ app.post("/toggleFavoriteRecipe", async (req, res) => {
       );
       res.send({ status: "saved" });
     }
-
-    // Update the favorite status of the recipe in the recipesCollection
-    const updatedRecipe = await recipesCollection.findOneAndUpdate(
-      { _id: new ObjectId(recipeId) },
-      { $set: { isFavorite: favoriteRecipes.includes(recipeId) } },
-      { returnOriginal: false }
-    );
-
-    if (updatedRecipe) {
-      console.log("Recipe favorite status updated:", updatedRecipe);
-    } else {
-      console.log("Failed to update recipe favorite status");
-    }
-  } else {
-    res.status(404).send({ error: "User not found" });
   }
 });
 
