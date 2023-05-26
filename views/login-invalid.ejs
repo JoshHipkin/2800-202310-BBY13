@@ -1,25 +1,38 @@
-<%- include("templates/headerBeforeLogin") %> 
+<%- include("templates/headerBeforeLogin") %>
 <!-- Similar bootstrap structre from COMP2537 Assignment Signup Page -->
 <main class="form-signin w-100 m-auto">
-    <div class="d-flex gap-2 justify-content-center py-5">
+  <div class="d-flex gap-2 justify-content-center py-5">
     <!-- runs to loggingin -->
-    <form action='/loggingin' method='post' class="text-center">
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-        <div class="form-floating mb-2">
-            <input name='email' type='text' class="form-control" id="floatingInput" placeholder="Email Address">
-            <label for="floatingInput">Email Address</label>
-        </div>
-        <div class="form-floating mb-2">
-            <input name='password' type='password' class="form-control" id="floatingPassword" placeholder="Password">
-            <label for="floatingPassword">Password</label>
-        </div>
-        <button type="submit" class="w-100 btn btn-lg btn-success">Submit</button>
-    </form>    
-</div>
-<div style="text-align: center; color: red;"><p>Invalid Email/Password Combination</p></div>
-
+    <form action="/loggingin" method="post" class="text-center">
+      <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+      <div class="form-floating mb-2">
+        <input
+          name="email"
+          type="text"
+          class="form-control"
+          id="floatingInput"
+          placeholder="Email Address"
+        />
+        <label for="floatingInput">Email Address</label>
+      </div>
+      <div class="form-floating mb-2">
+        <input
+          name="password"
+          type="password"
+          class="form-control"
+          id="floatingPassword"
+          placeholder="Password"
+        />
+        <label for="floatingPassword">Password</label>
+      </div>
+      <button type="submit" class="w-100 btn btn-lg btn-success">Submit</button>
+    </form>
+  </div>
+  <div style="text-align: center; color: red">
+    <p>Invalid Email/Password Combination</p>
+  </div>
 </main>
 <div style="text-align: center">
-    <a href="/forgot">Forgot User Info</a>
+  <a href="/forgot">Forgot User Info</a>
 </div>
 <%- include("templates/footerBeforeLogin") %>

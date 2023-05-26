@@ -19,22 +19,22 @@
             </form>
         </div>
     </main>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    
-        var addAllergyBtn = document.getElementById('add-allergy');
-        addAllergyBtn.addEventListener('click', function() {
-          var allergiesContainer = document.getElementById('allergies-container');
-          var newAllergyDiv = document.createElement('div');
-          newAllergyDiv.classList.add('form-group', 'mb-2');
-          var newAllergyInput = document.createElement('input');
-          newAllergyInput.type = 'text';
-          newAllergyInput.classList.add('form-control');
-          newAllergyInput.name = 'allergy';
-          newAllergyInput.placeholder = 'Enter another allergy';
-          newAllergyDiv.appendChild(newAllergyInput);
-          allergiesContainer.appendChild(newAllergyDiv);
-        });
-      });
-      </script>
+<script>
+       document.addEventListener('DOMContentLoaded', function() {
+
+var addAllergyBtn = document.getElementById('add-allergy');
+addAllergyBtn.addEventListener('click', function() {
+  var allergiesContainer = document.getElementById('allergies-container');
+  var newAllergyDiv = document.createElement('div');
+  newAllergyDiv.classList.add('form-group', 'mb-2');
+  var newAllergyInput = document.createElement('input');
+  newAllergyInput.type = 'text';
+  newAllergyInput.classList.add('form-control');
+  newAllergyInput.name = 'allergy';
+  newAllergyInput.placeholder = 'Enter another allergy';
+  newAllergyDiv.appendChild(newAllergyInput);
+  allergiesContainer.appendChild(newAllergyDiv);
+});
+});
+</script>
 <%- include("templates/footer") %>

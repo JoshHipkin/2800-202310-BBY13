@@ -17,7 +17,7 @@
             
 
 <button class="btn btn-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Filters</button>
-
+<!-- Start of filter offcanvas -->
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Filters</h5>
@@ -76,41 +76,24 @@
                           >Exclude Diet retreved from profile</label
                         >
                       </div>
-        </div>
-</div>
-        
-
-            
-
-              
-                 
-            
-
-    
-      
-
-        </div>
-    </form><div id="aiRecipeButton-box"></div>
+                  </div>
+              </div>
+          </div>
+    </form>
+    <div id="aiRecipeButton-box"></div>
     <!-- Inside the <div class="text-center mb-5 mt-5"> -->
-
-
-<div class="text-center" id="recipeNumber">
+      <div class="text-center" id="recipeNumber">
   
-    <% if (pageCount === 1) { %>
-   <h3>You can make <%= recipe.length %> Recipes!</h3> 
-  <% } else { %>
-  <h3>You can make <%= pageCount * 20 %> Recipes!</h3>
-<% } %>
- 
-</div>
-    
+        <% if (pageCount === 1) { %>
+        <h3>You can make <%= recipe.length %> Recipes!</h3> 
+        <% } else { %>
+        <h3>You can make <%= pageCount * 20 %> Recipes!</h3>
+        <% } %>
+      </div>
 
-<% for(let i=0; i < recipe.length; i++) { %>
-  <%- include('templates/recipeCard', {recipe: recipe[i], filteredRatings: filteredRatings, user: user}) %>
-<% } %> 
-
-
-
+        <% for(let i=0; i < recipe.length; i++) { %>
+          <%- include('templates/recipeCard', {recipe: recipe[i], filteredRatings: filteredRatings, user: user}) %>
+        <% } %> 
 <div class="pagination d-flex justify-content-center">
   <% if (currentPage > 1) { %>
     <a class="page-link" href="/search?q=<%- searchQuery %>&page=<%= currentPage - 1 %>&s=<%= Array.isArray(selectedCategories) ? selectedCategories.join(',') : '' %>">
@@ -139,21 +122,21 @@
 
 
 <script>
-    // add Custom with AI button
-    const AIRecipeButton = document.createElement("link");
-    AIRecipeButton.className = "btn btn-success btn-lg d-flex justify-content-center mx-5 mb-3";
-    AIRecipeButton.innerHTML = "Get AI Custom Recipe... ";
-    document.getElementById("aiRecipeButton-box").appendChild(AIRecipeButton);
-  console.log("script loaded");
-        // add event listener to send GET request with ingredients array
-        AIRecipeButton.addEventListener("click", function() {
-          console.log("clicked");
-        let ingredientsString = document.getElementById("search_input").value;
-       console.log(ingredientsString);
-       let url = "/waitingRoom/?q=" + ingredientsString;
-        console.log(url);
-       window.location.href = url;
-    });
+   // add Custom with AI button
+   const AIRecipeButton = document.createElement("link");
+   AIRecipeButton.className = "btn btn-success btn-lg d-flex justify-content-center mx-5 mb-3";
+   AIRecipeButton.innerHTML = "Get AI Custom Recipe... ";
+   document.getElementById("aiRecipeButton-box").appendChild(AIRecipeButton);
+   console.log("script loaded");
+   // add event listener to send GET request with ingredients array
+   AIRecipeButton.addEventListener("click", function() {
+     console.log("clicked");
+     let ingredientsString = document.getElementById("search_input").value;
+     console.log(ingredientsString);
+     let url = "/waitingRoom/?q=" + ingredientsString;
+     console.log(url);
+     window.location.href = url;
+   });
 </script>
 
 

@@ -1,11 +1,10 @@
-<%- include("templates/header") %> 
+<%- include("templates/header") %>
 <!-- inspired from 1800 demo -->
 <div class="container">
-    
-    <h1 class="text-center my-5"><%- user.username %>'s Profile</h1>
-   
-<div class="tab-content">
-    <%- include(tabContent, {user: user, pantry: pantry}) %>
-</div>
-<%- include("templates/footer") %>
+  <h1 class="text-center my-5"><%- user.username %>'s Profile</h1>
 
+  <div class="tab-content">
+    <%- include(tabContent, {user: user, pantry: pantry}) %>
+  </div>
+  <%- include("templates/footer") %>
+</div>

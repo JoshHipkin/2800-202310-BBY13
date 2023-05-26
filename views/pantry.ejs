@@ -17,7 +17,7 @@
         </div>
     </fieldset>
 </form>
-
+<!-- showing all items in users pantry with ability to delete each individual item -->
 <div class="text-center">
     <h3>Pantry:</h3>
     <% ingredientsArr = []; %>
@@ -50,64 +50,63 @@
 <script>
 //auto complete script from https://www.educative.io/answers/how-to-add-autocomplete-to-an-input-field-in-javascript
 async function autocomplete(input) {
-var list = []
-//ChatGPT helped with fetching array from JSON file
-await fetch("/json/filteredIngredientArray.json")
+  var list = []
+  //ChatGPT helped with fetching array from JSON file
+  await fetch("/json/filteredIngredientArray.json")
     .then(response => response.json())
     .then(data => {
-        // Access the array from the JSON data
-        list = data;
+      // Access the array from the JSON data
+      list = data;
     })
     .catch(error => {
-        console.error('Error fetching JSON file:', error);
+      console.error('Error fetching JSON file:', error);
     });
 
-    //Add an event listener to compare the input value with all countries
-    input.addEventListener('input', function () {
-        //Close the existing list if it is open
-        closeList();
+  //Add an event listener to compare the input value with all countries
+  input.addEventListener('input', function() {
+    //Close the existing list if it is open
+    closeList();
 
-        //If the input is empty, exit the function
-        if (!this.value)
-            return;
+    //If the input is empty, exit the function
+    if (!this.value)
+      return;
 
-        //Create a suggestions <div> and add it to the element containing the input field
-        suggestions = document.createElement('div');
-        suggestions.setAttribute('id', 'suggestions');
-        this.parentNode.appendChild(suggestions);
+    //Create a suggestions <div> and add it to the element containing the input field
+    suggestions = document.createElement('div');
+    suggestions.setAttribute('id', 'suggestions');
+    this.parentNode.appendChild(suggestions);
 
-        var count = 0;
-        //Iterate through all entries in the list and find matches
-        for (let i=0; i<list.length; i++) {
-            if (list[i].toUpperCase().includes(this.value.toUpperCase())) {
-                //If a match is found, create a suggestion <div> and add it to the suggestions <div>
-                suggestion = document.createElement('div');
-                suggestion.innerHTML = list[i];
-                
-                suggestion.addEventListener('click', function () {
-                    input.value = this.innerHTML;
-                    closeList();
-                });
-                suggestion.style.cursor = 'pointer';
+    var count = 0;
+    //Iterate through all entries in the list and find matches
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].toUpperCase().includes(this.value.toUpperCase())) {
+        //If a match is found, create a suggestion <div> and add it to the suggestions <div>
+        suggestion = document.createElement('div');
+        suggestion.innerHTML = list[i];
+
+        suggestion.addEventListener('click', function() {
+          input.value = this.innerHTML;
+          closeList();
+        });
+        suggestion.style.cursor = 'pointer';
 
 
-                if (!(count == 5)){
-                    suggestions.appendChild(suggestion);
-                    count++
-                }
-            }
+        if (!(count == 5)) {
+          suggestions.appendChild(suggestion);
+          count++
         }
-
-    });
-
-    function closeList() {
-        let suggestions = document.getElementById('suggestions');
-        if (suggestions)
-            suggestions.parentNode.removeChild(suggestions);
+      }
     }
+
+  });
+
+  function closeList() {
+    let suggestions = document.getElementById('suggestions');
+    if (suggestions)
+      suggestions.parentNode.removeChild(suggestions);
+  }
 }
 
 autocomplete(document.getElementById('input'))
-
 </script>
 

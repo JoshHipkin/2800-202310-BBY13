@@ -62,55 +62,55 @@
   <%- include("templates/footer") %>
 
   <script>
-    $(document).ready(function() {
-      var ingredientCount = 1;
-  
-      $('#addIngredient').click(function() {
-        var ingredientInput = '<input type="text" class="form-control mt-2" name="ingredients" placeholder="Ingredient ' + (ingredientCount + 1) + '" required>';
-        $('#ingredientList').append(ingredientInput);
-        ingredientCount++;
-      });
-  
-      // Handle form submission
-      $('form').submit(function(e) {
-        // Prevent the default form submission
-        e.preventDefault();
-  
-        // Collect all ingredient inputs and store them in an array
-        var ingredientsArray = [];
-        $('[name="ingredients"]').each(function() {
-          var ingredientValue = $(this).val().trim();
-          if (ingredientValue !== '') {
-            ingredientsArray.push(ingredientValue);
-          }
-        });
-  
-        // Assign the array of ingredients to a hidden input field
-        $('<input>').attr({
-          type: 'hidden',
-          name: 'ingredientsArray',
-          value: JSON.stringify(ingredientsArray)
-        }).appendTo('form');
-  
+$(document).ready(function() {
+  var ingredientCount = 1;
 
-          
-// Get the instructions text and split it into an array using semicolon (;) as the delimiter
-var instructionsText = $('[name="steps"]').val().trim();
-      var instructionsArray = instructionsText.split('.').map(function(instruction) {
-        return instruction.trim();
-      });
+  $('#addIngredient').click(function() {
+    var ingredientInput = '<input type="text" class="form-control mt-2" name="ingredients" placeholder="Ingredient ' + (ingredientCount + 1) + '" required>';
+    $('#ingredientList').append(ingredientInput);
+    ingredientCount++;
+  });
 
-      // Assign the array of instructions to a hidden input field
-      $('<input>').attr({
-        type: 'hidden',
-        name: 'instructionsArray',
-        value: JSON.stringify(instructionsArray)
-      }).appendTo('form');
+  // Handle form submission
+  $('form').submit(function(e) {
+    // Prevent the default form submission
+    e.preventDefault();
 
-
-        // Submit the form
-        this.submit();
-      });
+    // Collect all ingredient inputs and store them in an array
+    var ingredientsArray = [];
+    $('[name="ingredients"]').each(function() {
+      var ingredientValue = $(this).val().trim();
+      if (ingredientValue !== '') {
+        ingredientsArray.push(ingredientValue);
+      }
     });
+
+    // Assign the array of ingredients to a hidden input field
+    $('<input>').attr({
+      type: 'hidden',
+      name: 'ingredientsArray',
+      value: JSON.stringify(ingredientsArray)
+    }).appendTo('form');
+
+
+
+    // Get the instructions text and split it into an array using semicolon (;) as the delimiter
+    var instructionsText = $('[name="steps"]').val().trim();
+    var instructionsArray = instructionsText.split('.').map(function(instruction) {
+      return instruction.trim();
+    });
+
+    // Assign the array of instructions to a hidden input field
+    $('<input>').attr({
+      type: 'hidden',
+      name: 'instructionsArray',
+      value: JSON.stringify(instructionsArray)
+    }).appendTo('form');
+
+
+    // Submit the form
+    this.submit();
+  });
+});
   </script>
 

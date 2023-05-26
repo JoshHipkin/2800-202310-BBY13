@@ -28,6 +28,7 @@
       <div id="ingredients" class="tab active">
         <!-- <h4 class>Ingredients:</h4>  -->
         <p class="mb-0">
+          <!-- All ingredients for recipes -->
           <ul>
               <% console.log(recipe.ingredients_raw_str) %>
               <% const ingredients_raw_str = recipe.ingredients_raw_str.split('\",\"'); %>
@@ -42,8 +43,8 @@
       <div id="instructions" class="tab">
         <!-- <h4 class="fst-italic">Instructions:</h4> -->
         <p class="mb-0">
-            <ol>
-              
+          <!-- All steps for recipe   -->
+          <ol>
                 <% const steps = recipe.steps.replace(/&amp;/g, "&").replace(/\u0026/g, "&").split(/[\s]*', '[\s]*|\. |;/) %>
                 <% for(let i=0; i < steps.length; i++) { %>
                   <% const step = steps[i].trim().replace(/\[|\]|'|,/g, ''); %>
@@ -112,7 +113,7 @@
 </div>
 
       
-      
+      <!-- Show all comments and ratings for individual recipe -->
       <% for (count = commentData.length -1; count >= 0 ; count--){ %>
         
           <div class="form-floating mb-2">
