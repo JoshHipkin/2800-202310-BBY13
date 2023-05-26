@@ -209,11 +209,15 @@ CLARIFAI_SECRET=api key here
 Credit to ChatGPT for assisting code writing
 OpenAI and Clarifi for AI features (Photo Recognition and Generated Recipes)
 Auto complete feature from: https://www.educative.io/answers/how-to-add-autocomplete-to-an-input-field-in-javascript
+Kaggle recipe Dataset: https://www.kaggle.com/datasets/shuyangli94/foodcom-recipes-with-search-terms-and-tags
 
 # How we used AI for our app:
-1. We used ChatGPT to help build our code and bug fix errors. If we struggled with coding, ChatGPT provided helpful feedback. It took a bit of prompt tweaking to get exactly what you wanted from ChatGPT but the AI proved to be a helpful coding tool throughout the project term.
-2. Our app uses a pre-trained food image classification model provided through the Clarifai API to allow users to select ingredients by taking photos of them.The Clarifai model returns an array of 20 ingredients with their probability values and then our algorithm adds at least 1, but no more than 5, of those ingredients based on a minimum threshold and comparison to prior probability values. This allows for only the most certain ingredients to show and allows the user to include 2 or 3 ingredients in a photo. Any erroneous ingredients can be easily deselected by the user. They can then use those ingredients for searching or custom AI generated recipe creation, which is provided by sending a prompt to the OpenAI API and requesting the response in our recipe JSON format.
-3. The Clarifai API was difficult to get consistent results so there was a lot of tinkering trying to set the threshold for probability scores to be at a good point where the model was accurate enough to be practical without giving unnecessary extra ingredients. Jake spent a lot of time configuring the AI manually to ensure it was capable enough to implement into our app.
+   We involved chatGPT in our app ideation and brainstorming processes, asking for app ideas, interesting features, and ways to include AI elements in consideration of the project theme. We asked how to best implement our features, what API services and technologies we could use, and routinely had it fix or write code for oour implementation. 
+
+   Our app uses a pre-trained food image classification model provided through the Clarifai API to allow users to select ingredients by taking photos of them.The Clarifai model returns an array of 20 ingredients with their probability values and then our algorithm adds at least 1, but no more than 5, of those ingredients based on a minimum threshold and comparison to prior probability values. This allows for only the most certain ingredients to show and allows the user to include 2 or 3 ingredients in a photo. Any erroneous ingredients can be easily deselected by the user. 
+
+   They can then use those ingredients for searching or custom AI generated recipe creation, which is provided by sending a prompt to the OpenAI API and requesting the response in our recipe JSON format.
+
 
 # Dev Contact info:
 Jake: jrobbins19@my.bcit.ca 
@@ -226,148 +230,4 @@ Conrad: cchristian5@my.bcit.ca
 
 
 
-# Conrad_PantryInventory
-Feature implemented to allow the user to have a saved inventory of items, instead of searching the ingredients everytime.
-Conrad PantryFix
-(May 24, 2023)
-- Optimize for mobile devices
-- Fix error in pantry ejs
-(May 23, 2023)
-- Saved user input into database
-- Allows the items to be displayed on page
-- Implemented a feature that allows the user to delete the item from db
-- Implemented a search button to search with pantry items
-(May 19, 2023)
-- Working on ejs pantry page
-- Fixed bug on ejs script on preference and profile page
-- Build an array based on all the ingredients in mongodb database (2 hrs)
-- Iterate, troubleshoot, and save all unique ingredients into array (2 hrs)
-- Save array into json file (2hr)
-- Implement autosuggest feature on form using array (2 hrs)
 
-# Conrad_RecipeReviews
-Conrad_HotFixRatings
-(May 18, 2023)
-With the new implemented pages of browsing and search. Improved code to work on new pages, created ejs recipe card template, improved interator processes of reviews on ejs cards. Fixed bug where multiple lines of ratings were printing depending on length of comment array 
-- Improved ejs code
-- Applied ratings to recipes on both browsing and search pages
-- Created recipe card template ejs files to refer to 
-- Fixed bug with multiple lines of ratings printing
-
-(May 17, 2023)
-Implemented the ability to leave reviews on recipes. Comments, comment topic header and ratings are available for the user to rate and review recipes. Changes to homepage displays the avg rating based on user reviews, as well as in profile for each recipe. Used chatGPT to develop function to iterate though an array and return the index of a desired value in object. 
-
-- Hotfixed redirect to text prompts in forgot user id process
-- Studied teammates recipe code
-- Created comment collection in database
-- Created const variable and reference to right location
-- Implement backend code to store username, comment and recipeID to comment collection
-- Create form with bootstrap to allow user to type comments
-- Troubleshoot recipeID not showing up
-- Improve and optimize code to pass clean variables into ejs
-- Implement code to display other user comments on recipe page
-- Fix front end to at least functionality 
-- Added comment title to reviews
-- Store user rating out of 5
-- Display rating with review at the bottom with comments
-- Fix a little form front end to display comments a little better
-- Decide how to sort array to display average of ratings 
-- Troubleshooting changing rating values to return average 
-- Researching array methods
-- Implement average ratings on recipe cards in homepage
-- Added delimiter to parse avg rating 
-- Added total number of reviews displayed (based on X reviews)
-
-- Prevent unsigned in user to post reviews
-
-# Conrad_AuthenticationUserImprovements
-Conrad_HeaderHotFix
-(May 17, 2023)
-Changed some code to improve header and footer not working on certain pages. Also optimized code and passed clean variables into ejs.
-- Changed code to function on js instead of ejs
-- Improved ejs code for header and footer
-- Ensured pages recipe, imageUpload and Homepage worked with new header and footer
-
-(May 16, 2023)
-Improvements made to creating and logging into a user. Changed redirects on pages. Implemented invalid credential prompts if user 
-types in existing email. Changed header and footer depending on user login. Redirect page to login if user tries to access
-user session validation pages.
-
-- Added validation if user is logged in or not to restrict pages, ex. Profile
-- Changed header and footer for pages before accessing home
-- Changed redirect of logo button if user is already at homepage 
-- Implemented continue without logging in button on landing page
-- Change user id into username in profile
-- Fixing session validation functions and valid session functions
-- Change header if user is logged in or not when on homepage
-- Prevent additional users to be created if email is already in database
-- Improve prompts to show user if they used incorrect login details, account already exists, and password restrictions
-
-# Conrad_LoginSecurityRecovery
-Conrad_SecurityQuestionFix
-(May 12, 2023)
-Fixed Problem bug of text running off text field in verify.ejs. Changed to textarea with better wrap properties.
-- Changed input field in verify.ejs to textarea and changed some text properties
-
-(May 11, 2023)
-Created a feature to allow the user to reset their password if they had forgotten their user ID. 
-
-- Added username to signup page and store to database (15 mins)
-- Created page for security.ejs to allow user to type security password with bootstrap (30 mins)
-- Researching mongodb methods (15 mins)
-- Connecting security password to database (1 hr)
-- Troubleshooting select menu for security question (1.5 hr)
-- Connecting security question to database (15 mins)
-- Creating forgot.ejs and reset.ejs for user to reset password (30 mins)
-- Fixing ejs parameter array that reads to reset.ejs(15 mins)
-- Fixing proper security question being read to fieldset in reset.ejs (45 mins)
-- Writing securityPasswordVerify post to verify password and to properly display (30 mins)
-- Created 404 page (10 mins)
-- Created ability to change password after verifying user through security question and save to database (30 mins)
-
-# Conrad_PopulatingProfilePage
-(May 10, 2023)
-Populated profile page that auto fills the profile page with user information drawn from the database. Changed  the 
-populate user info script to properly run in index.js. Uses an array to pass the parameter into profile.ejs
-in order of id, email, then password. Did not implement an edit button to change user information, just populated
-profile page.
-
-- Populated profile page with fieldset of User ID, Email, Password, and Dietery Preferences (30 mins)
-- Implemented bootstrap for fieldset (10 mins)
-- Created populate user info script to pull correct user information from database (45 mins)
-- Changed populate user info script and implemented straight into app.get(profile) instead (10 mins)
-- Figured out ejs parameter restrictions and came up with array solution (45 mins)
-- Implemented profile user information in array to pass into profile.ejs (15 mins)
-
-# Conrad_UserDatabase
-(May 9, 2023)
-Implemented a feature to allow users to signup in signup page and have their user info stored into the database. 
-Currently if the user does not input a required field or fails joi's validation, the user will be 
-redirected back to the signup page. The same works for login, if the user provides incorrect or fails joi's validation
-the user will be redirected to the login page.
-
-- Implemented signup page and stores user info in database
-- Implemented joi validation
-- Implemented login page and allows user to log into account from database
-
-# Conrad_EJSImplementation
-(May 9, 2023)
-Installed ejs and nodemon to help build website. Also changed all html into ejs files and put in views 
-folder to run off scripts/index.js. Made it compatible with header and footer 
-
-- Changed HTML files to EJS files and placed in views folder
-- Fixed header and footer compatibility with EJS 
-- Added Profile page 
-- Implemented working buttons in header and footer to change pages to proper location
-
-# Conrad_MainLoginSignupBasicPages:
-(May 9, 2023)
-Basic front end crucial pages to get the project started. Implemented bootstrap to give the pages
-a little more front end detail. I also created a template.html to copy for other pages. I only created 
-the pages with basic content but I didn't connect each page though an index.js as we did in COMP 2537.
-
-- Created index, login and signup html pages
-- Created footer and header html in templates folder
-- Created navHeaderFooter.js to read and load footer and header templates into pages.
-- Implemented Bootstrap and Jquery to get the header and footer to appear
-- Created template.html to copy for other pages to keep consistency
